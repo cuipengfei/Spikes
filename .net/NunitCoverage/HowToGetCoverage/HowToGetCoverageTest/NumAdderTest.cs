@@ -5,7 +5,7 @@ using HowToGetCoverage;
 namespace HowToGetCoverageTest
 {
     [TestFixture]
-    public class UnitTest1
+    public class NumAdderTest
     {
         [Test]
         public void shouldAddOneAndOne()

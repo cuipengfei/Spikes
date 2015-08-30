@@ -3,3 +3,4 @@ bin/
 obj/
 *.suo
 .vs/
+NunitCoverage/HowToGetCoverage/HowToGetCoverage.sln.DotSettings.user
