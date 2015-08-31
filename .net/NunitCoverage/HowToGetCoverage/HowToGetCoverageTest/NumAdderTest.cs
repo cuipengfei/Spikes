@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using HowToGetCoverage;
+using Rhino.Mocks;
 
 namespace HowToGetCoverageTest
 {
