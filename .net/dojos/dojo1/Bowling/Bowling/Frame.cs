@@ -20,6 +20,10 @@
             {
                 score += (Next.FirstTry+Next.SecondTry);
             }
+            else if(FirstTry+SecondTry==10)
+            {
+                score += Next.FirstTry;
+            }
             return score;
         }
     }

@@ -35,5 +35,20 @@ namespace BowlingTest
             Assert.AreEqual(17,score1);
         }
         
+        [TestMethod]
+        public void FrameShouldCountNextBallAsScoreWhenThereIsSpare()
+        {
+            //given
+            Frame frame1 = new Frame() {FirstTry = 4,SecondTry = 6};
+            Frame frame2 = new Frame() {FirstTry = 5,SecondTry = 2};
+            frame1.Next = frame2;
+
+            //when
+            int score1=frame1.Score;
+
+            //then
+            Assert.AreEqual(15,score1);
+        }
+        
     }
 }
