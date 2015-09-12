@@ -5,11 +5,7 @@
         public int FirstTry { get; set; }
         public int SecondTry { get; set; }
 
-        public int Score
-        {
-            get { return CalculateScore(); }
-        }
-
+        public int Score => CalculateScore();
 
         public Frame Next { get; set; }
 
