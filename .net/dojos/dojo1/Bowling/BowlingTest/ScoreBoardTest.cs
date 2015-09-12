@@ -1,4 +1,5 @@
-﻿using Bowling;
+﻿using System;
+using Bowling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BowlingTest
@@ -73,6 +74,24 @@ namespace BowlingTest
 
             //then
             Assert.AreEqual(300, totalScore);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ScoreBoardShouldThrowExceptionWhenAddingMoreThanTenFrames()
+        {
+            var scoreBoard = new ScoreBoard();
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 10);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Bowling
@@ -28,6 +29,10 @@ namespace Bowling
 
         private void AddFrame(Frame frame)
         {
+            if (frames.Count == 10)
+            {
+                throw new ArgumentOutOfRangeException(nameof(frame),"Only 10 frames are allowed to be added into the board.");
+            }
             if (frames.Count > 0)
             {
                 frames.Last().Next = frame;

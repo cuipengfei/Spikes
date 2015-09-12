@@ -1,4 +1,6 @@
-﻿namespace Bowling
+﻿using System;
+
+namespace Bowling
 {
     public class Frame
     {
@@ -11,6 +13,10 @@
 
         protected virtual int CalculateScore()
         {
+            if (IsStrike() && SecondTry != 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(SecondTry),"Second try should not be play when it's strike.");
+            }
             var score = FirstTry + SecondTry;
             if (IsStrike())
             {

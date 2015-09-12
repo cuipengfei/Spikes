@@ -1,4 +1,5 @@
-﻿using Bowling;
+﻿using System;
+using Bowling;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BowlingTest
@@ -64,6 +65,14 @@ namespace BowlingTest
 
             //then
             Assert.AreEqual(30, score1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void SecondBallShouldNotBePlayedIfIsStrike()
+        {
+            var frame = new Frame {FirstTry = 10, SecondTry = 2};
+            var score=frame.Score;
         }
     }
 }
