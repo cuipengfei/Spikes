@@ -16,15 +16,39 @@
         private int CalculateScore()
         {
             int score= FirstTry + SecondTry;
-            if (FirstTry == 10)
+            if (IsStrike())
             {
-                score += (Next.FirstTry+Next.SecondTry);
+                score += (NextBall()+NextToNextBall());
             }
-            else if(FirstTry+SecondTry==10)
+            else if(IsSpare())
             {
-                score += Next.FirstTry;
+                score += NextBall();
             }
             return score;
+        }
+
+        private int NextToNextBall()
+        {
+            if (Next.IsStrike())
+            {
+               return Next.Next.FirstTry;
+            }
+            return Next.SecondTry;
+        }
+
+        private int NextBall()
+        {
+            return Next.FirstTry;
+        }
+
+        private bool IsSpare()
+        {
+            return FirstTry+SecondTry==10;
+        }
+
+        private bool IsStrike()
+        {
+            return FirstTry == 10;
         }
     }
 }

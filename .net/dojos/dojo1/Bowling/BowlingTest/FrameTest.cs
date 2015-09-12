@@ -50,5 +50,22 @@ namespace BowlingTest
             Assert.AreEqual(15,score1);
         }
         
+        [TestMethod]
+        public void ThreeStrikesShouldScore30()
+        {
+            //given
+            Frame frame1 = new Frame() {FirstTry = 10,SecondTry = 0};
+            Frame frame2 = new Frame() {FirstTry = 10,SecondTry = 0};
+            Frame frame3 = new Frame() {FirstTry = 10,SecondTry = 0};
+            frame1.Next = frame2;
+            frame2.Next = frame3;
+
+            //when
+            int score1=frame1.Score;
+
+            //then
+            Assert.AreEqual(30,score1);
+        }
+        
     }
 }
