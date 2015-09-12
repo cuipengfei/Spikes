@@ -15,18 +15,23 @@ namespace Bowling
         {
             if (IsStrike() && SecondTry != 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(SecondTry),"Second try should not be play when it's strike.");
+                throw new ArgumentOutOfRangeException(nameof(SecondTry),
+                    "Second try should not be play when it's strike.");
             }
-            var score = FirstTry + SecondTry;
+            return FirstTry + SecondTry + Bonus();
+        }
+
+        private int Bonus()
+        {
             if (IsStrike())
             {
-                score += (NextBall() + NextToNextBall());
+                return NextBall() + NextToNextBall();
             }
-            else if (IsSpare())
+            if (IsSpare())
             {
-                score += NextBall();
+                return NextBall();
             }
-            return score;
+            return 0;
         }
 
         private int NextToNextBall()
