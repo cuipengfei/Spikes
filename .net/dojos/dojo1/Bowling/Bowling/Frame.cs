@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Bowling
+﻿namespace Bowling
 {
     public class Frame
     {
@@ -27,7 +25,7 @@ namespace Bowling
 
         private int NextToNextBall()
         {
-            if (Next.IsStrike()&&NextIsNotLast())
+            if (Next.IsStrike() && NextIsNotLast())
             {
                 return Next.Next.FirstTry;
             }
@@ -36,7 +34,7 @@ namespace Bowling
 
         private bool NextIsNotLast()
         {
-            return Next.Next!=null;
+            return Next.Next != null;
         }
 
         private int NextBall()

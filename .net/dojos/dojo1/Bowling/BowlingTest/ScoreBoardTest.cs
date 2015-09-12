@@ -20,7 +20,7 @@ namespace BowlingTest
             scoreBoard.AddFrame(2, 7); //9
             scoreBoard.AddFrame(6, 4); //20
             scoreBoard.AddFrame(10, 0); //15
-            scoreBoard.AddFrame(3, 2); //5
+            scoreBoard.AddLastFrame(3, 2); //5
 
             //when
             var totalScore = scoreBoard.Score;
@@ -43,7 +43,7 @@ namespace BowlingTest
             scoreBoard.AddFrame(2, 8); //16
             scoreBoard.AddFrame(6, 4); //20
             scoreBoard.AddFrame(10, 0); //15
-            scoreBoard.AddFrame(3, 2); //5
+            scoreBoard.AddLastFrame(3, 2); //5
 
             //when
             var totalScore = scoreBoard.Score;
@@ -57,16 +57,16 @@ namespace BowlingTest
         {
             //given
             var scoreBoard = new ScoreBoard();
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0); 
-            scoreBoard.AddFrame(10, 0);  
-            scoreBoard.AddLastFrame(10, 10,10); 
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddFrame(10, 0);
+            scoreBoard.AddLastFrame(10, 10, 10);
 
             //when
             var totalScore = scoreBoard.Score;

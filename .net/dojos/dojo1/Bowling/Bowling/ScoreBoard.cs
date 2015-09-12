@@ -11,7 +11,7 @@ namespace Bowling
 
         public void AddFrame(int firstTry, int secondTry)
         {
-            var frame=new Frame {FirstTry = firstTry,SecondTry = secondTry};
+            var frame = new Frame {FirstTry = firstTry, SecondTry = secondTry};
             AddFrame(frame);
         }
 
@@ -20,9 +20,9 @@ namespace Bowling
             return frames.Sum(frame => frame.Score);
         }
 
-        public void AddLastFrame(int firstTry, int secondTry, int thirdTry)
+        public void AddLastFrame(int firstTry, int secondTry, int thirdTry=0)
         {
-            var frame=new LastFrame {FirstTry = firstTry,SecondTry =secondTry,ThirdTry = thirdTry};
+            var frame = new LastFrame {FirstTry = firstTry, SecondTry = secondTry, ThirdTry = thirdTry};
             AddFrame(frame);
         }
 
