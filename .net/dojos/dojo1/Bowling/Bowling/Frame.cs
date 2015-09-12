@@ -1,4 +1,6 @@
-﻿namespace Bowling
+﻿using System.Linq;
+
+namespace Bowling
 {
     public class Frame
     {

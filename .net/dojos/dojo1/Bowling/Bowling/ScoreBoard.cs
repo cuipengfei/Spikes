@@ -9,8 +9,9 @@ namespace Bowling
 
         public int Score => TotalScore();
 
-        public void AddFrame(Frame frame)
+        public void AddFrame(int firstTry, int secondTry)
         {
+            var frame=new Frame {FirstTry = firstTry,SecondTry = secondTry};
             if (frames.Count > 0)
             {
                 frames.Last().Next = frame;
