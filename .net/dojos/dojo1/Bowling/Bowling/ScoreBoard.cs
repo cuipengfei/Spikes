@@ -6,7 +6,7 @@ namespace Bowling
     public class ScoreBoard
     {
         private readonly List<Frame> frames = new List<Frame>();
-        
+
         public int Score => TotalScore();
 
         public void AddFrame(Frame frame)
