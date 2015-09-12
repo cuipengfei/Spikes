@@ -21,7 +21,7 @@ namespace Bowling
             return frames.Sum(frame => frame.Score);
         }
 
-        public void AddLastFrame(int firstTry, int secondTry, int thirdTry=0)
+        public void AddLastFrame(int firstTry, int secondTry, int thirdTry = 0)
         {
             var frame = new LastFrame {FirstTry = firstTry, SecondTry = secondTry, ThirdTry = thirdTry};
             AddFrame(frame);
@@ -31,7 +31,8 @@ namespace Bowling
         {
             if (frames.Count == 10)
             {
-                throw new ArgumentOutOfRangeException(nameof(frame),"Only 10 frames are allowed to be added into the board.");
+                throw new ArgumentOutOfRangeException(nameof(frame),
+                    "Only 10 frames are allowed to be added into the board.");
             }
             if (frames.Count > 0)
             {

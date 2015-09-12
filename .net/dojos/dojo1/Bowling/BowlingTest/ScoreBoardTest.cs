@@ -77,7 +77,7 @@ namespace BowlingTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void ScoreBoardShouldThrowExceptionWhenAddingMoreThanTenFrames()
         {
             var scoreBoard = new ScoreBoard();

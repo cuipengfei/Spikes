@@ -68,11 +68,11 @@ namespace BowlingTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void SecondBallShouldNotBePlayedIfIsStrike()
         {
             var frame = new Frame {FirstTry = 10, SecondTry = 2};
-            var score=frame.Score;
+            var score = frame.Score;
         }
     }
 }
