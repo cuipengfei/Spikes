@@ -28,5 +28,28 @@ namespace BowlingTest
             //then
             Assert.AreEqual(112, totalScore);
         }
+
+        [TestMethod]
+        public void ScoreBoardShouldCountTotalScoresWhenThereAreConsectiveStrikesAndSpares()
+        {
+            //given
+            var scoreBoard = new ScoreBoard();
+            scoreBoard.AddFrame(new Frame {FirstTry = 10, SecondTry = 0}); //30
+            scoreBoard.AddFrame(new Frame {FirstTry = 10, SecondTry = 0}); //30
+            scoreBoard.AddFrame(new Frame {FirstTry = 10, SecondTry = 0}); //25
+            scoreBoard.AddFrame(new Frame {FirstTry = 10, SecondTry = 0}); //20
+            scoreBoard.AddFrame(new Frame {FirstTry = 5, SecondTry = 5}); //10
+            scoreBoard.AddFrame(new Frame {FirstTry = 0, SecondTry = 0}); //0
+            scoreBoard.AddFrame(new Frame {FirstTry = 2, SecondTry = 8}); //16
+            scoreBoard.AddFrame(new Frame {FirstTry = 6, SecondTry = 4}); //20
+            scoreBoard.AddFrame(new Frame {FirstTry = 10, SecondTry = 0}); //15
+            scoreBoard.AddFrame(new Frame {FirstTry = 3, SecondTry = 2}); //5
+
+            //when
+            var totalScore = scoreBoard.Score;
+
+            //then
+            Assert.AreEqual(171, totalScore);
+        }
     }
 }
