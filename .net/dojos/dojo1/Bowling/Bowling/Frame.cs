@@ -18,7 +18,7 @@
             int score= FirstTry + SecondTry;
             if (FirstTry == 10)
             {
-                score += Next.FirstTry;
+                score += (Next.FirstTry+Next.SecondTry);
             }
             return score;
         }
