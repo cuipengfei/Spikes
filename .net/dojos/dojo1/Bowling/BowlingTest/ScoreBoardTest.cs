@@ -51,5 +51,28 @@ namespace BowlingTest
             //then
             Assert.AreEqual(171, totalScore);
         }
+
+        [TestMethod]
+        public void ScoreBoardShouldCountTotalScoresOfPerfectGame()
+        {
+            //given
+            var scoreBoard = new ScoreBoard();
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0); 
+            scoreBoard.AddFrame(10, 0);  
+            scoreBoard.AddLastFrame(10, 10,10); 
+
+            //when
+            var totalScore = scoreBoard.Score;
+
+            //then
+            Assert.AreEqual(300, totalScore);
+        }
     }
 }

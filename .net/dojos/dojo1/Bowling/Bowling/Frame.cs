@@ -11,7 +11,7 @@ namespace Bowling
 
         public Frame Next { get; set; }
 
-        private int CalculateScore()
+        protected virtual int CalculateScore()
         {
             var score = FirstTry + SecondTry;
             if (IsStrike())
@@ -27,11 +27,16 @@ namespace Bowling
 
         private int NextToNextBall()
         {
-            if (Next.IsStrike())
+            if (Next.IsStrike()&&NextIsNotLast())
             {
                 return Next.Next.FirstTry;
             }
             return Next.SecondTry;
+        }
+
+        private bool NextIsNotLast()
+        {
+            return Next.Next!=null;
         }
 
         private int NextBall()
