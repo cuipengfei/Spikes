@@ -5,23 +5,23 @@ namespace BowlingSecondPractice
 {
     public class ScoreBoard
     {
-        private readonly List<Frame> frames=new List<Frame>();
+        private readonly List<Frame> frames = new List<Frame>();
 
         public int TotalScore
         {
-            get { return frames.Sum(frame=>frame.Score); }
+            get { return frames.Sum(frame => frame.Score); }
         }
 
-        public void PlayFrame(int firstBall, int secondBall, int thirdBall=-1)
+        public void PlayFrame(int firstBall, int secondBall, int thirdBall = -1)
         {
             Frame frame = null;
             if (thirdBall != -1)
             {
-                frame=new LastFrame(firstBall, secondBall, thirdBall);
+                frame = new LastFrame(firstBall, secondBall, thirdBall);
             }
             else
             {
-                frame=new Frame(firstBall,secondBall);
+                frame = new Frame(firstBall, secondBall);
             }
             if (frames.Count > 0)
             {

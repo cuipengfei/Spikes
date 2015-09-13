@@ -1,6 +1,5 @@
-﻿using System;
+﻿using BowlingSecondPractice;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BowlingSecondPractice;
 
 namespace BowlingTest
 {
@@ -11,13 +10,13 @@ namespace BowlingTest
         public void LastFrameShouldSimplyAddThreeBallsAsScore()
         {
             //given
-            var lastFrame = new LastFrame(1,2,3);
+            var lastFrame = new LastFrame(1, 2, 3);
 
             //when
-            int score=lastFrame.Score;
+            var score = lastFrame.Score;
 
             //then
-            Assert.AreEqual(6,score);
+            Assert.AreEqual(6, score);
         }
     }
 }

@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BowlingSecondPractice
+﻿namespace BowlingSecondPractice
 {
     public class Frame
     {
-        public int FirstBall { get; }
-        public int SecondBall { get; }
-
         public Frame(int firstBall, int secondBall)
         {
-            this.FirstBall = firstBall;
-            this.SecondBall = secondBall;
+            FirstBall = firstBall;
+            SecondBall = secondBall;
         }
+
+        public int FirstBall { get; }
+        public int SecondBall { get; }
 
         public int Score
         {

@@ -4,7 +4,7 @@ namespace BowlingSecondPractice
     {
         public LastFrame(int firstBall, int secondBall, int thirdBall) : base(firstBall, secondBall)
         {
-            this.ThirdBall = thirdBall;
+            ThirdBall = thirdBall;
         }
 
         public int ThirdBall { get; }
