@@ -45,8 +45,8 @@
 
         private int SecondToNextBall()
         {
-            var nextIsNotLast = NextFrame.NextFrame!=null;
-            if (NextFrame.IsStrike()&&nextIsNotLast)
+            var nextIsNotLast = NextFrame.NextFrame != null;
+            if (NextFrame.IsStrike() && nextIsNotLast)
             {
                 return NextFrame.NextFrame.FirstBall;
             }
