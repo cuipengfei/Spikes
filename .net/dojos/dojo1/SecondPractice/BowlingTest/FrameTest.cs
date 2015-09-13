@@ -19,5 +19,20 @@ namespace BowlingTest
             //then
             Assert.AreEqual(5,score);
         }
+
+        [TestMethod]
+        public void FrameShouldCountBonusOfNextBallWhenThereIsSpare()
+        {
+            //given
+            var frame=new Frame(3,7);
+            var nextFrame=new Frame(3,3);
+            frame.NextFrame = nextFrame;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(13,score);
+        }
     }
 }
