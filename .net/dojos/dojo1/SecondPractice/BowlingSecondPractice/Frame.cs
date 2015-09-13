@@ -11,10 +11,7 @@
         public int FirstBall { get; }
         public int SecondBall { get; }
 
-        public int Score
-        {
-            get { return CalculateScore(); }
-        }
+        public int Score => CalculateScore();
 
         public Frame NextFrame { get; set; }
 
@@ -48,7 +45,8 @@
 
         private int SecondToNextBall()
         {
-            if (NextFrame.IsStrike())
+            var nextIsNotLast = NextFrame.NextFrame!=null;
+            if (NextFrame.IsStrike()&&nextIsNotLast)
             {
                 return NextFrame.NextFrame.FirstBall;
             }
