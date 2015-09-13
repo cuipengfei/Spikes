@@ -24,7 +24,7 @@ namespace BowlingSecondPractice
 
         public Frame NextFrame { get; set; }
 
-        private int CalculateScore()
+        protected virtual int CalculateScore()
         {
             return FirstBall + SecondBall + Bonus();
         }
