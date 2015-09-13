@@ -55,6 +55,7 @@
     <Compile Include="FrameTest.cs" />
     <Compile Include="LastFrameTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScoreBoardTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BowlingSecondPractice\BowlingSecondPractice.csproj">
