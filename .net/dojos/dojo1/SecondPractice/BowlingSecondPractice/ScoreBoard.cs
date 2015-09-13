@@ -14,6 +14,16 @@ namespace BowlingSecondPractice
 
         public void PlayFrame(int firstBall, int secondBall, int thirdBall = -1)
         {
+            var frame = CreateFrame(firstBall, secondBall, thirdBall);
+            if (frames.Count > 0)
+            {
+                frames.Last().NextFrame = frame;
+            }
+            frames.Add(frame);
+        }
+
+        private static Frame CreateFrame(int firstBall, int secondBall, int thirdBall)
+        {
             Frame frame = null;
             if (thirdBall != -1)
             {
@@ -23,11 +33,7 @@ namespace BowlingSecondPractice
             {
                 frame = new Frame(firstBall, secondBall);
             }
-            if (frames.Count > 0)
-            {
-                frames.Last().NextFrame = frame;
-            }
-            frames.Add(frame);
+            return frame;
         }
     }
 }
