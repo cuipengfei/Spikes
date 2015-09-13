@@ -31,11 +31,39 @@ namespace BowlingSecondPractice
 
         private int Bonus()
         {
-            if (FirstBall + SecondBall == 10)
+            if (IsStrike())
             {
-                return NextFrame.FirstBall;
+                return NextBall() + SecondToNextBall();
+            }
+            if (IsSpare())
+            {
+                return NextBall();
             }
             return 0;
+        }
+
+        private int NextBall()
+        {
+            return NextFrame.FirstBall;
+        }
+
+        private bool IsSpare()
+        {
+            return FirstBall + SecondBall == 10;
+        }
+
+        private int SecondToNextBall()
+        {
+            if (NextFrame.IsStrike())
+            {
+                return NextFrame.NextFrame.FirstBall;
+            }
+            return NextFrame.SecondBall;
+        }
+
+        private bool IsStrike()
+        {
+            return FirstBall == 10;
         }
     }
 }

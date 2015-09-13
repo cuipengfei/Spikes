@@ -34,5 +34,37 @@ namespace BowlingTest
             //then
             Assert.AreEqual(13,score);
         }
+
+        [TestMethod]
+        public void FrameShouldCountBonusOfNextTwoBallsInNextFrameWhenThereIsStrike()
+        {
+            //given
+            var frame=new Frame(10,0);
+            var nextFrame=new Frame(3,3);
+            frame.NextFrame = nextFrame;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(16,score);
+        }
+
+        [TestMethod]
+        public void FrameShouldCountBonusOfNextTwoBallsInNextTwoFramesWhenThereAreConsectiveStrikes()
+        {
+            //given
+            var frame=new Frame(10,0);
+            var nextFrame=new Frame(10,0);
+            var secondToNextFrame=new Frame(3,3);
+            frame.NextFrame = nextFrame;
+            nextFrame.NextFrame = secondToNextFrame;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(23,score);
+        }
     }
 }
