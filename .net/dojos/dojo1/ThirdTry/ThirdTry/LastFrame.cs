@@ -1,13 +1,13 @@
 ﻿namespace ThirdTry
 {
-    public class LastFrame:Frame
+    public class LastFrame : Frame
     {
-        public int ThirdBall { get; }
-
-        public LastFrame(int firstBall, int secondBall, int thirdBall) : base(firstBall,secondBall)
+        public LastFrame(int firstBall, int secondBall, int thirdBall) : base(firstBall, secondBall)
         {
-            this.ThirdBall = thirdBall;
+            ThirdBall = thirdBall;
         }
+
+        public int ThirdBall { get; }
 
         protected override int CalculateScore()
         {
