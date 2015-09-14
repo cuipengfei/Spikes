@@ -26,13 +26,30 @@
 
             if (isSpare)
             {
-                return Next.FirstBall;
+                return NextBallScore();
             }
             if (isStrike)
             {
-                return Next.FirstBall+Next.SecondBall;
+                return NextBallScore() + SecondNextBallScore();
+               
             }
             return 0;
+        }
+
+        private int NextBallScore()
+        {
+            return Next.FirstBall;
+        }
+
+        private int SecondNextBallScore()
+        {
+            var nextIsStrike = Next.FirstBall == 10;
+            var nextIsNotLast = Next.Next!=null;
+            if (nextIsStrike&&nextIsNotLast)
+            {
+                return Next.Next.FirstBall;
+            }
+            return  Next.SecondBall;
         }
     }
 }
