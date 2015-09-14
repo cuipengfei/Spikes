@@ -34,5 +34,20 @@ namespace ThirdTryTest
             //then
             Assert.AreEqual(12,score);
         }
+
+        [TestMethod]
+        public void FrameShouldCountItsScoreWithNext2BallsAsBonusWhenThereIsStrike()
+        {
+            //given
+            var frame = new Frame(10,0);
+            var nextFrame=new Frame(2,3);
+            frame.Next = nextFrame;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(15,score);
+        }
     }
 }
