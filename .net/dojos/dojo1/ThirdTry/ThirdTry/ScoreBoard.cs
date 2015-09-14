@@ -9,9 +9,13 @@ namespace ThirdTry
 
         public int TotalScore { get { return frames.Sum(f => f.Score); } }
 
-        public void Play(int firstBall, int secondBall)
+        public void Play(int firstBall, int secondBall,int thirdBall=-1)
         {
             var frame=new Frame(firstBall, secondBall);
+            if (thirdBall != -1)
+            {
+                frame=new LastFrame(firstBall,secondBall,thirdBall);
+            }
             if (frames.Count > 0)
             {
                 frames.Last().Next = frame;
