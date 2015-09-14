@@ -14,7 +14,7 @@
         public int Score => CalculateScore();
         public Frame Next { get; set; }
 
-        private int CalculateScore()
+        protected virtual int CalculateScore()
         {
             return FirstBall+SecondBall+Bonus();
         }
