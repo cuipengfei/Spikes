@@ -72,5 +72,27 @@ namespace ThirdTryTest
             //then
             Assert.AreEqual(110,scoreBoard.TotalScore);
         }
+
+        [TestMethod]
+        public void ScoreBoardShouldCountScoreOfPerfectGame()
+        {
+            //given
+            var scoreBoard=new ScoreBoard();
+
+            //when
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);    
+            scoreBoard.Play(10,10,10);
+
+            //then
+            Assert.AreEqual(300,scoreBoard.TotalScore);
+        }
     }
 }
