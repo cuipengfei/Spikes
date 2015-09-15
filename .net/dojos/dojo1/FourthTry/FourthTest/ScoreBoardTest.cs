@@ -102,5 +102,42 @@ namespace FourthTest
             //then
             Assert.AreEqual(300,total);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ScoreBoardShouldNotHaveMoreThan10Frames()
+        {
+            var scoreBoard=new ScoreBoard();
+
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0); 
+            scoreBoard.Play(10,0); 
+            scoreBoard.Play(10,0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ScoreBoardShouldNotHaveMoreThan1LastFrames()
+        {
+            var scoreBoard=new ScoreBoard();
+
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(1,9,1);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(1,2,3);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0); 
+            scoreBoard.Play(10,0); 
+        }
     }
 }
