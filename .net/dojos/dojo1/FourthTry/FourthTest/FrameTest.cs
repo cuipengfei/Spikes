@@ -81,5 +81,12 @@ namespace FourthTest
             //then
             Assert.AreEqual(23,score);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void FrameShouldNotHaveAnyBallBiggerThan10()
+        {
+            var frame=new Frame(11,12);
+        }
     }
 }

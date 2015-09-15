@@ -1,4 +1,6 @@
-﻿namespace FourthTry
+﻿using System;
+
+namespace FourthTry
 {
     public class Frame
     {
@@ -7,8 +9,21 @@
 
         public Frame(int firstBall, int secondBall)
         {
+            CheckBallLimit(firstBall, secondBall);
             this.FirstBall = firstBall;
             this.SecondBall = secondBall;
+        }
+
+        private static void CheckBallLimit(int firstBall, int secondBall)
+        {
+            if (firstBall > 10)
+            {
+                throw new ArgumentOutOfRangeException(nameof(firstBall), "ball upper limit is 10");
+            }
+            if (secondBall > 10)
+            {
+                throw new ArgumentOutOfRangeException(nameof(secondBall), "ball upper limit is 10");
+            }
         }
 
         public int Score => CalculateScore();
