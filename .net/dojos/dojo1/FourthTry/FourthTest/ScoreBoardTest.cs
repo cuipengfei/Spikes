@@ -79,5 +79,28 @@ namespace FourthTest
             //then
             Assert.AreEqual(113,total);
         }
+
+        [TestMethod]
+        public void ScoreBoardShouldCalculateTotalOfPerfectGame()
+        {
+            //given
+            var scoreBoard=new ScoreBoard();
+
+            //when
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0);
+            scoreBoard.Play(10,0); 
+            scoreBoard.Play(10,10,10);
+
+            int total = scoreBoard.TotalScore;
+            //then
+            Assert.AreEqual(300,total);
+        }
     }
 }
