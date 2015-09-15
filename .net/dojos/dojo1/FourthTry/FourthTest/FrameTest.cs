@@ -34,5 +34,20 @@ namespace FourthTest
             //then
             Assert.AreEqual(13,score);
         }
+
+        [TestMethod]
+        public void FrameShouldIncludeNextTwoBallsAsBonusWhenThereIsStrike()
+        {
+            //given
+            var frame = new Frame(10,0);
+            var frame2=new Frame(3,4);
+            frame.Next = frame2;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(17,score);
+        }
     }
 }

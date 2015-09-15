@@ -20,9 +20,15 @@
 
         private int Bonus()
         {
-            if (FirstBall + SecondBall == 10)
+            var isStrike= FirstBall == 10;
+            var isSpare = !isStrike&&(FirstBall + SecondBall == 10);
+            if (isSpare)
             {
                 return Next.FirstBall;
+            }
+            if (isStrike)
+            {
+                return Next.FirstBall+Next.SecondBall;
             }
             return 0;
         }
