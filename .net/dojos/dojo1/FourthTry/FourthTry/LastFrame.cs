@@ -8,5 +8,10 @@
         {
             this._thirdBall = thirdBall;
         }
+
+        protected override int CalculateScore()
+        {
+            return FirstBall + SecondBall + _thirdBall;
+        }
     }
 }

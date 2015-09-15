@@ -13,7 +13,7 @@
 
         public int Score => CalculateScore();
 
-        private int CalculateScore()
+        protected virtual int CalculateScore()
         {
             return FirstBall + SecondBall+Bonus();
         }
