@@ -12,14 +12,28 @@ namespace FourthTry
 
         public int TotalScore { get { return frames.Sum(frame => frame.Score); } }
 
-        public void Play(int firstBall, int secondBall)
+        public void Play(int firstBall, int secondBall,int thirdBall=-1)
         {
-            var frame = new Frame(firstBall, secondBall);
+            var frame = CreateFrame(firstBall, secondBall, thirdBall);
             if (frames.Count > 0)
             {
                 frames.Last().Next = frame;
             }
             frames.Add(frame);
+        }
+
+        private static Frame CreateFrame(int firstBall, int secondBall, int thirdBall)
+        {
+            Frame frame;
+            if (thirdBall == -1)
+            {
+                frame = new Frame(firstBall, secondBall);
+            }
+            else
+            {
+                frame = new LastFrame(firstBall, secondBall, thirdBall);
+            }
+            return frame;
         }
     }
 }

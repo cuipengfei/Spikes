@@ -33,5 +33,28 @@ namespace FourthTest
             //then
             Assert.AreEqual(79,total);
         }
+
+        [TestMethod]
+        public void ScoreBoardShouldCalculateTotalScoreWhenLastFrameHasSpare()
+        {
+            //given
+            var scoreBoard=new ScoreBoard();
+
+            //when
+            scoreBoard.Play(1,2);//3
+            scoreBoard.Play(2,3);//5
+            scoreBoard.Play(3,4);//7
+            scoreBoard.Play(5,5);//11
+            scoreBoard.Play(1,2);//3
+            scoreBoard.Play(10,0);//20
+            scoreBoard.Play(7,3);//11
+            scoreBoard.Play(1,2);//3
+            scoreBoard.Play(10,0);//20
+            scoreBoard.Play(1,9,2);//12
+
+            int total = scoreBoard.TotalScore;
+            //then
+            Assert.AreEqual(95,total);
+        }
     }
 }
