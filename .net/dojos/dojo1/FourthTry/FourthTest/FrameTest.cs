@@ -88,5 +88,12 @@ namespace FourthTest
         {
             var frame=new Frame(11,12);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FrameShouldNotHaveTwoBallsSumBiggerThan10()
+        {
+            var frame=new Frame(7,5);
+        }
     }
 }

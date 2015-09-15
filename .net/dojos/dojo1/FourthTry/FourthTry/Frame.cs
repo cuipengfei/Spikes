@@ -9,20 +9,26 @@ namespace FourthTry
 
         public Frame(int firstBall, int secondBall)
         {
-            CheckBallLimit(firstBall, secondBall);
             this.FirstBall = firstBall;
             this.SecondBall = secondBall;
+            CheckBallLimit();
         }
 
-        private static void CheckBallLimit(int firstBall, int secondBall)
+        protected virtual void CheckBallLimit()
         {
-            if (firstBall > 10)
+            CheckSingleBall(FirstBall,nameof(FirstBall));
+            CheckSingleBall(SecondBall,nameof(SecondBall));
+            if (FirstBall + SecondBall > 10)
             {
-                throw new ArgumentOutOfRangeException(nameof(firstBall), "ball upper limit is 10");
+                throw new ArgumentException("two balls sum upper limit is 10");
             }
-            if (secondBall > 10)
+        }
+
+        protected void CheckSingleBall(int ball,string name)
+        {
+            if (ball > 10)
             {
-                throw new ArgumentOutOfRangeException(nameof(secondBall), "ball upper limit is 10");
+                throw new ArgumentOutOfRangeException(name, "ball upper limit is 10");
             }
         }
 
