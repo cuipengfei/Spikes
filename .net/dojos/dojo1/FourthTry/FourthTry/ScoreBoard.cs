@@ -49,7 +49,7 @@ namespace FourthTry
 
         private void CheckLastPosition()
         {
-            if (frames.Count!=9)
+            if (frames.Count != 9)
             {
                 throw new ArgumentException("only last frame can have 3 balls");
             }

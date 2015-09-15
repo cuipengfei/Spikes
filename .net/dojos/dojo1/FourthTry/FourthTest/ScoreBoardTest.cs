@@ -123,7 +123,7 @@ namespace FourthTest
         public void LastFrameMustBeLast()
         {
             var scoreBoard = new ScoreBoard();
-            scoreBoard.Play(1, 1,1);
+            scoreBoard.Play(1, 1, 1);
         }
     }
 }
