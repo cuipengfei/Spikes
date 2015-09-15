@@ -24,13 +24,27 @@
             var isSpare = !isStrike&&(FirstBall + SecondBall == 10);
             if (isSpare)
             {
-                return Next.FirstBall;
+                return Next1Ball();
             }
             if (isStrike)
             {
-                return Next.FirstBall+Next.SecondBall;
+                return Next1Ball() + Next2Ball();
             }
             return 0;
+        }
+
+        private int Next2Ball()
+        {
+            if (Next.FirstBall == 10)
+            {
+                return Next.Next.FirstBall;
+            }
+            return Next.SecondBall;
+        }
+
+        private int Next1Ball()
+        {
+            return Next.FirstBall;
         }
 
         public Frame Next { get; set; }
