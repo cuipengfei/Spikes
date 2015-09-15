@@ -19,5 +19,13 @@ namespace FourthTest
             //then
             Assert.AreEqual(6,score);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThridBallShouldNotBeBiggerThan10()
+        {
+            var lastFrame = new LastFrame(1, 2, 13);
+            var score = lastFrame.Score;
+        }
     }
 }

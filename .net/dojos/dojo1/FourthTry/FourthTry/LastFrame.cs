@@ -14,10 +14,8 @@
             return FirstBall + SecondBall + _thirdBall;
         }
 
-        protected override void CheckBallLimit()
+        protected override void CheckExtra()
         {
-           CheckSingleBall(FirstBall,nameof(FirstBall));
-           CheckSingleBall(FirstBall,nameof(SecondBall));
            CheckSingleBall(_thirdBall,nameof(_thirdBall));
         }
     }

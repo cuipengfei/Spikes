@@ -87,6 +87,7 @@ namespace FourthTest
         public void FrameShouldNotHaveAnyBallBiggerThan10()
         {
             var frame=new Frame(11,12);
+            var score = frame.Score;
         }
 
         [TestMethod]
@@ -94,6 +95,7 @@ namespace FourthTest
         public void FrameShouldNotHaveTwoBallsSumBiggerThan10()
         {
             var frame=new Frame(7,5);
+            var score = frame.Score;
         }
     }
 }
