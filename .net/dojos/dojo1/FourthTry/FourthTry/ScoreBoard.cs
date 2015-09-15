@@ -41,13 +41,18 @@ namespace FourthTry
             }
             else
             {
-                if (frames.Any(f => f is LastFrame))
-                {
-                    throw new ArgumentException("can not have more than 1 last frames");
-                }
+                CheckLastPosition();
                 frame = new LastFrame(firstBall, secondBall, thirdBall);
             }
             return frame;
+        }
+
+        private void CheckLastPosition()
+        {
+            if (frames.Count!=9)
+            {
+                throw new ArgumentException("only last frame can have 3 balls");
+            }
         }
     }
 }

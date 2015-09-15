@@ -24,13 +24,6 @@ namespace FourthTry
 
         public Frame Next { get; set; }
 
-        private void CheckBallLimit()
-        {
-            CheckSingleBall(FirstBall, nameof(FirstBall));
-            CheckSingleBall(SecondBall, nameof(SecondBall));
-            CheckExtra();
-        }
-
         protected virtual void CheckExtra()
         {
             if (FirstBall + SecondBall > 10)
@@ -50,6 +43,13 @@ namespace FourthTry
         protected virtual int CalculateScore()
         {
             return FirstBall + SecondBall + Bonus();
+        }
+
+        private void CheckBallLimit()
+        {
+            CheckSingleBall(FirstBall, nameof(FirstBall));
+            CheckSingleBall(SecondBall, nameof(SecondBall));
+            CheckExtra();
         }
 
         private int Bonus()

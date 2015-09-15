@@ -120,20 +120,10 @@ namespace FourthTest
 
         [TestMethod]
         [ExpectedException(typeof (ArgumentException))]
-        public void ScoreBoardShouldNotHaveMoreThan1LastFrames()
+        public void LastFrameMustBeLast()
         {
             var scoreBoard = new ScoreBoard();
-
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(1, 9, 1);
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(1, 2, 3);
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(10, 0);
-            scoreBoard.Play(10, 0);
+            scoreBoard.Play(1, 1,1);
         }
     }
 }
