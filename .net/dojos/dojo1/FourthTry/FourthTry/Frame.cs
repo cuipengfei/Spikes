@@ -35,7 +35,9 @@
 
         private int Next2Ball()
         {
-            if (Next.FirstBall == 10)
+            var nextIsStrike = Next.FirstBall == 10;
+            var nextIsNotLast = Next.Next != null;
+            if (nextIsStrike&&nextIsNotLast)
             {
                 return Next.Next.FirstBall;
             }

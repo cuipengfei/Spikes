@@ -66,5 +66,20 @@ namespace FourthTest
             //then
             Assert.AreEqual(23,score);
         }
+
+        [TestMethod]
+        public void FrameShouldIncludeNextTwoBallsAsBonusWhenNextToStrikeIsLastFrame()
+        {
+            //given
+            var frame = new Frame(10,0);
+            var frame2=new LastFrame(10,3,4);
+            frame.Next = frame2;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(23,score);
+        }
     }
 }
