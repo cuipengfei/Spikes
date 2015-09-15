@@ -14,14 +14,14 @@ namespace FourthTest
             var lastFrame = new LastFrame(1, 2, 3);
 
             //when
-            var score=lastFrame.Score;
+            var score = lastFrame.Score;
 
             //then
-            Assert.AreEqual(6,score);
+            Assert.AreEqual(6, score);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof (ArgumentOutOfRangeException))]
         public void ThridBallShouldNotBeBiggerThan10()
         {
             var lastFrame = new LastFrame(1, 2, 13);

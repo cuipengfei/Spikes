@@ -6,14 +6,14 @@ namespace FourthTry
 {
     public class ScoreBoard
     {
-        private readonly List<Frame> frames=new List<Frame>(); 
-        public ScoreBoard()
+        private readonly List<Frame> frames = new List<Frame>();
+
+        public int TotalScore
         {
+            get { return frames.Sum(frame => frame.Score); }
         }
 
-        public int TotalScore { get { return frames.Sum(frame => frame.Score); } }
-
-        public void Play(int firstBall, int secondBall,int thirdBall=-1)
+        public void Play(int firstBall, int secondBall, int thirdBall = -1)
         {
             CheckValidity();
             var frame = CreateFrame(firstBall, secondBall, thirdBall);
@@ -32,7 +32,7 @@ namespace FourthTry
             }
         }
 
-        private  Frame CreateFrame(int firstBall, int secondBall, int thirdBall)
+        private Frame CreateFrame(int firstBall, int secondBall, int thirdBall)
         {
             Frame frame;
             if (thirdBall == -1)

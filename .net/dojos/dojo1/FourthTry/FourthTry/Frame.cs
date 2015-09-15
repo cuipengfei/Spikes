@@ -1,18 +1,28 @@
 ﻿using System;
-using System.Dynamic;
 
 namespace FourthTry
 {
     public class Frame
     {
+        public Frame(int firstBall, int secondBall)
+        {
+            FirstBall = firstBall;
+            SecondBall = secondBall;
+        }
+
         public int FirstBall { get; }
         public int SecondBall { get; }
 
-        public Frame(int firstBall, int secondBall)
+        public int Score
         {
-            this.FirstBall = firstBall;
-            this.SecondBall = secondBall;
+            get
+            {
+                CheckBallLimit();
+                return CalculateScore();
+            }
         }
+
+        public Frame Next { get; set; }
 
         private void CheckBallLimit()
         {
@@ -34,15 +44,6 @@ namespace FourthTry
             if (ball > 10)
             {
                 throw new ArgumentOutOfRangeException(name, "ball upper limit is 10");
-            }
-        }
-
-        public int Score
-        {
-            get
-            {
-                CheckBallLimit();
-                return CalculateScore();
             }
         }
 
@@ -81,7 +82,5 @@ namespace FourthTry
         {
             return Next.FirstBall;
         }
-
-        public Frame Next { get; set; }
     }
 }
