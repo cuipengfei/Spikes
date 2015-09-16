@@ -21,5 +21,20 @@ namespace LiveDemoTest
             //then
             Assert.AreEqual(5,score);
         }
+        
+        [TestMethod]
+        public void FrameShouldIncludeNext1BallAsBonusWhenThereIsSpare()
+        {
+            //given
+            Frame frame=new Frame(2,8);
+            Frame frame2=new Frame(3,4);
+            frame.Next = frame2;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(13,score);
+        }
     }
 }

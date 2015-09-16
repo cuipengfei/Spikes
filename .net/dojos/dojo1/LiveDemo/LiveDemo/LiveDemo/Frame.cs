@@ -13,6 +13,23 @@ namespace LiveDemo
             SecondBall = secondBall;
         }
 
-        public int Score { get { return FirstBall+SecondBall; } }
+        public int Score { get { return CalculateScore(); } }
+
+        private int CalculateScore()
+        {
+            return FirstBall+SecondBall+Bonus();
+        }
+
+        private int Bonus()
+        {
+            var isSpare = FirstBall + SecondBall == 10;
+            if (isSpare)
+            {
+                return Next.FirstBall;
+            }
+            return 0;
+        }
+
+        public Frame Next { get; set; }
     }
 }
