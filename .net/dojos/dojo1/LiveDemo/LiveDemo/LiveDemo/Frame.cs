@@ -22,7 +22,12 @@ namespace LiveDemo
 
         private int Bonus()
         {
+            var isStrike = FirstBall  == 10;
             var isSpare = FirstBall + SecondBall == 10;
+            if (isStrike)
+            {
+                return Next.FirstBall+Next.SecondBall;
+            }
             if (isSpare)
             {
                 return Next.FirstBall;
