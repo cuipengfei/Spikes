@@ -26,13 +26,28 @@ namespace LiveDemo
             var isSpare = FirstBall + SecondBall == 10;
             if (isStrike)
             {
-                return Next.FirstBall+Next.SecondBall;
+                return Next1Ball() + Next2Ball();
             }
             if (isSpare)
             {
-                return Next.FirstBall;
+                return Next1Ball();
             }
             return 0;
+        }
+
+        private int Next2Ball()
+        {
+            var nextIsStrike = Next.FirstBall == 10;
+            if (nextIsStrike)
+            {
+                return Next.Next.FirstBall;
+            }
+            return  Next.SecondBall;
+        }
+
+        private int Next1Ball()
+        {
+            return Next.FirstBall;
         }
 
         public Frame Next { get; set; }

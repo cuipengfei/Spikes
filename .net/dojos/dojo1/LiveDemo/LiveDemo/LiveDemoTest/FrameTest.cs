@@ -51,5 +51,22 @@ namespace LiveDemoTest
             //then
             Assert.AreEqual(17,score);
         }
+
+        [TestMethod]
+        public void FrameShouldIncludeNext2BallsAsBonusWhenThereAre2ConsectiveStrikes()
+        {
+            //given
+            Frame frame=new Frame(10,0);
+            Frame frame2=new Frame(10,0);
+            Frame frame3=new Frame(3,4);
+            frame.Next = frame2;
+            frame2.Next = frame3;
+
+            //when
+            int score=frame.Score;
+
+            //then
+            Assert.AreEqual(23,score);
+        }
     }
 }
