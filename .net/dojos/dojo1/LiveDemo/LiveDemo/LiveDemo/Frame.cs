@@ -38,7 +38,8 @@ namespace LiveDemo
         private int Next2Ball()
         {
             var nextIsStrike = Next.FirstBall == 10;
-            if (nextIsStrike)
+            var nextIsNotLast = Next.Next != null;
+            if (nextIsStrike&&nextIsNotLast)
             {
                 return Next.Next.FirstBall;
             }
