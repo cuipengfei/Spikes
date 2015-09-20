@@ -54,6 +54,12 @@
     <Compile Include="GildedRoseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GildedRose\GildedRose.csproj">
+      <Project>{CB8347B0-DEB1-4B20-A12B-9082E3B65259}</Project>
+      <Name>GildedRose</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
