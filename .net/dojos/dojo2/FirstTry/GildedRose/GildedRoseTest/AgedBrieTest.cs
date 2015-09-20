@@ -27,5 +27,24 @@ namespace GildedRoseTest
             //then increase 5 more
             Assert.AreEqual(AgedBrie(program).Quality,12);
         }
+
+        [TestMethod]
+        public void AgedBrieShouldNotIncreaseToMoreThan50()
+        {
+            //given
+            var program = GetProgram();
+
+            //when pass 26 days
+            PassNDays(program,26);
+
+            //then increase 50
+            Assert.AreEqual(AgedBrie(program).Quality,50);
+
+            //when pass 5 more days
+            PassNDays(program,5);
+
+            //then increase no more
+            Assert.AreEqual(AgedBrie(program).Quality,50);
+        }
     }
 }
