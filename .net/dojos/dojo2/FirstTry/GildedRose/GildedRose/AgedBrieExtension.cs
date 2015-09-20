@@ -9,7 +9,7 @@ namespace GildedRose
     {
         public static void BrieIncrease(this Item item)
         {
-            if (item.SellIn > 0)
+            if (item.SellIn >= 0)
             {
                 item.IncreaseQuality();
             }

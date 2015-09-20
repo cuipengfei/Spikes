@@ -9,11 +9,18 @@ namespace GildedRose
     {
         public static void Decrease(this Item item)
         {
-            if (item.Quality > 0)
+            if (item.Name != "Sulfuras, Hand of Ragnaros")
             {
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                if (item.Quality > 0)
                 {
-                    item.DecreaseQuality();
+                        item.DecreaseQuality();
+                        if (item.SellIn < 0)
+                        {
+                            if (item.Quality > 0)
+                            {
+                                item.DecreaseQuality();
+                            }
+                        }
                 }
             }
         }

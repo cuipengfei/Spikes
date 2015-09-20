@@ -44,6 +44,11 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
+                if (!item.ShouldNeverChange())
+                {
+                    item.DecreaseSellIn();
+                }
+
                 if (item.IsValueIncreaseItem())
                 {
                     item.Increase();
@@ -53,23 +58,15 @@ namespace GildedRose
                     item.Decrease();
                 }
 
-                if (!item.ShouldNeverChange())
-                {
-                    item.DecreaseSellIn();
-                }
 
-                if (item.SellIn >= 0) continue;
-                if (item.Name == "Aged Brie") continue;
-                if (item.IsDropToZeroItem())
+                if (item.SellIn < 0)
                 {
-                    item.DropToZero();
-                }
-                else
-                {
-                    if (item.Quality <= 0) continue;
-                    if (!item.ShouldNeverChange())
+                    if (item.Name != "Aged Brie")
                     {
-                        item.DecreaseQuality();
+                        if (item.IsDropToZeroItem())
+                        {
+                            item.DropToZero();
+                        }
                     }
                 }
             }

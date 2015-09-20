@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AgedBrieExtension.cs" />
     <Compile Include="ItemExtension.cs" />
+    <Compile Include="NormalItemExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TicketExtension.cs" />

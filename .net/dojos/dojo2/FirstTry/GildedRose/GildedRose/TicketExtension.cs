@@ -11,7 +11,7 @@ namespace GildedRose
         {
             item.IncreaseQuality();
 
-            if (item.SellIn < 11)
+            if (item.SellIn < 10)
             {
                 if (item.Quality < 50)
                 {
@@ -19,7 +19,7 @@ namespace GildedRose
                 }
             }
 
-            if (item.SellIn < 6)
+            if (item.SellIn < 5)
             {
                 if (item.Quality < 50)
                 {
