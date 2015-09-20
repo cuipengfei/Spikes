@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgedBrieExtension.cs" />
+    <Compile Include="ConjuredItemExtension.cs" />
     <Compile Include="ItemExtension.cs" />
     <Compile Include="NormalItemExtension.cs" />
     <Compile Include="Program.cs" />

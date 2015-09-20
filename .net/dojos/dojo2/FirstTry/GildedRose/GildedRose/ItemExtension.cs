@@ -50,5 +50,20 @@
                 item.DecreaseSellIn();
             }
         }
+
+        public static void Decrease(this Item item)
+        {
+            if (!item.ShouldNeverChange())
+            {
+                if (item.IsConjuredItem())
+                {
+                    item.DoubleDecrease();
+                }
+                else
+                {
+                    item.NormalDecrease();
+                }
+            }
+        }
     }
 }

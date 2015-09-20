@@ -2,19 +2,16 @@
 {
     internal static class NormalItemExtension
     {
-        public static void Decrease(this Item item)
+        public static void NormalDecrease(this Item item)
         {
-            if (item.Name != "Sulfuras, Hand of Ragnaros")
+            item.DecreaseIfNotZero();
+            if (item.SellIn < 0)
             {
-                DecreaseIfNotZero(item);
-                if (item.SellIn < 0)
-                {
-                    DecreaseIfNotZero(item);
-                }
+                item.DecreaseIfNotZero();
             }
         }
 
-        private static void DecreaseIfNotZero(Item item)
+        public static void DecreaseIfNotZero(this Item item)
         {
             if (item.Quality > 0)
             {
