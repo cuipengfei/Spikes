@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class ItemExtension
+    internal static class ItemExtension
     {
         public static void DecreaseQuality(this Item item)
         {
@@ -46,6 +41,14 @@ namespace GildedRose
         public static bool ShouldNeverChange(this Item item)
         {
             return item.Name == "Sulfuras, Hand of Ragnaros";
+        }
+
+        public static void DecreaseDate(this Item item)
+        {
+            if (!item.ShouldNeverChange())
+            {
+                item.DecreaseSellIn();
+            }
         }
     }
 }

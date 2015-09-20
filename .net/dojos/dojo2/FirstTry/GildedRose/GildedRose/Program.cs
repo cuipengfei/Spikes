@@ -42,12 +42,9 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items)
+            foreach (var item in Items)
             {
-                if (!item.ShouldNeverChange())
-                {
-                    item.DecreaseSellIn();
-                }
+                item.DecreaseDate();
 
                 if (item.IsValueIncreaseItem())
                 {
@@ -58,16 +55,9 @@ namespace GildedRose
                     item.Decrease();
                 }
 
-
-                if (item.SellIn < 0)
+                if (item.IsDropToZeroItem() && item.SellIn < 0)
                 {
-                    if (item.Name != "Aged Brie")
-                    {
-                        if (item.IsDropToZeroItem())
-                        {
-                            item.DropToZero();
-                        }
-                    }
+                    item.DropToZero();
                 }
             }
         }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class AgedBrieExtension
+    internal static class AgedBrieExtension
     {
         public static void BrieIncrease(this Item item)
         {

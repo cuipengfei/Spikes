@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class TicketExtension
+    internal static class TicketExtension
     {
         public static void TicketIncrease(this Item item)
         {
@@ -13,18 +8,12 @@ namespace GildedRose
 
             if (item.SellIn < 10)
             {
-                if (item.Quality < 50)
-                {
-                    item.IncreaseQuality();
-                }
+                item.IncreaseQuality();
             }
 
             if (item.SellIn < 5)
             {
-                if (item.Quality < 50)
-                {
-                    item.IncreaseQuality();
-                }
+                item.IncreaseQuality();
             }
         }
 
