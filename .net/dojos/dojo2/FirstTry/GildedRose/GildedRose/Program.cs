@@ -50,7 +50,7 @@ namespace GildedRose
                     {
                         if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
                         {
-                            Items[i].Quality = Items[i].Quality - 1;
+                            Items[i].DecreaseQuality();
                         }
                     }
                 }
@@ -58,7 +58,7 @@ namespace GildedRose
                 {
                     if (Items[i].Quality < 50)
                     {
-                        Items[i].Quality = Items[i].Quality + 1;
+                        Items[i].IncreaseQuality();
 
                         if (Items[i].Name == "Backstage passes to a TAFKAL80ETC concert")
                         {
@@ -66,7 +66,7 @@ namespace GildedRose
                             {
                                 if (Items[i].Quality < 50)
                                 {
-                                    Items[i].Quality = Items[i].Quality + 1;
+                                    Items[i].IncreaseQuality();
                                 }
                             }
 
@@ -74,7 +74,7 @@ namespace GildedRose
                             {
                                 if (Items[i].Quality < 50)
                                 {
-                                    Items[i].Quality = Items[i].Quality + 1;
+                                    Items[i].IncreaseQuality();
                                 }
                             }
                         }
@@ -96,7 +96,7 @@ namespace GildedRose
                             {
                                 if (Items[i].Name != "Sulfuras, Hand of Ragnaros")
                                 {
-                                    Items[i].Quality = Items[i].Quality - 1;
+                                    Items[i].DecreaseQuality();
                                 }
                             }
                         }
@@ -109,7 +109,7 @@ namespace GildedRose
                     {
                         if (Items[i].Quality < 50)
                         {
-                            Items[i].Quality = Items[i].Quality + 1;
+                            Items[i].IncreaseQuality();
                         }
                     }
                 }
