@@ -41,5 +41,10 @@ namespace GildedRoseTest
         {
             return program.Items.FirstOrDefault(i => i.Name == itemName);
         }
+
+        protected Item Sulfras(Program program)
+        {
+            return FindItem(program, "Sulfuras, Hand of Ragnaros");
+        }
     }
 }
