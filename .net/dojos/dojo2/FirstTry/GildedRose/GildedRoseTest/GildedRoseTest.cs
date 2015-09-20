@@ -15,10 +15,24 @@ namespace GildedRoseTest
             Program program=Program.InitApp();
 
             //when
-            program.UpdateQuality();
+            PassNDays(program,1);
 
             //then
             Assert.AreEqual(Vest(program).Quality,19);
+
+            //when
+            PassNDays(program,5);
+
+            //then
+            Assert.AreEqual(Vest(program).Quality,14);
+        }
+
+        private static void PassNDays(Program program,int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                program.UpdateQuality();
+            }
         }
 
         private Item Vest(Program program)
