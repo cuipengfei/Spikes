@@ -6,13 +6,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GildedRoseTest
 {
     [TestClass]
-    public class GildedRoseTest
+    public class NormalItemTest:TestBase
     {
         [TestMethod]
         public void NormalItemsShouldDecreaseOneEachDay()
         {
             //given
-            Program program=Program.InitApp();
+            var program = GetProgram();
 
             //when one day pass
             PassNDays(program,1);
@@ -64,19 +64,6 @@ namespace GildedRoseTest
 
             //then quality can not decrease below 0
             Assert.AreEqual(Vest(program).Quality,0);
-        }
-
-        private static void PassNDays(Program program,int n)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                program.UpdateQuality();
-            }
-        }
-
-        private Item Vest(Program program)
-        {
-            return program.Items.FirstOrDefault(i=>i.Name== "+5 Dexterity Vest");
         }
     }
 }
