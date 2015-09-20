@@ -46,5 +46,10 @@ namespace GildedRoseTest
         {
             return FindItem(program, "Sulfuras, Hand of Ragnaros");
         }
+
+        protected Item ManaCake(Program program)
+        {
+            return FindItem(program, "Conjured Mana Cake");
+        }
     }
 }
