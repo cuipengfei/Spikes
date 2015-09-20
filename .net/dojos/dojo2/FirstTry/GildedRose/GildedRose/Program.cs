@@ -6,21 +6,21 @@ namespace GildedRose
     public class Program
     {
         public IList<Item> Items;
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
-            System.Console.WriteLine("OMGHAI!");
+            Console.WriteLine("OMGHAI!");
 
             var app = InitApp();
 
             app.UpdateQuality();
 
-            System.Console.ReadKey();
-
+            Console.ReadKey();
         }
 
         public static Program InitApp()
         {
-            var app = new Program()
+            var app = new Program
             {
                 Items = new List<Item>
                 {
@@ -122,7 +122,6 @@ namespace GildedRose
                 }
             }
         }
-
     }
 
     public class Item
@@ -133,5 +132,4 @@ namespace GildedRose
 
         public int Quality { get; set; }
     }
-
 }

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using GildedRose;
 
 namespace GildedRoseTest
 {
     public class TestBase
     {
-        protected static void PassNDays(Program program,int n)
+        protected static void PassNDays(Program program, int n)
         {
-            for (int i = 0; i < n; i++)
+            for (var i = 0; i < n; i++)
             {
                 program.UpdateQuality();
             }
@@ -18,7 +15,7 @@ namespace GildedRoseTest
 
         protected static Program GetProgram()
         {
-            Program program = Program.InitApp();
+            var program = Program.InitApp();
             return program;
         }
 
