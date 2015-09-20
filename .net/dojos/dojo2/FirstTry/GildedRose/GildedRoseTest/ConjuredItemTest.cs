@@ -17,5 +17,18 @@ namespace GildedRoseTest
             //then decrease 2
             Assert.AreEqual(4, ManaCake(program).Quality);
         }
+
+        [TestMethod]
+        public void ConjuredItemShouldNotDecreaseToLessThan0()
+        {
+            //given
+            var program = GetProgram();
+
+            //when pass 4 days
+            PassNDays(program, 4);
+
+            //then decrease to 0
+            Assert.AreEqual(0, ManaCake(program).Quality);
+        }
     }
 }
