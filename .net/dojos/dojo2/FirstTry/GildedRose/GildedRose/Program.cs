@@ -113,13 +113,6 @@ namespace GildedRose
                         }
                     }
                 }
-                if (i == 5)
-                {
-                    Console.WriteLine(Items[i].Name);
-                    Console.WriteLine(Items[i].SellIn);
-                    Console.WriteLine(Items[i].Quality);
-                    Console.WriteLine("-----");
-                }
             }
         }
     }
