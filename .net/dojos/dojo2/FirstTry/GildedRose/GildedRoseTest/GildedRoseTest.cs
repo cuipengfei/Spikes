@@ -27,6 +27,25 @@ namespace GildedRoseTest
             Assert.AreEqual(Vest(program).Quality,14);
         }
 
+        [TestMethod]
+        public void NormalItemsShouldDecreaseTwoEachDayAfterSellInDays()
+        {
+            //given
+            Program program=Program.InitApp();
+
+            //when
+            PassNDays(program,10);
+
+            //then
+            Assert.AreEqual(Vest(program).Quality,10);
+
+            //when
+            PassNDays(program,1);
+
+            //then
+            Assert.AreEqual(Vest(program).Quality,8);
+        }
+
         private static void PassNDays(Program program,int n)
         {
             for (int i = 0; i < n; i++)
