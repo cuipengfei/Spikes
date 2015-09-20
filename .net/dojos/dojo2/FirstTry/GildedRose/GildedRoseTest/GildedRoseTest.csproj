@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BackStagePassTest.cs" />
     <Compile Include="AgedBrieTest.cs" />
     <Compile Include="NormalItemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,20 +16,30 @@ namespace GildedRoseTest
             }
         }
 
-        protected Item Vest(Program program)
-        {
-            return program.Items.FirstOrDefault(i=>i.Name== "+5 Dexterity Vest");
-        }
-
         protected static Program GetProgram()
         {
             Program program = Program.InitApp();
             return program;
         }
 
+        protected Item Vest(Program program)
+        {
+            return FindItem(program, "+5 Dexterity Vest");
+        }
+
         protected Item AgedBrie(Program program)
         {
-            return program.Items.FirstOrDefault(i => i.Name == "Aged Brie");
+            return FindItem(program, "Aged Brie");
+        }
+
+        protected Item BackStagePass(Program program)
+        {
+            return FindItem(program, "Backstage passes to a TAFKAL80ETC concert");
+        }
+
+        private static Item FindItem(Program program, string itemName)
+        {
+            return program.Items.FirstOrDefault(i => i.Name == itemName);
         }
     }
 }
