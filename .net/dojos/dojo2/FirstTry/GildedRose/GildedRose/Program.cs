@@ -59,26 +59,17 @@ namespace GildedRose
                 }
 
                 if (item.SellIn >= 0) continue;
-                if (item.Name == "Aged Brie")
+                if (item.Name == "Aged Brie") continue;
+                if (item.IsDropToZeroItem())
                 {
-                    if (item.Quality < 50)
-                    {
-                        item.IncreaseQuality();
-                    }
+                    item.DropToZero();
                 }
                 else
                 {
-                    if (item.IsDropToZeroItem())
+                    if (item.Quality <= 0) continue;
+                    if (!item.ShouldNeverChange())
                     {
-                        item.DropToZero();
-                    }
-                    else
-                    {
-                        if (item.Quality <= 0) continue;
-                        if (!item.ShouldNeverChange())
-                        {
-                            item.DecreaseQuality();
-                        }
+                        item.DecreaseQuality();
                     }
                 }
             }
