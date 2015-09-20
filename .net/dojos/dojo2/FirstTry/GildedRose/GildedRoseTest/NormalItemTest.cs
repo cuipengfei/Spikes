@@ -18,13 +18,13 @@ namespace GildedRoseTest
             PassNDays(program,1);
 
             //then decrease one
-            Assert.AreEqual(Vest(program).Quality,19);
+            Assert.AreEqual(19,Vest(program).Quality);
 
             //when another 5 days pass
             PassNDays(program,5);
 
             //then decrease five more
-            Assert.AreEqual(Vest(program).Quality,14);
+            Assert.AreEqual(14,Vest(program).Quality);
         }
 
         [TestMethod]
@@ -37,8 +37,8 @@ namespace GildedRoseTest
             PassNDays(program,10);
 
             //then sell in days are over
-            Assert.AreEqual(Vest(program).Quality,10);
-            Assert.AreEqual(Vest(program).SellIn,0);
+            Assert.AreEqual(10,Vest(program).Quality);
+            Assert.AreEqual(0,Vest(program).SellIn);
 
             //when pass another day
             PassNDays(program,1);
@@ -57,13 +57,13 @@ namespace GildedRoseTest
             PassNDays(program,15);
 
             //then quality is zero
-            Assert.AreEqual(Vest(program).Quality,0);
+            Assert.AreEqual(0,Vest(program).Quality);
 
             //when another day pass
             PassNDays(program,1);
 
             //then quality can not decrease below 0
-            Assert.AreEqual(Vest(program).Quality,0);
+            Assert.AreEqual(0,Vest(program).Quality);
         }
     }
 }

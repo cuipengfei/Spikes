@@ -18,7 +18,7 @@ namespace GildedRoseTest
             PassNDays(program,2);
 
             //then not change
-            Assert.AreEqual(Sulfras(program).Quality,80);
+            Assert.AreEqual(80,Sulfras(program).Quality);
 
             //when pass whatever days for 10 times
             for (int i = 0; i < 10; i++)
@@ -27,7 +27,7 @@ namespace GildedRoseTest
                 int days=random.Next(1, 20);
                 PassNDays(program,days);
                 //then never change
-                Assert.AreEqual(Sulfras(program).Quality, 80);
+                Assert.AreEqual(80,Sulfras(program).Quality);
             }
         }
     }

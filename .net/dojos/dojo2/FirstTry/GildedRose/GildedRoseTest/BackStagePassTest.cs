@@ -18,8 +18,8 @@ namespace GildedRoseTest
             PassNDays(program,5);
 
             //then increase one each day
-            Assert.AreEqual(BackStagePass(program).Quality,25);
-            Assert.AreEqual(BackStagePass(program).SellIn,10);
+            Assert.AreEqual(25,BackStagePass(program).Quality);
+            Assert.AreEqual(10,BackStagePass(program).SellIn);
         }
 
         [TestMethod]
@@ -32,13 +32,13 @@ namespace GildedRoseTest
             PassNDays(program,5);
 
             //then 10 days left
-            Assert.AreEqual(BackStagePass(program).SellIn,10);
+            Assert.AreEqual(10,BackStagePass(program).SellIn);
 
             //when another 5 days
             PassNDays(program,5);
 
             //then 10 more quality
-            Assert.AreEqual(BackStagePass(program).Quality,35);
+            Assert.AreEqual(35,BackStagePass(program).Quality);
         }
 
         [TestMethod]
