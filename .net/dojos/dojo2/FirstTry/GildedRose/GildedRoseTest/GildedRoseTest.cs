@@ -14,16 +14,16 @@ namespace GildedRoseTest
             //given
             Program program=Program.InitApp();
 
-            //when
+            //when one day pass
             PassNDays(program,1);
 
-            //then
+            //then decrease one
             Assert.AreEqual(Vest(program).Quality,19);
 
-            //when
+            //when another 5 days pass
             PassNDays(program,5);
 
-            //then
+            //then decrease five more
             Assert.AreEqual(Vest(program).Quality,14);
         }
 
@@ -33,17 +33,37 @@ namespace GildedRoseTest
             //given
             Program program=Program.InitApp();
 
-            //when
+            //when 10 days pass
             PassNDays(program,10);
 
-            //then
+            //then sell in days are over
             Assert.AreEqual(Vest(program).Quality,10);
+            Assert.AreEqual(Vest(program).SellIn,0);
 
-            //when
+            //when pass another day
             PassNDays(program,1);
 
-            //then
+            //then decrease 2
             Assert.AreEqual(Vest(program).Quality,8);
+        }
+
+        [TestMethod]
+        public void NormalItemsShouldNotDecreaseAnymoreAfterItsZero()
+        {
+            //given
+            Program program=Program.InitApp();
+
+            //when 15 days pass
+            PassNDays(program,15);
+
+            //then quality is zero
+            Assert.AreEqual(Vest(program).Quality,0);
+
+            //when another day pass
+            PassNDays(program,1);
+
+            //then quality can not decrease below 0
+            Assert.AreEqual(Vest(program).Quality,0);
         }
 
         private static void PassNDays(Program program,int n)
