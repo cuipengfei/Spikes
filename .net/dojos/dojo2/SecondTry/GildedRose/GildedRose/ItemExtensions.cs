@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class ItemExtensions
+    internal static class ItemExtensions
     {
         public static void DecreaseQualityByOne(this Item item)
         {

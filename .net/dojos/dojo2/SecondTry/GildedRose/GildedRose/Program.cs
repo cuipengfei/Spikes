@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static GildedRose.IncreaseItemExtentions;
 
 namespace GildedRose
 {
@@ -43,7 +42,7 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items)
+            foreach (var item in Items)
             {
                 if (!item.IsNeverChangeItem())
                 {
@@ -58,7 +57,7 @@ namespace GildedRose
                 {
                     item.UpdateDropToZeroItemQuality();
                 }
-                else if(!item.IsNeverChangeItem())
+                else if (!item.IsNeverChangeItem())
                 {
                     item.UpdateNormalItemQuality();
                 }
