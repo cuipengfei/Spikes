@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static GildedRose.IncreaseItemExtentions;
 
 namespace GildedRose
 {
@@ -49,53 +50,17 @@ namespace GildedRose
                     item.DecreaseDate();
                 }
 
-                if (item.IsIncreaseItem() || item.IsDropToZeroItem())
+                if (item.IsIncreaseItem())
                 {
-                    if (item.Quality < 50)
-                    {
-                        item.IncreaseQualityByOne();
-
-                        if (item.IsDropToZeroItem())
-                        {
-                            if (item.SellIn < 10)
-                            {
-                                if (item.Quality < 50)
-                                {
-                                    item.IncreaseQualityByOne();
-                                }
-                            }
-
-                            if (item.SellIn < 5)
-                            {
-                                if (item.Quality < 50)
-                                {
-                                    item.IncreaseQualityByOne();
-                                }
-                            }
-                        }
-                    }
+                    item.UpdateIncreaseItemQuality();
                 }
-                else
+                else if (item.IsDropToZeroItem())
                 {
-                    item.NormalItemDecrease();
+                    item.UpdateDropToZeroItemQuality();
                 }
-
-                if (item.SellIn < 0)
+                else if(!item.IsNeverChangeItem())
                 {
-                    if (item.IsIncreaseItem())
-                    {
-                        if (item.Quality < 50)
-                        {
-                            item.IncreaseQualityByOne();
-                        }
-                    }
-                    else
-                    {
-                        if (item.IsDropToZeroItem())
-                        {
-                            item.DropToZero();
-                        }
-                    }
+                    item.UpdateNormalItemQuality();
                 }
             }
         }

@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DropToZeroItemExtensions.cs" />
+    <Compile Include="IncreaseItemExtentions.cs" />
     <Compile Include="ItemExtensions.cs" />
     <Compile Include="NormalItemExtensions.cs" />
     <Compile Include="Program.cs" />

@@ -5,21 +5,18 @@ using System.Text;
 
 namespace GildedRose
 {
-    static class NormalItemExtensions
+    internal static class NormalItemExtensions
     {
-        public static void NormalItemDecrease(this Item item)
+        public static void UpdateNormalItemQuality(this Item item)
         {
-            if (!item.IsNeverChangeItem())
+            TryDecreaseOne(item);
+            if (item.SellIn < 0)
             {
-                TryDecrease(item);
-                if (item.SellIn < 0)
-                {
-                    item.TryDecrease();
-                }
+                item.TryDecreaseOne();
             }
         }
 
-        public static void TryDecrease(this Item item)
+        public static void TryDecreaseOne(this Item item)
         {
             if (item.Quality > 0)
             {

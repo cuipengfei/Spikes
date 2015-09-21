@@ -17,11 +17,6 @@ namespace GildedRose
             item.Quality = item.Quality + 1;
         }
 
-        public static void DropToZero(this Item item)
-        {
-            item.Quality = item.Quality - item.Quality;
-        }
-
         public static void DecreaseDate(this Item item)
         {
             item.SellIn = item.SellIn - 1;
