@@ -6,7 +6,7 @@ namespace GildedRoseTest
     public class ConjuredItemTest : TestBase
     {
         [TestMethod]
-        public void ConjuredItemShouldDecreaseAsNormal()//this is before we can add the new feature
+        public void ConjuredItemShouldDecreaseAsNormal() //this is before we can add the new feature
         {
             //given
             var program = GetProgram();
