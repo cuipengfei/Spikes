@@ -19,29 +19,29 @@ namespace FsCheck.NUnit.CSharpExamples
             return Prop.ForAll<int[]>(xs => xs.Reverse().Reverse().SequenceEqual(xs));
         }
 
-//        //TODO: do not call toProperty.
-//        // Note this one should fail
-//        public static Property Counter_shouldFail()
-//        {
-//            return new CounterSpec().ToProperty();
-//        }
-
-        public static Property CounterShouldIncreaseGivenTimes()
+        //TODO: do not call toProperty.
+        // Note this one should fail
+        public static Property Counter_shouldFail()
         {
-            return Prop.ForAll<int>(times =>
-            {
-                if (times >= 0)
-                {
-                    var counter = new Counter();
-                    for (int i = 0; i < times; i++)
-                    {
-                        counter.Inc();
-                    }
-                    return counter.Get() == times;
-                }
-                return true;
-            });
+            return new CounterSpec().ToProperty();
         }
+
+//        public static Property CounterShouldIncreaseGivenTimes()
+//        {
+//            return Prop.ForAll<int>(times =>
+//            {
+//                if (times >= 0)
+//                {
+//                    var counter = new Counter();
+//                    for (int i = 0; i < times; i++)
+//                    {
+//                        counter.Inc();
+//                    }
+//                    return counter.Get() == times;
+//                }
+//                return true;
+//            });
+//        }
 
         [Test]
         public void all()
