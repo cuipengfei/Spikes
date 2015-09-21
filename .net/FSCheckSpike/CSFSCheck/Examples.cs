@@ -8,25 +8,45 @@ namespace FsCheck.NUnit.CSharpExamples
     public class Examples
     {
         //Simple boolean property
-        [Property]
-        public bool RevRev(int[] xs)
+        public static bool RevRev(int[] xs)
         {
             return xs.Reverse().Reverse().SequenceEqual(xs);
         }
 
         // Note: should fail
-        [Property(Verbose = true)]
-        public Property RevId_shouldFail()
+        public static Property DifferentWayToWriteRevRev()
         {
-            return Prop.ForAll<int[]>(xs => xs.Reverse().SequenceEqual(xs));
+            return Prop.ForAll<int[]>(xs => xs.Reverse().Reverse().SequenceEqual(xs));
         }
 
-        //TODO: do not call toProperty.
-        // Note this one should fail
-        [Property]
-        public Property Counter_shouldFail()
+//        //TODO: do not call toProperty.
+//        // Note this one should fail
+//        public static Property Counter_shouldFail()
+//        {
+//            return new CounterSpec().ToProperty();
+//        }
+
+        public static Property CounterShouldIncreaseGivenTimes()
         {
-            return new CounterSpec().ToProperty();
+            return Prop.ForAll<int>(times =>
+            {
+                if (times >= 0)
+                {
+                    var counter = new Counter();
+                    for (int i = 0; i < times; i++)
+                    {
+                        counter.Inc();
+                    }
+                    return counter.Get() == times;
+                }
+                return true;
+            });
+        }
+
+        [Test]
+        public void all()
+        {
+            Check.QuickThrowOnFailureAll<Examples>();
         }
     }
 }
