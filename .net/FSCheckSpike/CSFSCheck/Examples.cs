@@ -11,13 +11,13 @@ namespace FsCheck.NUnit.CSharpExamples
         public void RevRev()
         {
             var reverseTwiceBeSameProp = Prop.ForAll<int[]>(xs => xs.Reverse().Reverse().SequenceEqual(xs));
-            Check.QuickThrowOnFailure(reverseTwiceBeSameProp);
+            Check.Verbose(reverseTwiceBeSameProp);
         }
 
         [Test]
         public void SelfDefinedPropTest()
         {
-            Check.QuickThrowOnFailure(new CounterSpec().ToProperty());
+           Check.Verbose(new CounterSpec().ToProperty());
         }
     }
 }
