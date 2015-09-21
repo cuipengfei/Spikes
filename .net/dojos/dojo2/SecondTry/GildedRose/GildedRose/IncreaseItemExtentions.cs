@@ -19,5 +19,10 @@
                 item.IncreaseQualityByOne();
             }
         }
+
+        public static bool IsIncreaseItem(this Item item)
+        {
+            return item.Name == "Aged Brie";
+        }
     }
 }

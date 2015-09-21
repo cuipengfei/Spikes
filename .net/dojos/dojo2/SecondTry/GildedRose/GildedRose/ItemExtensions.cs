@@ -22,24 +22,25 @@
             return item.Name == "Sulfuras, Hand of Ragnaros";
         }
 
-        public static bool IsDropToZeroItem(this Item item)
+        public static void Update(this Item item)
         {
-            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
-        }
-
-        public static bool IsIncreaseItem(this Item item)
-        {
-            return item.Name == "Aged Brie";
-        }
-
-        public static bool IsConjuredItem(this Item item)
-        {
-            return item.Name == "Conjured Mana Cake";
-        }
-
-        public static bool IsNormalItem(this Item item)
-        {
-            return !item.IsConjuredItem() && !item.IsDropToZeroItem() && !item.IsIncreaseItem();
+            item.DecreaseDate();
+            if (item.IsIncreaseItem())
+            {
+                item.UpdateIncreaseItemQuality();
+            }
+            if (item.IsDropToZeroItem())
+            {
+                item.UpdateDropToZeroItemQuality();
+            }
+            if (item.IsConjuredItem())
+            {
+                item.UpdateConjuredItemQuality();
+            }
+            if (item.IsNormalItem())
+            {
+                item.UpdateNormalItemQuality();
+            }
         }
     }
 }
