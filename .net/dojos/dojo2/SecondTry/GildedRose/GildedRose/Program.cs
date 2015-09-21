@@ -44,17 +44,12 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
-                if (!item.IsIncreaseItem() && !item.IsDropToZeroItem())
+                if (!item.IsNeverChangeItem())
                 {
-                    if (item.Quality > 0)
-                    {
-                        if (!item.IsNeverChangeItem())
-                        {
-                            item.DecreaseQualityByOne();
-                        }
-                    }
+                    item.DecreaseDate();
                 }
-                else
+
+                if (item.IsIncreaseItem() || item.IsDropToZeroItem())
                 {
                     if (item.Quality < 50)
                     {
@@ -62,7 +57,7 @@ namespace GildedRose
 
                         if (item.IsDropToZeroItem())
                         {
-                            if (item.SellIn < 11)
+                            if (item.SellIn < 10)
                             {
                                 if (item.Quality < 50)
                                 {
@@ -70,7 +65,7 @@ namespace GildedRose
                                 }
                             }
 
-                            if (item.SellIn < 6)
+                            if (item.SellIn < 5)
                             {
                                 if (item.Quality < 50)
                                 {
@@ -80,36 +75,25 @@ namespace GildedRose
                         }
                     }
                 }
-
-                if (!item.IsNeverChangeItem())
+                else
                 {
-                    item.DecreaseDate();
+                    item.NormalItemDecrease();
                 }
 
                 if (item.SellIn < 0)
                 {
-                    if (!item.IsIncreaseItem())
-                    {
-                        if (!item.IsDropToZeroItem())
-                        {
-                            if (item.Quality > 0)
-                            {
-                                if (!item.IsNeverChangeItem())
-                                {
-                                    item.DecreaseQualityByOne();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            item.DropToZero();
-                        }
-                    }
-                    else
+                    if (item.IsIncreaseItem())
                     {
                         if (item.Quality < 50)
                         {
                             item.IncreaseQualityByOne();
+                        }
+                    }
+                    else
+                    {
+                        if (item.IsDropToZeroItem())
+                        {
+                            item.DropToZero();
                         }
                     }
                 }
