@@ -1,7 +1,4 @@
-﻿using System;
-using FsCheck;
-
-namespace FsCheck.NUnit.CSharpExamples.ClassesToTest
+﻿namespace FsCheck.NUnit.CSharpExamples.ClassesToTest
 {
     public class CounterSpec : ICommandGenerator<Counter, int>
     {
@@ -10,9 +7,15 @@ namespace FsCheck.NUnit.CSharpExamples.ClassesToTest
             return Gen.Elements(new Command<Counter, int>[] {new Inc(), new Dec()});
         }
 
-        public Counter InitialActual { get { return new Counter();} }
-    
-        public int InitialModel { get { return 0; } }
+        public Counter InitialActual
+        {
+            get { return new Counter(); }
+        }
+
+        public int InitialModel
+        {
+            get { return 0; }
+        }
 
         private class Inc : BaseCommand
         {
@@ -39,8 +42,8 @@ namespace FsCheck.NUnit.CSharpExamples.ClassesToTest
             public override int RunModel(int m)
             {
                 if (m > 2)
-                    return m- 2;
-                return m-1;
+                    return m - 2;
+                return m - 1;
             }
         }
 

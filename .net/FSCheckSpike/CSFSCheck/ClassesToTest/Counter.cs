@@ -6,7 +6,7 @@
 
         public void Inc()
         {
-            n++;
+            n += 8;
         }
 
         public void Dec()
