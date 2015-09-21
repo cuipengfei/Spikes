@@ -26,5 +26,20 @@ namespace GildedRose
         {
             item.SellIn = item.SellIn - 1;
         }
+
+        public static bool IsNeverChangeItem(this Item item)
+        {
+            return item.Name == "Sulfuras, Hand of Ragnaros";
+        }
+
+        public static bool IsDropToZeroItem(this Item item)
+        {
+            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
+        }
+
+        public static bool IsIncreaseItem(this Item item)
+        {
+            return item.Name == "Aged Brie";
+        }
     }
 }
