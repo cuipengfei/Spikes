@@ -36,5 +36,10 @@
         {
             return item.Name == "Conjured Mana Cake";
         }
+
+        public static bool IsNormalItem(this Item item)
+        {
+            return !item.IsConjuredItem() && !item.IsDropToZeroItem() && !item.IsIncreaseItem();
+        }
     }
 }

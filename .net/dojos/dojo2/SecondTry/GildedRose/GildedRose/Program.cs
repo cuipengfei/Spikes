@@ -47,27 +47,28 @@ namespace GildedRose
                 if (!item.IsNeverChangeItem())
                 {
                     item.DecreaseDate();
+                    Update(item);
                 }
+            }
+        }
 
-                if (item.IsIncreaseItem())
-                {
-                    item.UpdateIncreaseItemQuality();
-                }
-                else if (item.IsDropToZeroItem())
-                {
-                    item.UpdateDropToZeroItemQuality();
-                }
-                else if (!item.IsNeverChangeItem())
-                {
-                    if (!item.IsConjuredItem())
-                    {
-                        item.UpdateNormalItemQuality();
-                    }
-                    else
-                    {
-                        item.UpdateConjuredItemQuality();
-                    }
-                }
+        private static void Update(Item item)
+        {
+            if (item.IsIncreaseItem())
+            {
+                item.UpdateIncreaseItemQuality();
+            }
+            if (item.IsDropToZeroItem())
+            {
+                item.UpdateDropToZeroItemQuality();
+            }
+            if (item.IsConjuredItem())
+            {
+                item.UpdateConjuredItemQuality();
+            }
+            if (item.IsNormalItem())
+            {
+                item.UpdateNormalItemQuality();
             }
         }
     }
