@@ -59,7 +59,14 @@ namespace GildedRose
                 }
                 else if (!item.IsNeverChangeItem())
                 {
-                    item.UpdateNormalItemQuality();
+                    if (!item.IsConjuredItem())
+                    {
+                        item.UpdateNormalItemQuality();
+                    }
+                    else
+                    {
+                        item.UpdateConjuredItemQuality();
+                    }
                 }
             }
         }

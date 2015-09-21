@@ -31,5 +31,10 @@
         {
             return item.Name == "Aged Brie";
         }
+
+        public static bool IsConjuredItem(this Item item)
+        {
+            return item.Name == "Conjured Mana Cake";
+        }
     }
 }

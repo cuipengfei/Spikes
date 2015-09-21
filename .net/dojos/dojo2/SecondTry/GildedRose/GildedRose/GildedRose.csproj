@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConjuredItemExtensions.cs" />
     <Compile Include="DropToZeroItemExtensions.cs" />
     <Compile Include="IncreaseItemExtentions.cs" />
     <Compile Include="ItemExtensions.cs" />
