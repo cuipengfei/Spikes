@@ -55,41 +55,19 @@ namespace GildedRose
                 }
                 else
                 {
-                    if (item.Quality < 50)
+                    if (item.IsTimeLimited())
                     {
-                        item.IncreaseOneQuality();
-
-                        if (item.IsTimeLimited())
-                        {
-                            if (item.SellIn < 10)
-                            {
-                                if (item.Quality < 50)
-                                {
-                                    item.IncreaseOneQuality();
-                                }
-                            }
-
-                            if (item.SellIn < 5)
-                            {
-                                if (item.Quality < 50)
-                                {
-                                    item.IncreaseOneQuality();
-                                }
-                            }
-                        }
+                        item.UpdateTimeLimitedItem();
+                    }
+                    else if (item.IsValueAdding())
+                    {
+                        item.TryIncreaseOne();
                     }
                 }
 
                 if (item.SellIn < 0)
                 {
-                    if (!item.IsValueAdding())
-                    {
-                        if (item.IsTimeLimited())
-                        {
-                            ClearQuality(item);
-                        }
-                    }
-                    else
+                    if (item.IsValueAdding())
                     {
                         if (item.Quality < 50)
                         {
@@ -98,11 +76,6 @@ namespace GildedRose
                     }
                 }
             }
-        }
-
-        private static void ClearQuality(Item item)
-        {
-            item.Quality = item.Quality - item.Quality;
         }
     }
 
