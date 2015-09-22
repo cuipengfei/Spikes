@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class TimeLimitedItemExtensions
+    internal static class TimeLimitedItemExtensions
     {
         public static void UpdateTimeLimitedItem(this Item item)
         {
@@ -15,17 +10,13 @@ namespace GildedRose
             {
                 item.TryIncreaseOne();
             }
-
             if (item.SellIn < 5)
             {
                 item.TryIncreaseOne();
             }
             if (item.SellIn < 0)
             {
-                if (item.IsTimeLimited())
-                {
-                    item.ClearQuality();
-                }
+                item.ClearQuality();
             }
         }
 
@@ -40,6 +31,11 @@ namespace GildedRose
         public static void ClearQuality(this Item item)
         {
             item.Quality = item.Quality - item.Quality;
+        }
+
+        public static bool IsTimeLimited(this Item item)
+        {
+            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
         }
     }
 }

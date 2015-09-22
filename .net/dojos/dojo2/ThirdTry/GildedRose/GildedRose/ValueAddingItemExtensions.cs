@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class ValueAddingItemExtensions
+    internal static class ValueAddingItemExtensions
     {
         public static void UpdateValueAddingItem(this Item item)
         {
             item.TryIncreaseOne();
             if (item.SellIn < 0)
             {
-                if (item.IsValueAdding())
-                {
-                    item.TryIncreaseOne();
-                }
+                item.TryIncreaseOne();
             }
+        }
+
+        public static bool IsValueAdding(this Item item)
+        {
+            return item.Name == "Aged Brie";
         }
     }
 }

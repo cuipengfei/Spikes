@@ -43,7 +43,7 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items.Where(i => !i.IsLegendary()))
+            foreach (var item in Items.Where(i => !i.IsLegendary()))
             {
                 item.DecreaseOneDay();
 
