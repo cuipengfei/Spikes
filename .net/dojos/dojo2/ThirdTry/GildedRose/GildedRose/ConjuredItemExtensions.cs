@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    static class ConjuredItemExtensions
+    internal static class ConjuredItemExtensions
     {
         public static bool IsConjured(this Item item)
         {
@@ -14,8 +9,8 @@ namespace GildedRose
 
         public static void UpdateConjuredItem(this Item item)
         {
-           item.TryDecreaseOne();
-           item.TryDecreaseOne();
+            item.TryDecreaseOne();
+            item.TryDecreaseOne();
         }
     }
 }
