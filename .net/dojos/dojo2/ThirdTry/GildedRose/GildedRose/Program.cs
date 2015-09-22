@@ -61,18 +61,7 @@ namespace GildedRose
                     }
                     else if (item.IsValueAdding())
                     {
-                        item.TryIncreaseOne();
-                    }
-                }
-
-                if (item.SellIn < 0)
-                {
-                    if (item.IsValueAdding())
-                    {
-                        if (item.Quality < 50)
-                        {
-                            item.IncreaseOneQuality();
-                        }
+                        item.UpdateValueAddingItem();
                     }
                 }
             }
