@@ -44,63 +44,47 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
-                if (!IsValueAdding(item) && !IsTimeLimited(item))
+                if (!item.IsLegendary())
                 {
-                    if (item.Quality > 0)
-                    {
-                        if (!IsLegendary(item))
-                        {
-                            DecreaseOneQuality(item);
-                        }
-                    }
+                    item.DecreaseOneDay();
+                }
+
+                if (!item.IsValueAdding() && !item.IsTimeLimited())
+                {
+                    item.UpdateNormalItem();
                 }
                 else
                 {
                     if (item.Quality < 50)
                     {
-                        IncreaseOneQuality(item);
+                        item.IncreaseOneQuality();
 
-                        if (IsTimeLimited(item))
+                        if (item.IsTimeLimited())
                         {
-                            if (item.SellIn < 11)
+                            if (item.SellIn < 10)
                             {
                                 if (item.Quality < 50)
                                 {
-                                    IncreaseOneQuality(item);
+                                    item.IncreaseOneQuality();
                                 }
                             }
 
-                            if (item.SellIn < 6)
+                            if (item.SellIn < 5)
                             {
                                 if (item.Quality < 50)
                                 {
-                                    IncreaseOneQuality(item);
+                                    item.IncreaseOneQuality();
                                 }
                             }
                         }
                     }
                 }
 
-                if (!IsLegendary(item))
-                {
-                    DecreaseOneDay(item);
-                }
-
                 if (item.SellIn < 0)
                 {
-                    if (!IsValueAdding(item))
+                    if (!item.IsValueAdding())
                     {
-                        if (!IsTimeLimited(item))
-                        {
-                            if (item.Quality > 0)
-                            {
-                                if (!IsLegendary(item))
-                                {
-                                    DecreaseOneQuality(item);
-                                }
-                            }
-                        }
-                        else
+                        if (item.IsTimeLimited())
                         {
                             ClearQuality(item);
                         }
@@ -109,46 +93,16 @@ namespace GildedRose
                     {
                         if (item.Quality < 50)
                         {
-                            IncreaseOneQuality(item);
+                            item.IncreaseOneQuality();
                         }
                     }
                 }
             }
         }
 
-        private static bool IsLegendary(Item item)
-        {
-            return item.Name == "Sulfuras, Hand of Ragnaros";
-        }
-
-        private static bool IsTimeLimited(Item item)
-        {
-            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
-        }
-
-        private static bool IsValueAdding(Item item)
-        {
-            return item.Name == "Aged Brie";
-        }
-
         private static void ClearQuality(Item item)
         {
             item.Quality = item.Quality - item.Quality;
-        }
-
-        private static void DecreaseOneDay(Item item)
-        {
-            item.SellIn = item.SellIn - 1;
-        }
-
-        private static void IncreaseOneQuality(Item item)
-        {
-            item.Quality = item.Quality + 1;
-        }
-
-        private static void DecreaseOneQuality(Item item)
-        {
-            item.Quality = item.Quality - 1;
         }
     }
 
