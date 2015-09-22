@@ -44,11 +44,11 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
-                if (item.Name != "Aged Brie" && item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                if (!IsValueAdding(item) && !IsTimeLimited(item))
                 {
                     if (item.Quality > 0)
                     {
-                        if (item.Name != "Sulfuras, Hand of Ragnaros")
+                        if (!IsLegendary(item))
                         {
                             DecreaseOneQuality(item);
                         }
@@ -60,7 +60,7 @@ namespace GildedRose
                     {
                         IncreaseOneQuality(item);
 
-                        if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+                        if (IsTimeLimited(item))
                         {
                             if (item.SellIn < 11)
                             {
@@ -81,20 +81,20 @@ namespace GildedRose
                     }
                 }
 
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                if (!IsLegendary(item))
                 {
                     DecreaseOneDay(item);
                 }
 
                 if (item.SellIn < 0)
                 {
-                    if (item.Name != "Aged Brie")
+                    if (!IsValueAdding(item))
                     {
-                        if (item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                        if (!IsTimeLimited(item))
                         {
                             if (item.Quality > 0)
                             {
-                                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                                if (!IsLegendary(item))
                                 {
                                     DecreaseOneQuality(item);
                                 }
@@ -114,6 +114,21 @@ namespace GildedRose
                     }
                 }
             }
+        }
+
+        private static bool IsLegendary(Item item)
+        {
+            return item.Name == "Sulfuras, Hand of Ragnaros";
+        }
+
+        private static bool IsTimeLimited(Item item)
+        {
+            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
+        }
+
+        private static bool IsValueAdding(Item item)
+        {
+            return item.Name == "Aged Brie";
         }
 
         private static void ClearQuality(Item item)
