@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GildedRose
 {
@@ -42,27 +43,21 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items)
+            foreach (Item item in Items.Where(i => !i.IsLegendary()))
             {
-                if (!item.IsLegendary())
-                {
-                    item.DecreaseOneDay();
-                }
+                item.DecreaseOneDay();
 
-                if (!item.IsValueAdding() && !item.IsTimeLimited())
+                if (item.IsNormalItem())
                 {
                     item.UpdateNormalItem();
                 }
-                else
+                else if (item.IsTimeLimited())
                 {
-                    if (item.IsTimeLimited())
-                    {
-                        item.UpdateTimeLimitedItem();
-                    }
-                    else if (item.IsValueAdding())
-                    {
-                        item.UpdateValueAddingItem();
-                    }
+                    item.UpdateTimeLimitedItem();
+                }
+                else if (item.IsValueAdding())
+                {
+                    item.UpdateValueAddingItem();
                 }
             }
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GildedRose
 {
-    static class NormalItemExtensions
+    internal static class NormalItemExtensions
     {
         public static void UpdateNormalItem(this Item item)
         {
@@ -20,11 +20,13 @@ namespace GildedRose
         {
             if (item.Quality > 0)
             {
-                if (!item.IsLegendary())
-                {
-                    item.DecreaseOneQuality();
-                }
+                item.DecreaseOneQuality();
             }
+        }
+
+        public static bool IsNormalItem(this Item item)
+        {
+            return !item.IsValueAdding() && !item.IsTimeLimited();
         }
     }
 }
