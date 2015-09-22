@@ -46,8 +46,11 @@ namespace GildedRose
             foreach (var item in Items.Where(i => !i.IsLegendary()))
             {
                 item.DecreaseOneDay();
-
-                if (item.IsNormalItem())
+                if (item.IsConjured())
+                {
+                    item.UpdateConjuredItem();
+                }
+                else if (item.IsNormalItem())
                 {
                     item.UpdateNormalItem();
                 }

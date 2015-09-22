@@ -6,7 +6,7 @@ namespace GildedRoseTest
     public class ConjuredItemTest : TestBase
     {
         [TestMethod]
-        public void ConjuredItemShouldDecreaseAsNormal() //this is before we can add the new feature
+        public void ConjuredItemShouldDoubleDecrease()
         {
             //given
             var program = GetProgram();
@@ -14,8 +14,8 @@ namespace GildedRoseTest
             //when pass 1 days
             PassNDays(program, 1);
 
-            //then decrease 1
-            Assert.AreEqual(5, ManaCake(program).Quality);
+            //then decrease 2
+            Assert.AreEqual(4, ManaCake(program).Quality);
         }
 
         [TestMethod]
