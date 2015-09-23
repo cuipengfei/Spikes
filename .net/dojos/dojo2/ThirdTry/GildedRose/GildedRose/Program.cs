@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static GildedRose.Updaters.Updaters;
 
 namespace GildedRose
 {
@@ -46,22 +47,7 @@ namespace GildedRose
             foreach (var item in Items.Where(i => !i.IsLegendary()))
             {
                 item.DecreaseOneDay();
-                if (item.IsConjured())
-                {
-                    item.UpdateConjuredItem();
-                }
-                else if (item.IsNormalItem())
-                {
-                    item.UpdateNormalItem();
-                }
-                else if (item.IsTimeLimited())
-                {
-                    item.UpdateTimeLimitedItem();
-                }
-                else if (item.IsValueAdding())
-                {
-                    item.UpdateValueAddingItem();
-                }
+                FindUpdater(item).Update(item);
             }
         }
     }
