@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GildedRose
 {
-    static class UpdatersRepository
+    internal static class UpdatersRepository
     {
-        private static readonly List<Updater> _updaters = new List<Updater>()
+        private static readonly List<Updater> _updaters = new List<Updater>
         {
             new UpdateSuddenDropItemStrategy(),
             new ValueAddingUpdater(),

@@ -1,6 +1,6 @@
 ﻿namespace GildedRose
 {
-    class ValueAddingUpdater : Updater
+    internal class ValueAddingUpdater : Updater
     {
         public override bool CanUpdate(Item item)
         {

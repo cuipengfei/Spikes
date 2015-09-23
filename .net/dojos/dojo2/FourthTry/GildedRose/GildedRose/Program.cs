@@ -43,7 +43,7 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items.Where(IsNotLegendaryItem))
+            foreach (var item in Items.Where(IsNotLegendaryItem))
             {
                 PassOneDay(item);
                 Update(item);
@@ -53,7 +53,7 @@ namespace GildedRose
         private void Update(Item item)
         {
             var updater = UpdatersRepository.TryGetUpdater(item);
-            if (updater!=null)
+            if (updater != null)
             {
                 updater.Update(item);
             }

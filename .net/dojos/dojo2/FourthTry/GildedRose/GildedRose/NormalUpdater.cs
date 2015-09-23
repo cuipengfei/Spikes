@@ -1,10 +1,9 @@
-﻿using System;
-using static GildedRose.UpdateSuddenDropItemStrategy;
+﻿using static GildedRose.UpdateSuddenDropItemStrategy;
 using static GildedRose.ValueAddingUpdater;
 
 namespace GildedRose
 {
-    class NormalUpdater : Updater
+    internal class NormalUpdater : Updater
     {
         public override bool CanUpdate(Item item)
         {
