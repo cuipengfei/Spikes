@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GildedRose
 {
@@ -42,53 +43,57 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items)
+            foreach (Item item in Items.Where(IsNotLegendaryItem))
             {
-                if (IsNotValueAddingItem(item) && !IsSuddenDropItem(item))
+                PassOneDay(item);
+
+                if (IsSuddenDropItem(item))
                 {
-                    TryDecreaseOne(item);
+                    UpdateSuddenDropItem(item);
+                }
+                else if (IsValueAddingItem(item))
+                {
+                    UpdateValueAddingItem(item);
                 }
                 else
                 {
-                    TryIncreaseOne(item);
-
-                    if (IsSuddenDropItem(item))
-                    {
-                        if (item.SellIn < 11)
-                        {
-                            TryIncreaseOne(item);
-                        }
-
-                        if (item.SellIn < 6)
-                        {
-                            TryIncreaseOne(item);
-                        }
-                    }
+                    UpdateNormalItem(item);
                 }
+            }
+        }
 
-                if (IsNotLegendaryItem(item))
-                {
-                    PassOneDay(item);
-                }
+        private static void UpdateNormalItem(Item item)
+        {
+            TryDecreaseOne(item);
+            if (item.SellIn < 0)
+            {
+                TryDecreaseOne(item);
+            }
+        }
 
-                if (item.SellIn < 0)
-                {
-                    if (IsNotValueAddingItem(item))
-                    {
-                        if (!IsSuddenDropItem(item))
-                        {
-                            TryDecreaseOne(item);
-                        }
-                        else
-                        {
-                            ToZero(item);
-                        }
-                    }
-                    else
-                    {
-                        TryIncreaseOne(item);
-                    }
-                }
+        private void UpdateValueAddingItem(Item item)
+        {
+            TryIncreaseOne(item);
+            if (item.SellIn < 0)
+            {
+                TryIncreaseOne(item);
+            }
+        }
+
+        private void UpdateSuddenDropItem(Item item)
+        {
+            TryIncreaseOne(item);
+            if (item.SellIn < 10)
+            {
+                TryIncreaseOne(item);
+            }
+            if (item.SellIn < 5)
+            {
+                TryIncreaseOne(item);
+            }
+            if (item.SellIn < 0)
+            {
+                ToZero(item);
             }
         }
 
@@ -102,9 +107,9 @@ namespace GildedRose
             return item.Name == "Backstage passes to a TAFKAL80ETC concert";
         }
 
-        private static bool IsNotValueAddingItem(Item item)
+        private static bool IsValueAddingItem(Item item)
         {
-            return item.Name != "Aged Brie";
+            return item.Name == "Aged Brie";
         }
 
         private static void PassOneDay(Item item)
