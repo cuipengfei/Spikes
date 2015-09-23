@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FsCheck.NUnit.CSharpExamples.ClassesToTest;
 using NUnit.Framework;
 
@@ -10,14 +14,16 @@ namespace FsCheck.NUnit.CSharpExamples
         [Test]
         public void RevRev()
         {
-            var reverseTwiceBeSameProp = Prop.ForAll<int[]>(xs => xs.Reverse().Reverse().SequenceEqual(xs));
-            Check.Verbose(reverseTwiceBeSameProp);
+            Prop.ForAll<int[]>(
+                xs => xs.Reverse().Reverse()
+                    .SequenceEqual(xs))
+                .QuickCheckThrowOnFailure();
         }
 
         [Test]
         public void SelfDefinedPropTest()
         {
-           Check.Verbose(new CounterSpec().ToProperty());
+            new CounterSpec().ToProperty().QuickCheckThrowOnFailure();
         }
     }
 }
