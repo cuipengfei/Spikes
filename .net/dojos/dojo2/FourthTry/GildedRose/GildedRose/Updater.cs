@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GildedRose
 {
-    public abstract class UpdateStrategy
+    public abstract class Updater
     {
         public abstract bool CanUpdate(Item item);
         public abstract void Update(Item item);

@@ -54,18 +54,23 @@ namespace GildedRose
         private void Update(Item item)
         {
             var suddenUpdater=new UpdateSuddenDropItemStrategy();
-            if (suddenUpdater.CanUpdate(item))
+            var valueAddingUpdater=new ValueAddingUpdater();
+            var updaters = new List<Updater>() {suddenUpdater,valueAddingUpdater };
+
+            var updater = FindUpdater(updaters,item);
+            if (updater!=null)
             {
-               suddenUpdater.Update(item);
-            }
-            else if (IsValueAddingItem(item))
-            {
-                UpdateValueAddingItem(item);
+                updater.Update(item);
             }
             else
             {
                 UpdateNormalItem(item);
             }
+        }
+
+        private Updater FindUpdater(List<Updater> updaters, Item item)
+        {
+            return updaters.FirstOrDefault(updater => updater.CanUpdate(item));
         }
 
         private static void UpdateNormalItem(Item item)
@@ -77,23 +82,9 @@ namespace GildedRose
             }
         }
 
-        private void UpdateValueAddingItem(Item item)
-        {
-            UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
-            if (item.SellIn < 0)
-            {
-                UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
-            }
-        }
-
         private static bool IsNotLegendaryItem(Item item)
         {
             return item.Name != "Sulfuras, Hand of Ragnaros";
-        }
-
-        private static bool IsValueAddingItem(Item item)
-        {
-            return item.Name == "Aged Brie";
         }
 
         private static void PassOneDay(Item item)

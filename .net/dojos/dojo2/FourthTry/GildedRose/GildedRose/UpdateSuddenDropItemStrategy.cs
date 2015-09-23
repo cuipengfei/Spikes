@@ -1,6 +1,6 @@
 ﻿namespace GildedRose
 {
-    public class UpdateSuddenDropItemStrategy : UpdateStrategy
+    public class UpdateSuddenDropItemStrategy : Updater
     {
         public override bool CanUpdate(Item item)
         {
