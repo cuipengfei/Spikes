@@ -1,4 +1,5 @@
-﻿using static GildedRose.UpdateSuddenDropItemStrategy;
+﻿using static GildedRose.ConjuredUpdater;
+using static GildedRose.UpdateSuddenDropItemStrategy;
 using static GildedRose.ValueAddingUpdater;
 
 namespace GildedRose
@@ -7,7 +8,7 @@ namespace GildedRose
     {
         public override bool CanUpdate(Item item)
         {
-            return !IsValueAddingItem(item) && !IsSuddenDropItem(item);
+            return !IsValueAddingItem(item) && !IsSuddenDropItem(item) && !IsConjured(item);
         }
 
         public override void Update(Item item)

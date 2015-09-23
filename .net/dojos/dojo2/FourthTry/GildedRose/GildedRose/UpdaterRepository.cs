@@ -9,7 +9,8 @@ namespace GildedRose
         {
             new UpdateSuddenDropItemStrategy(),
             new ValueAddingUpdater(),
-            new NormalUpdater()
+            new NormalUpdater(),
+            new ConjuredUpdater()
         };
 
         public static Updater TryGetUpdater(Item item)
