@@ -47,64 +47,48 @@ namespace GildedRose
             {
                 PassOneDay(item);
 
-                if (IsSuddenDropItem(item))
-                {
-                    UpdateSuddenDropItem(item);
-                }
-                else if (IsValueAddingItem(item))
-                {
-                    UpdateValueAddingItem(item);
-                }
-                else
-                {
-                    UpdateNormalItem(item);
-                }
+                Update(item);
+            }
+        }
+
+        private void Update(Item item)
+        {
+            var suddenUpdater=new UpdateSuddenDropItemStrategy();
+            if (suddenUpdater.CanUpdate(item))
+            {
+               suddenUpdater.Update(item);
+            }
+            else if (IsValueAddingItem(item))
+            {
+                UpdateValueAddingItem(item);
+            }
+            else
+            {
+                UpdateNormalItem(item);
             }
         }
 
         private static void UpdateNormalItem(Item item)
         {
-            TryDecreaseOne(item);
+            UpdateSuddenDropItemStrategy.TryDecreaseOne(item);
             if (item.SellIn < 0)
             {
-                TryDecreaseOne(item);
+                UpdateSuddenDropItemStrategy.TryDecreaseOne(item);
             }
         }
 
         private void UpdateValueAddingItem(Item item)
         {
-            TryIncreaseOne(item);
+            UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
             if (item.SellIn < 0)
             {
-                TryIncreaseOne(item);
-            }
-        }
-
-        private void UpdateSuddenDropItem(Item item)
-        {
-            TryIncreaseOne(item);
-            if (item.SellIn < 10)
-            {
-                TryIncreaseOne(item);
-            }
-            if (item.SellIn < 5)
-            {
-                TryIncreaseOne(item);
-            }
-            if (item.SellIn < 0)
-            {
-                ToZero(item);
+                UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
             }
         }
 
         private static bool IsNotLegendaryItem(Item item)
         {
             return item.Name != "Sulfuras, Hand of Ragnaros";
-        }
-
-        private static bool IsSuddenDropItem(Item item)
-        {
-            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
         }
 
         private static bool IsValueAddingItem(Item item)
@@ -115,30 +99,6 @@ namespace GildedRose
         private static void PassOneDay(Item item)
         {
             item.SellIn = item.SellIn - 1;
-        }
-
-        private static void ToZero(Item item)
-        {
-            item.Quality = item.Quality - item.Quality;
-        }
-
-        private static void TryDecreaseOne(Item item)
-        {
-            if (item.Quality > 0)
-            {
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
-                {
-                    item.Quality = item.Quality - 1;
-                }
-            }
-        }
-
-        private void TryIncreaseOne(Item item)
-        {
-            if (item.Quality < 50)
-            {
-                item.Quality = item.Quality + 1;
-            }
         }
     }
 
