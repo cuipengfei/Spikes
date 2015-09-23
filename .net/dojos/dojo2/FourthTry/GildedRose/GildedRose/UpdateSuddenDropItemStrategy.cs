@@ -9,34 +9,29 @@
 
         public override void Update(Item item)
         {
-            UpdateSuddenDropItem(item);
+            TryIncreaseOne(item);
+            if (item.SellIn < 10)
+            {
+                TryIncreaseOne(item);
+            }
+            if (item.SellIn < 5)
+            {
+                TryIncreaseOne(item);
+            }
+            if (item.SellIn < 0)
+            {
+                ToZero(item);
+            }
         }
 
-        private static bool IsSuddenDropItem(Item item)
+        public static bool IsSuddenDropItem(Item item)
         {
             return item.Name == "Backstage passes to a TAFKAL80ETC concert";
         }
 
-        public static void ToZero(Item item)
+        private static void ToZero(Item item)
         {
             item.Quality = item.Quality - item.Quality;
-        }
-
-        public static void UpdateSuddenDropItem(Item item)
-        {
-            UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
-            if (item.SellIn < 10)
-            {
-                UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
-            }
-            if (item.SellIn < 5)
-            {
-                UpdateSuddenDropItemStrategy.TryIncreaseOne(item);
-            }
-            if (item.SellIn < 0)
-            {
-                UpdateSuddenDropItemStrategy.ToZero(item);
-            }
         }
     }
 }

@@ -53,33 +53,27 @@ namespace GildedRose
 
         private void Update(Item item)
         {
-            var suddenUpdater=new UpdateSuddenDropItemStrategy();
-            var valueAddingUpdater=new ValueAddingUpdater();
-            var updaters = new List<Updater>() {suddenUpdater,valueAddingUpdater };
-
-            var updater = FindUpdater(updaters,item);
+            var updater = TryGetUpdater(item);
             if (updater!=null)
             {
                 updater.Update(item);
             }
-            else
-            {
-                UpdateNormalItem(item);
-            }
+        }
+
+        private Updater TryGetUpdater(Item item)
+        {
+            var suddenUpdater = new UpdateSuddenDropItemStrategy();
+            var valueAddingUpdater = new ValueAddingUpdater();
+            var normalUpdater = new NormalUpdater();
+            var updaters = new List<Updater>() {suddenUpdater, valueAddingUpdater, normalUpdater};
+
+            var updater = FindUpdater(updaters, item);
+            return updater;
         }
 
         private Updater FindUpdater(List<Updater> updaters, Item item)
         {
             return updaters.FirstOrDefault(updater => updater.CanUpdate(item));
-        }
-
-        private static void UpdateNormalItem(Item item)
-        {
-            UpdateSuddenDropItemStrategy.TryDecreaseOne(item);
-            if (item.SellIn < 0)
-            {
-                UpdateSuddenDropItemStrategy.TryDecreaseOne(item);
-            }
         }
 
         private static bool IsNotLegendaryItem(Item item)
