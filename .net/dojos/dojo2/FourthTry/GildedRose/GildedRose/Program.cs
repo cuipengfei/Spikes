@@ -46,34 +46,17 @@ namespace GildedRose
             foreach (Item item in Items.Where(IsNotLegendaryItem))
             {
                 PassOneDay(item);
-
                 Update(item);
             }
         }
 
         private void Update(Item item)
         {
-            var updater = TryGetUpdater(item);
+            var updater = UpdatersRepository.TryGetUpdater(item);
             if (updater!=null)
             {
                 updater.Update(item);
             }
-        }
-
-        private Updater TryGetUpdater(Item item)
-        {
-            var suddenUpdater = new UpdateSuddenDropItemStrategy();
-            var valueAddingUpdater = new ValueAddingUpdater();
-            var normalUpdater = new NormalUpdater();
-            var updaters = new List<Updater>() {suddenUpdater, valueAddingUpdater, normalUpdater};
-
-            var updater = FindUpdater(updaters, item);
-            return updater;
-        }
-
-        private Updater FindUpdater(List<Updater> updaters, Item item)
-        {
-            return updaters.FirstOrDefault(updater => updater.CanUpdate(item));
         }
 
         private static bool IsNotLegendaryItem(Item item)
