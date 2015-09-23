@@ -44,7 +44,7 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
-                if (item.Name != "Aged Brie" && item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                if (IsNotValueAddingItem(item) && !IsSuddenDropItem(item))
                 {
                     TryDecreaseOne(item);
                 }
@@ -52,7 +52,7 @@ namespace GildedRose
                 {
                     TryIncreaseOne(item);
 
-                    if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+                    if (IsSuddenDropItem(item))
                     {
                         if (item.SellIn < 11)
                         {
@@ -66,16 +66,16 @@ namespace GildedRose
                     }
                 }
 
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                if (IsNotLegendaryItem(item))
                 {
                     PassOneDay(item);
                 }
 
                 if (item.SellIn < 0)
                 {
-                    if (item.Name != "Aged Brie")
+                    if (IsNotValueAddingItem(item))
                     {
-                        if (item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                        if (!IsSuddenDropItem(item))
                         {
                             TryDecreaseOne(item);
                         }
@@ -90,6 +90,21 @@ namespace GildedRose
                     }
                 }
             }
+        }
+
+        private static bool IsNotLegendaryItem(Item item)
+        {
+            return item.Name != "Sulfuras, Hand of Ragnaros";
+        }
+
+        private static bool IsSuddenDropItem(Item item)
+        {
+            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
+        }
+
+        private static bool IsNotValueAddingItem(Item item)
+        {
+            return item.Name != "Aged Brie";
         }
 
         private static void PassOneDay(Item item)
