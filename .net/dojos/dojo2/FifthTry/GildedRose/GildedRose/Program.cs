@@ -44,7 +44,7 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
-                if (item.Name != "Aged Brie" && item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                if (!IsValueAddingItem(item) && !IsTimeLimitedItem(item))
                 {
                     TryDecreaseOneQuality(item);
                 }
@@ -52,7 +52,7 @@ namespace GildedRose
                 {
                     TryIncreaseOneQuality(item);
 
-                    if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+                    if (IsTimeLimitedItem(item))
                     {
                         if (item.SellIn < 11)
                         {
@@ -66,16 +66,16 @@ namespace GildedRose
                     }
                 }
 
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                if (IsNotLegendaryItem(item))
                 {
                     PassOneDay(item);
                 }
 
                 if (item.SellIn < 0)
                 {
-                    if (item.Name != "Aged Brie")
+                    if (!IsValueAddingItem(item))
                     {
-                        if (item.Name != "Backstage passes to a TAFKAL80ETC concert")
+                        if (!IsTimeLimitedItem(item))
                         {
                             TryDecreaseOneQuality(item);
                         }
@@ -90,6 +90,21 @@ namespace GildedRose
                     }
                 }
             }
+        }
+
+        private static bool IsNotLegendaryItem(Item item)
+        {
+            return item.Name != "Sulfuras, Hand of Ragnaros";
+        }
+
+        private static bool IsTimeLimitedItem(Item item)
+        {
+            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
+        }
+
+        private static bool IsValueAddingItem(Item item)
+        {
+            return item.Name == "Aged Brie";
         }
 
         private static void PassOneDay(Item item)
@@ -114,7 +129,7 @@ namespace GildedRose
         {
             if (item.Quality > 0)
             {
-                if (item.Name != "Sulfuras, Hand of Ragnaros")
+                if (IsNotLegendaryItem(item))
                 {
                     item.Quality = item.Quality - 1;
                 }
