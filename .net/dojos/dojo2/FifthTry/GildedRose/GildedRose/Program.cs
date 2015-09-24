@@ -44,51 +44,63 @@ namespace GildedRose
         {
             foreach (Item item in Items)
             {
-                if (!IsValueAddingItem(item) && !IsTimeLimitedItem(item))
-                {
-                    TryDecreaseOneQuality(item);
-                }
-                else
-                {
-                    TryIncreaseOneQuality(item);
-
-                    if (IsTimeLimitedItem(item))
-                    {
-                        if (item.SellIn < 11)
-                        {
-                            TryIncreaseOneQuality(item);
-                        }
-
-                        if (item.SellIn < 6)
-                        {
-                            TryIncreaseOneQuality(item);
-                        }
-                    }
-                }
-
                 if (IsNotLegendaryItem(item))
                 {
                     PassOneDay(item);
+
+                    if (!IsValueAddingItem(item) && !IsTimeLimitedItem(item))
+                    {
+                        UpdateRegularItem(item);
+                    }
+                    else if (IsTimeLimitedItem(item))
+                    {
+                        UpdateTimeLimitedItem(item);
+                    }
+                    else if (IsValueAddingItem(item))
+                    {
+                        UpdateValueAddingItem(item);
+                    }
+                }
+            }
+        }
+
+        private static void UpdateValueAddingItem(Item item)
+        {
+            TryIncreaseOneQuality(item);
+            if (item.SellIn < 0)
+            {
+                TryIncreaseOneQuality(item);
+            }
+        }
+
+        private static void UpdateTimeLimitedItem(Item item)
+        {
+            TryIncreaseOneQuality(item);
+
+            if (IsTimeLimitedItem(item))
+            {
+                if (item.SellIn < 10)
+                {
+                    TryIncreaseOneQuality(item);
                 }
 
+                if (item.SellIn < 5)
+                {
+                    TryIncreaseOneQuality(item);
+                }
                 if (item.SellIn < 0)
                 {
-                    if (!IsValueAddingItem(item))
-                    {
-                        if (!IsTimeLimitedItem(item))
-                        {
-                            TryDecreaseOneQuality(item);
-                        }
-                        else
-                        {
-                            ToZero(item);
-                        }
-                    }
-                    else
-                    {
-                        TryIncreaseOneQuality(item);
-                    }
+                    ToZero(item);
                 }
+            }
+        }
+
+        private static void UpdateRegularItem(Item item)
+        {
+            TryDecreaseOneQuality(item);
+            if (item.SellIn < 0)
+            {
+                TryDecreaseOneQuality(item);
             }
         }
 
