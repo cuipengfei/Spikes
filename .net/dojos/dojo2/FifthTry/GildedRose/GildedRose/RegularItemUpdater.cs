@@ -1,4 +1,5 @@
-﻿using static GildedRose.TimeLimitedItemUpdater;
+﻿using static GildedRose.ConjuredItemUpdater;
+using static GildedRose.TimeLimitedItemUpdater;
 using static GildedRose.ValueAddingItemUpdater;
 
 namespace GildedRose
@@ -7,7 +8,7 @@ namespace GildedRose
     {
         public override bool CanUpdate(Item item)
         {
-            return !IsValueAddingItem(item) && !IsTimeLimitedItem(item);
+            return !IsValueAddingItem(item) && !IsTimeLimitedItem(item) && !IsConjuredItem(item);
         }
 
         public override void Update(Item item)

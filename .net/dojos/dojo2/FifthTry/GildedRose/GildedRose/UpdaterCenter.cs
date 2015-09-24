@@ -8,7 +8,8 @@ static internal class UpdaterCenter
     {
         new RegularItemUpdater(),
         new TimeLimitedItemUpdater(),
-        new ValueAddingItemUpdater()
+        new ValueAddingItemUpdater(),
+        new ConjuredItemUpdater()
     };
 
     internal static ItemUpdater GetUpdater(Item item)
