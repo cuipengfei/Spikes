@@ -52,22 +52,11 @@ namespace GildedRose
 
         private static void Update(Item item)
         {
-            var regularUpdater = GetUpdater(item);
+            var regularUpdater = UpdaterCenter.GetUpdater(item);
             if (regularUpdater != null)
             {
                 regularUpdater.Update(item);
             }
-        }
-
-        private static ItemUpdater GetUpdater(Item item)
-        {
-            var updaters = new List<ItemUpdater>
-            {
-                new RegularItemUpdater(),
-                new TimeLimitedItemUpdater(),
-                new ValueAddingItemUpdater()
-            };
-            return updaters.FirstOrDefault(updater => updater.CanUpdate(item));
         }
 
         private static bool IsNotLegendaryItem(Item item)
