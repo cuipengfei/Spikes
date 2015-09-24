@@ -1,28 +1,21 @@
-﻿namespace GildedRose
+﻿using static GildedRose.TimeLimitedItemUpdater;
+using static GildedRose.ValueAddingItemUpdater;
+
+namespace GildedRose
 {
-    class RegularItemUpdater : ItemUpdater
+    internal class RegularItemUpdater : ItemUpdater
     {
         public override bool CanUpdate(Item item)
         {
-            return IsRegularItem(item);
+            return !IsValueAddingItem(item) && !IsTimeLimitedItem(item);
         }
 
         public override void Update(Item item)
         {
-            UpdateRegularItem(item);
-        }
-
-        public static bool IsRegularItem(Item item)
-        {
-            return !ValueAddingItemUpdater.IsValueAddingItem(item) && !TimeLimitedItemUpdater.IsTimeLimitedItem(item);
-        }
-
-        public static void UpdateRegularItem(Item item)
-        {
-            Program.TryDecreaseOneQuality(item);
+            TryDecreaseOneQuality(item);
             if (item.SellIn < 0)
             {
-                Program.TryDecreaseOneQuality(item);
+                TryDecreaseOneQuality(item);
             }
         }
     }

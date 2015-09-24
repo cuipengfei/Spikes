@@ -43,7 +43,7 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items.Where(IsNotLegendaryItem))
+            foreach (var item in Items.Where(IsNotLegendaryItem))
             {
                 PassOneDay(item);
                 Update(item);
@@ -53,7 +53,7 @@ namespace GildedRose
         private static void Update(Item item)
         {
             var regularUpdater = GetUpdater(item);
-            if (regularUpdater!=null)
+            if (regularUpdater != null)
             {
                 regularUpdater.Update(item);
             }
@@ -67,7 +67,7 @@ namespace GildedRose
                 new TimeLimitedItemUpdater(),
                 new ValueAddingItemUpdater()
             };
-            return updaters.FirstOrDefault(updater=>updater.CanUpdate(item));
+            return updaters.FirstOrDefault(updater => updater.CanUpdate(item));
         }
 
         private static bool IsNotLegendaryItem(Item item)
@@ -78,30 +78,6 @@ namespace GildedRose
         private static void PassOneDay(Item item)
         {
             item.SellIn = item.SellIn - 1;
-        }
-
-        public static void ToZero(Item item)
-        {
-            item.Quality = item.Quality - item.Quality;
-        }
-
-        public static void TryIncreaseOneQuality(Item item)
-        {
-            if (item.Quality < 50)
-            {
-                item.Quality = item.Quality + 1;
-            }
-        }
-
-        public static void TryDecreaseOneQuality(Item item)
-        {
-            if (item.Quality > 0)
-            {
-                if (IsNotLegendaryItem(item))
-                {
-                    item.Quality = item.Quality - 1;
-                }
-            }
         }
     }
 
