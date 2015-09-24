@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GildedRose
 {
@@ -42,66 +43,31 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            foreach (Item item in Items)
+            foreach (Item item in Items.Where(IsNotLegendaryItem))
             {
-                if (IsNotLegendaryItem(item))
-                {
-                    PassOneDay(item);
-
-                    if (!IsValueAddingItem(item) && !IsTimeLimitedItem(item))
-                    {
-                        UpdateRegularItem(item);
-                    }
-                    else if (IsTimeLimitedItem(item))
-                    {
-                        UpdateTimeLimitedItem(item);
-                    }
-                    else if (IsValueAddingItem(item))
-                    {
-                        UpdateValueAddingItem(item);
-                    }
-                }
+                PassOneDay(item);
+                Update(item);
             }
         }
 
-        private static void UpdateValueAddingItem(Item item)
+        private static void Update(Item item)
         {
-            TryIncreaseOneQuality(item);
-            if (item.SellIn < 0)
+            var regularUpdater = GetUpdater(item);
+            if (regularUpdater!=null)
             {
-                TryIncreaseOneQuality(item);
+                regularUpdater.Update(item);
             }
         }
 
-        private static void UpdateTimeLimitedItem(Item item)
+        private static ItemUpdater GetUpdater(Item item)
         {
-            TryIncreaseOneQuality(item);
-
-            if (IsTimeLimitedItem(item))
+            var updaters = new List<ItemUpdater>
             {
-                if (item.SellIn < 10)
-                {
-                    TryIncreaseOneQuality(item);
-                }
-
-                if (item.SellIn < 5)
-                {
-                    TryIncreaseOneQuality(item);
-                }
-                if (item.SellIn < 0)
-                {
-                    ToZero(item);
-                }
-            }
-        }
-
-        private static void UpdateRegularItem(Item item)
-        {
-            TryDecreaseOneQuality(item);
-            if (item.SellIn < 0)
-            {
-                TryDecreaseOneQuality(item);
-            }
+                new RegularItemUpdater(),
+                new TimeLimitedItemUpdater(),
+                new ValueAddingItemUpdater()
+            };
+            return updaters.FirstOrDefault(updater=>updater.CanUpdate(item));
         }
 
         private static bool IsNotLegendaryItem(Item item)
@@ -109,27 +75,17 @@ namespace GildedRose
             return item.Name != "Sulfuras, Hand of Ragnaros";
         }
 
-        private static bool IsTimeLimitedItem(Item item)
-        {
-            return item.Name == "Backstage passes to a TAFKAL80ETC concert";
-        }
-
-        private static bool IsValueAddingItem(Item item)
-        {
-            return item.Name == "Aged Brie";
-        }
-
         private static void PassOneDay(Item item)
         {
             item.SellIn = item.SellIn - 1;
         }
 
-        private static void ToZero(Item item)
+        public static void ToZero(Item item)
         {
             item.Quality = item.Quality - item.Quality;
         }
 
-        private static void TryIncreaseOneQuality(Item item)
+        public static void TryIncreaseOneQuality(Item item)
         {
             if (item.Quality < 50)
             {
@@ -137,7 +93,7 @@ namespace GildedRose
             }
         }
 
-        private static void TryDecreaseOneQuality(Item item)
+        public static void TryDecreaseOneQuality(Item item)
         {
             if (item.Quality > 0)
             {
