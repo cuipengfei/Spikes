@@ -6,22 +6,19 @@
         {
             TryIncreaseOneQuality(item);
 
-            if (IsTimeLimitedItem(item))
+            if (item.SellIn < 10)
             {
-                if (item.SellIn < 10)
-                {
-                    TryIncreaseOneQuality(item);
-                }
+                TryIncreaseOneQuality(item);
+            }
 
-                if (item.SellIn < 5)
-                {
-                    TryIncreaseOneQuality(item);
-                }
+            if (item.SellIn < 5)
+            {
+                TryIncreaseOneQuality(item);
+            }
 
-                if (item.SellIn < 0)
-                {
-                    ToZero(item);
-                }
+            if (item.SellIn < 0)
+            {
+                ToZero(item);
             }
         }
 
