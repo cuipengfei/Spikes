@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GildedRose;
 
-static internal class UpdaterCenter
+internal static class UpdaterCenter
 {
     private static readonly List<ItemUpdater> Updaters = new List<ItemUpdater>
     {
