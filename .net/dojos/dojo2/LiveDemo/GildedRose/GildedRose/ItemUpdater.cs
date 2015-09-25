@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
     internal abstract class ItemUpdater
     {
@@ -23,6 +19,20 @@ namespace GildedRose
             {
                 item.Quality = item.Quality - 1;
             }
+        }
+    }
+
+    internal class ConjuredItemUpdater : ItemUpdater
+    {
+        public override bool CanUpdate(Item item)
+        {
+            return item.Name == "Conjured Mana Cake";
+        }
+
+        public override void Update(Item item)
+        {
+            TryDecreaseOneQuality(item);
+            TryDecreaseOneQuality(item);
         }
     }
 }

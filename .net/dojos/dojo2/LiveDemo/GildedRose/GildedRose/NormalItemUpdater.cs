@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace GildedRose
+﻿namespace GildedRose
 {
-    class NormalItemUpdater : ItemUpdater
+    internal class NormalItemUpdater : ItemUpdater
     {
         public override bool CanUpdate(Item item)
         {
