@@ -74,7 +74,7 @@ namespace GildedRoseTest
             //when pass another 1 day
             PassNDays(program, 1);
 
-            //then quality is 50
+            //then quality is 0
             Assert.AreEqual(0, BackStagePass(program).Quality);
         }
     }
