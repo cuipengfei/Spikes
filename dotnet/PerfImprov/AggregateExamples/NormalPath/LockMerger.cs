@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AggregateExamples.Cards;
 
 namespace AggregateExamples.NormalPath
 {
@@ -13,7 +12,7 @@ namespace AggregateExamples.NormalPath
             {
                 lock (token)
                 {
-                    bigCompany.EvaluatedMarketValue += smallCompany.EvaluatedMarketValue;
+                    bigCompany.Merge(smallCompany);
                 }
             });
             return bigCompany;

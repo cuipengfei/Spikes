@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AggregateExamples.Cards;
 
 namespace AggregateExamples.NormalPath
 {
@@ -9,7 +8,7 @@ namespace AggregateExamples.NormalPath
         {
             foreach (var smallCompany in smallCompanies)
             {
-                bigCompany.EvaluatedMarketValue += smallCompany.EvaluatedMarketValue;
+                bigCompany.Merge(smallCompany);
             }
             return bigCompany;
         }

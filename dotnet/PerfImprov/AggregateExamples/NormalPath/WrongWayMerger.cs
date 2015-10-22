@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AggregateExamples.Cards;
 
 namespace AggregateExamples.NormalPath
 {
@@ -9,7 +8,7 @@ namespace AggregateExamples.NormalPath
         public static Company WrongParallelMerge(Company bigCompany, IEnumerable<Company> smallCompanies)
         {
             Parallel.ForEach(smallCompanies,
-                smallCompany => { bigCompany.EvaluatedMarketValue += smallCompany.EvaluatedMarketValue; });
+                smallCompany => bigCompany.Merge(smallCompany));
             return bigCompany;
         }
     }

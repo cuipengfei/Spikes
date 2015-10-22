@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AggregateExamples.Cards;
 
 namespace AggregateExamples.FunctionalPath
 {
@@ -8,8 +7,11 @@ namespace AggregateExamples.FunctionalPath
     {
         public static Company FunctionalParallelMerge(Company bigCompany, IEnumerable<Company> smallCompanies)
         {
-            return smallCompanies.AsParallel().Aggregate(bigCompany, (buyer, seller) =>
-                new Company {EvaluatedMarketValue = buyer.EvaluatedMarketValue + seller.EvaluatedMarketValue});
+            var merged = smallCompanies.AsParallel()
+                .Aggregate(() => new Company(), (buyer, seller) => buyer.Merge(seller),
+                    (agg1, agg2) =>
+                        agg1.Merge(agg2), f => f);
+            return bigCompany.Merge(merged);
         }
     }
 }
