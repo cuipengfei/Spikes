@@ -7,11 +7,17 @@ namespace AggregateExamples.FunctionalPath
     {
         public static Company FunctionalParallelMerge(Company bigCompany, IEnumerable<Company> smallCompanies)
         {
-            var merged = smallCompanies.AsParallel()
-                .Aggregate(() => new Company(), (buyer, seller) => buyer.Merge(seller),
-                    (agg1, agg2) =>
-                        agg1.Merge(agg2), f => f);
-            return bigCompany.Merge(merged);
+            return smallCompanies
+                .AsParallel()
+                .Aggregate(CreateShell,
+                    (shell, smallCompany) => shell.Merge(smallCompany),
+                    (shell1, shell2) => shell1.Merge(shell2),
+                    bigCompany.Merge);
+        }
+
+        private static Company CreateShell()
+        {
+            return new Company();
         }
     }
 }

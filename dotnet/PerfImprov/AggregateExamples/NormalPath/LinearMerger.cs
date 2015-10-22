@@ -2,9 +2,9 @@
 
 namespace AggregateExamples.NormalPath
 {
-    internal class MutationMerger
+    internal class LinearMerger
     {
-        public static Company MergeByMutation(Company bigCompany, IEnumerable<Company> smallCompanies)
+        public static Company LinearMerge(Company bigCompany, IEnumerable<Company> smallCompanies)
         {
             foreach (var smallCompany in smallCompanies)
             {

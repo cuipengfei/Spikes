@@ -8,11 +8,7 @@ namespace AggregateExamples.FunctionalPath
         public static Company FunctionalMerge(Company bigCompany, IEnumerable<Company> smallCompanies)
         {
             return smallCompanies.Aggregate(bigCompany,
-                (buyer, seller) =>
-                {
-                    buyer.Merge(seller);
-                    return buyer;
-                });
+                (buyer, seller) => buyer.Merge(seller));
         }
     }
 }

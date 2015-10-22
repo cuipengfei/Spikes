@@ -24,8 +24,8 @@ namespace AggregateExamples
         {
             Console.WriteLine("==========================");
 
-            PrintMergeResult(MutationMerger.MergeByMutation, "简单直接    （最容易）");
-            PrintMergeResult(WrongWayMerger.WrongParallelMerge, "错误并行    （快但错）");
+            PrintMergeResult(LinearMerger.LinearMerge, "简单直接    （最容易）");
+            PrintMergeResult(FirstTryParallelMerger.FirstTryParallelMerge, "错误并行    （快但错）");
             PrintMergeResult(LockMerger.MergeWithLock, "加锁并行    （反而慢）");
 
             Console.WriteLine("*****");

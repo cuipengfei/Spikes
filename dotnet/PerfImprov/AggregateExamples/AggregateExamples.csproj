@@ -46,8 +46,8 @@
     <Compile Include="FunctionalPath\FunctionalMerger.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="FunctionalPath\FunctionalParallelMerger.cs" />
-    <Compile Include="NormalPath\WrongWayMerger.cs" />
-    <Compile Include="NormalPath\MutationMerger.cs" />
+    <Compile Include="NormalPath\FirstTryParallelMerger.cs" />
+    <Compile Include="NormalPath\LinearMerger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NormalPath\LockMerger.cs" />
