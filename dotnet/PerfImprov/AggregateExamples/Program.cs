@@ -40,7 +40,7 @@ namespace AggregateExamples
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var mergedCompany = mergeMethod(new Company {EvaluatedMarketValue = 10000000}, _smallCompanies);
+            var mergedCompany = mergeMethod(new Company {EvaluatedMarketValue = 1000000}, _smallCompanies);
 
             stopwatch.Stop();
 
@@ -51,8 +51,8 @@ namespace AggregateExamples
         private static IEnumerable<Company> GenerateSmallCompanies()
         {
             return Enumerable
-                .Range(100, 12000000)
-                .Select(number => new Company {EvaluatedMarketValue = number/100});
+                .Range(0, 10000000)
+				.Select(number => new Company {EvaluatedMarketValue = number}).ToArray();
         }
     }
 }
