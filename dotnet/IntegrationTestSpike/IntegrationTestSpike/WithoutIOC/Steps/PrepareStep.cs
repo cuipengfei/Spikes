@@ -1,4 +1,4 @@
-﻿namespace IntegrationTestSpike.HardMode.Steps
+﻿namespace IntegrationTestSpike.WithoutIOC.Steps
 {
     public class PrepareStep : BaseStep
     {

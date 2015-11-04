@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using IntegrationTestSpike.HardMode.Models;
+using IntegrationTestSpike.WithoutIOC.Models;
 
-namespace IntegrationTestSpike.HardMode.Steps
+namespace IntegrationTestSpike.WithoutIOC.Steps
 {
     public class CalculateStep : BaseStep
     {

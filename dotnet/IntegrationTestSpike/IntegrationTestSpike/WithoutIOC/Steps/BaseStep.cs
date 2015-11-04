@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.HardMode.Models;
-using IntegrationTestSpike.HardMode.Providers;
+using IntegrationTestSpike.WithoutIOC.Models;
+using IntegrationTestSpike.WithoutIOC.Providers;
 
-namespace IntegrationTestSpike.HardMode.Steps
+namespace IntegrationTestSpike.WithoutIOC.Steps
 {
     public abstract class BaseStep
     {
@@ -10,7 +10,7 @@ namespace IntegrationTestSpike.HardMode.Steps
         protected DataProvider<List<Land>> landDataProvider;
         protected DataProvider<List<Tower>> towerDataProvider;
 
-        public BaseStep(GlobalContext context)
+        protected BaseStep(GlobalContext context)
         {
             _context = context;
         }

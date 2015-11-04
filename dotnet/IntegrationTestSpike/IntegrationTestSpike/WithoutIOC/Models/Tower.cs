@@ -1,4 +1,4 @@
-﻿namespace IntegrationTestSpike.HardMode.Models
+﻿namespace IntegrationTestSpike.WithoutIOC.Models
 {
     public struct Tower
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.HardMode;
-using IntegrationTestSpike.HardMode.Models;
-using IntegrationTestSpike.HardMode.Steps;
+using IntegrationTestSpike.WithoutIOC;
+using IntegrationTestSpike.WithoutIOC.Models;
+using IntegrationTestSpike.WithoutIOC.Steps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AddDefenceTest
@@ -23,11 +23,14 @@ namespace AddDefenceTest
                     Towers = new List<Tower>()
                 }
             };
+            GlobalContext.Instance.MinimumDefence = 5;
+            GlobalContext.Instance.LastId = 5;
             var calculateStep = new CalculateStep(GlobalContext.Instance);
 
-            Assert.AreEqual(GlobalContext.Instance.ExistingLands[0].Towers.Count, 0); //before: no tower
+            Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count); //before: no tower
             calculateStep.Do();
-            Assert.AreEqual(GlobalContext.Instance.ExistingLands[0].Towers.Count, 1); //before: no tower
+            Assert.AreEqual(1, GlobalContext.Instance.ExistingLands[0].Towers.Count); //before: one tower
+            Assert.AreEqual("6", GlobalContext.Instance.ExistingLands[0].Towers[0].ID); //before: one tower
         }
     }
 }

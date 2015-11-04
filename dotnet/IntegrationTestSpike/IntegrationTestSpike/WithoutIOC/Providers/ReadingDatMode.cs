@@ -1,4 +1,4 @@
-﻿namespace IntegrationTestSpike.HardMode.Providers
+﻿namespace IntegrationTestSpike.WithoutIOC.Providers
 {
     public enum ReadingDatMode
     {

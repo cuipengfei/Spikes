@@ -46,17 +46,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HardMode\Launcher.cs" />
-    <Compile Include="HardMode\Models\Land.cs" />
-    <Compile Include="HardMode\Models\Tower.cs" />
-    <Compile Include="HardMode\Providers\DataProvider.cs" />
-    <Compile Include="HardMode\Providers\ExcelDataProvider.cs" />
-    <Compile Include="HardMode\Providers\DatFileDataProvider.cs" />
-    <Compile Include="HardMode\Providers\ReadingDatMode.cs" />
-    <Compile Include="HardMode\Steps\BaseStep.cs" />
-    <Compile Include="HardMode\GlobalContext.cs" />
-    <Compile Include="HardMode\Steps\CalculateStep.cs" />
-    <Compile Include="HardMode\Steps\PrepareStep.cs" />
+    <Compile Include="WithoutIOC\Launcher.cs" />
+    <Compile Include="WithoutIOC\Models\Land.cs" />
+    <Compile Include="WithoutIOC\Models\Tower.cs" />
+    <Compile Include="WithoutIOC\Providers\DataProvider.cs" />
+    <Compile Include="WithoutIOC\Providers\ExcelDataProvider.cs" />
+    <Compile Include="WithoutIOC\Providers\DatFileDataProvider.cs" />
+    <Compile Include="WithoutIOC\Providers\ReadingDatMode.cs" />
+    <Compile Include="WithoutIOC\Steps\BaseStep.cs" />
+    <Compile Include="WithoutIOC\GlobalContext.cs" />
+    <Compile Include="WithoutIOC\Steps\CalculateStep.cs" />
+    <Compile Include="WithoutIOC\Steps\PrepareStep.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

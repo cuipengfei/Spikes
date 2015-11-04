@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.HardMode.Providers;
-using IntegrationTestSpike.HardMode.Steps;
+using IntegrationTestSpike.WithoutIOC.Providers;
+using IntegrationTestSpike.WithoutIOC.Steps;
 
-namespace IntegrationTestSpike.HardMode
+namespace IntegrationTestSpike.WithoutIOC
 {
     public class Launcher
     {
@@ -14,6 +14,8 @@ namespace IntegrationTestSpike.HardMode
 
         private static List<BaseStep> LoadSteps()
         {
+            GlobalContext.Instance.LastId = 10;
+            GlobalContext.Instance.MinimumDefence = 5;
             var prepareStep = new PrepareStep(GlobalContext.Instance);
             prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
             var steps = new List<BaseStep>

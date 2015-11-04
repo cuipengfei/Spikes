@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.HardMode.Models;
+using IntegrationTestSpike.WithoutIOC.Models;
 
-namespace IntegrationTestSpike.HardMode
+namespace IntegrationTestSpike.WithoutIOC
 {
     public class GlobalContext
     {
@@ -9,8 +9,6 @@ namespace IntegrationTestSpike.HardMode
 
         private GlobalContext()
         {
-            LastId = 10;
-            MinimumDefence = 2;
         }
 
         public int LastId { get; set; }

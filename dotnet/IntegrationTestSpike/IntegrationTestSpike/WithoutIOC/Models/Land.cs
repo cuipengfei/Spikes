@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IntegrationTestSpike.HardMode.Models
+namespace IntegrationTestSpike.WithoutIOC.Models
 {
     public struct Land
     {

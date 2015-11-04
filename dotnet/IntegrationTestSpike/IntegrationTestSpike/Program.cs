@@ -1,5 +1,5 @@
 ﻿using System;
-using IntegrationTestSpike.HardMode;
+using IntegrationTestSpike.WithoutIOC;
 
 namespace IntegrationTestSpike
 {
