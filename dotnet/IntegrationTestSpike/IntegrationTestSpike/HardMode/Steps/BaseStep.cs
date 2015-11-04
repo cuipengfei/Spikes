@@ -4,7 +4,7 @@ using IntegrationTestSpike.HardMode.Providers;
 
 namespace IntegrationTestSpike.HardMode.Steps
 {
-    internal abstract class BaseStep
+    public abstract class BaseStep
     {
         protected readonly GlobalContext _context;
         protected DataProvider<List<Land>> landDataProvider;

@@ -3,7 +3,7 @@ using IntegrationTestSpike.HardMode.Models;
 
 namespace IntegrationTestSpike.HardMode.Providers
 {
-    internal class DatFileDataProvider : DataProvider<List<Tower>>
+    public class DatFileDataProvider : DataProvider<List<Tower>>
     {
         public ReadingDatMode Mode { get; set; }
 

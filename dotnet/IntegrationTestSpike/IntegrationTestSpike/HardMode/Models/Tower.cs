@@ -1,6 +1,6 @@
 ﻿namespace IntegrationTestSpike.HardMode.Models
 {
-    internal struct Tower
+    public struct Tower
     {
         public string ID;
         public int Height;

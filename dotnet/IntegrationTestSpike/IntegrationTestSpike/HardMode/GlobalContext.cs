@@ -3,7 +3,7 @@ using IntegrationTestSpike.HardMode.Models;
 
 namespace IntegrationTestSpike.HardMode
 {
-    internal class GlobalContext
+    public class GlobalContext
     {
         public static readonly GlobalContext Instance = new GlobalContext();
 

@@ -1,6 +1,6 @@
 ﻿namespace IntegrationTestSpike.HardMode.Providers
 {
-    internal enum ReadingDatMode
+    public enum ReadingDatMode
     {
         Hex,
         Binary

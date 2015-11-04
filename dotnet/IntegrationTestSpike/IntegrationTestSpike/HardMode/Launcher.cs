@@ -4,7 +4,7 @@ using IntegrationTestSpike.HardMode.Steps;
 
 namespace IntegrationTestSpike.HardMode
 {
-    internal class Launcher
+    public class Launcher
     {
         public static void Launch()
         {

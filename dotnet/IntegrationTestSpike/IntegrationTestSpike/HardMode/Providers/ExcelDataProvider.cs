@@ -3,7 +3,7 @@ using IntegrationTestSpike.HardMode.Models;
 
 namespace IntegrationTestSpike.HardMode.Providers
 {
-    internal class ExcelDataProvider : DataProvider<List<Land>>
+    public class ExcelDataProvider : DataProvider<List<Land>>
     {
         public bool IsReadingWholeFile { get; set; }
 

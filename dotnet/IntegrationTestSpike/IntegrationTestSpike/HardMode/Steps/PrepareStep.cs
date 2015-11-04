@@ -1,6 +1,6 @@
 ﻿namespace IntegrationTestSpike.HardMode.Steps
 {
-    internal class PrepareStep : BaseStep
+    public class PrepareStep : BaseStep
     {
         public PrepareStep(GlobalContext context) : base(context)
         {

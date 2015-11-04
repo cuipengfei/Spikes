@@ -3,7 +3,7 @@ using IntegrationTestSpike.HardMode.Models;
 
 namespace IntegrationTestSpike.HardMode.Steps
 {
-    internal class CalculateStep : BaseStep
+    public class CalculateStep : BaseStep
     {
         private readonly int _height = 10;
 

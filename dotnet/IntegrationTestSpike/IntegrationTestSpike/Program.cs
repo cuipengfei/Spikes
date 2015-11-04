@@ -3,7 +3,7 @@ using IntegrationTestSpike.HardMode;
 
 namespace IntegrationTestSpike
 {
-    internal class Program
+    public class Program
     {
         private static void Main(string[] args)
         {

@@ -2,7 +2,7 @@
 
 namespace IntegrationTestSpike.HardMode.Models
 {
-    internal struct Land
+    public struct Land
     {
         public int UpperLeftX;
         public int UpperLeftY;
