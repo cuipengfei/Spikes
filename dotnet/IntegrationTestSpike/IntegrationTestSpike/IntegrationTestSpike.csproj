@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>lib\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,11 +44,19 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="YAXLib">
-      <HintPath>lib\YAXLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WithIOC\GlobalContext.cs" />
+    <Compile Include="WithIOC\Launcher.cs" />
+    <Compile Include="WithIOC\Models\Land.cs" />
+    <Compile Include="WithIOC\Models\Tower.cs" />
+    <Compile Include="WithIOC\Providers\DataProvider.cs" />
+    <Compile Include="WithIOC\Providers\DatFileDataProvider.cs" />
+    <Compile Include="WithIOC\Providers\ExcelDataProvider.cs" />
+    <Compile Include="WithIOC\Providers\ReadingDatMode.cs" />
+    <Compile Include="WithIOC\Steps\BaseStep.cs" />
+    <Compile Include="WithIOC\Steps\CalculateStep.cs" />
+    <Compile Include="WithIOC\Steps\PrepareStep.cs" />
     <Compile Include="WithoutIOC\Launcher.cs" />
     <Compile Include="WithoutIOC\Models\Land.cs" />
     <Compile Include="WithoutIOC\Models\Tower.cs" />
