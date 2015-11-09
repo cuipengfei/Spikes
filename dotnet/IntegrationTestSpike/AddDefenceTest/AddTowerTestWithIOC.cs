@@ -25,7 +25,7 @@ namespace AddDefenceTest
             calc.Do();
             Assert.AreEqual(23, GlobalContext.Instance.ExistingLands[0].Towers.Count);
         }
-        
+
         public static ILifetimeScope RegisterComponents()
         {
             var builder = new ContainerBuilder();

@@ -7,8 +7,8 @@ namespace IntegrationTestSpike.TowerDemo.Steps
 {
     public class CalculateStep : BaseStep
     {
-        private readonly int _height = 10;
         private readonly IEnumerable<Calculator> _calculators;
+        private readonly int _height = 10;
 
         public CalculateStep(GlobalContext context, IEnumerable<Calculator> calculators)
             : base(context)
