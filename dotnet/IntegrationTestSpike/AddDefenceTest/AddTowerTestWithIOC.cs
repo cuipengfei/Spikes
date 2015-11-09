@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Autofac;
 using IntegrationTestSpike.WithIOC;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Autofac;
 using IntegrationTestSpike.WithIOC.Steps;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AddDefenceTest
 {
@@ -10,14 +9,21 @@ namespace AddDefenceTest
     public class AddTowerTestWithIOC
     {
         [TestMethod]
-        public void ShouldAddTowerToDefencelessLands()
+        public void WholeProcessTest()
         {
-            var step = Launcher.RegisterComponents().Resolve<CalculateStep>();
+            var scope = Launcher.RegisterComponents();
 
-            Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count); //before: no tower
-            step.Do();
-            Assert.AreEqual(1, GlobalContext.Instance.ExistingLands[0].Towers.Count); //after: one tower
-            Assert.AreEqual("6", GlobalContext.Instance.ExistingLands[0].Towers[0].ID);
+            var prep = scope.Resolve<PrepareStep>();
+
+            Assert.AreEqual(null, GlobalContext.Instance.ExistingLands);
+            prep.Do();
+            Assert.AreEqual(1, GlobalContext.Instance.ExistingLands.Count);
+
+            var calc = scope.Resolve<CalculateStep>();
+
+            Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
+            calc.Do();
+            Assert.AreEqual(1, GlobalContext.Instance.ExistingLands[0].Towers.Count);
         }
     }
 }
