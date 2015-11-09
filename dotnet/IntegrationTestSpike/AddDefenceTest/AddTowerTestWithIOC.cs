@@ -16,7 +16,6 @@ namespace AddDefenceTest
 
             var prep = scope.Resolve<PrepareStep>();
 
-            Assert.AreEqual(null, GlobalContext.Instance.ExistingLands);
             prep.Do();
             Assert.AreEqual(1, GlobalContext.Instance.ExistingLands.Count);
 
@@ -33,6 +32,13 @@ namespace AddDefenceTest
             builder.RegisterInstance(GlobalContext.Instance);
             builder.RegisterModule(new ConfigurationSettingsReader("autofac"));
             return builder.Build().BeginLifetimeScope();
+        }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            GlobalContext.Instance.ExistingLands = null;
+            GlobalContext.Instance.ExistingTowers = null;
         }
     }
 }

@@ -76,7 +76,6 @@
     <Compile Include="WithIOC\Calculators\MiniDefenceCalculator.cs" />
     <Compile Include="WithIOC\Calculators\NormalTowerCalculator.cs" />
     <Compile Include="WithIOC\GlobalContext.cs" />
-    <Compile Include="WithIOC\Launcher.cs" />
     <Compile Include="WithIOC\Models\Land.cs" />
     <Compile Include="WithIOC\Models\Tower.cs" />
     <Compile Include="WithIOC\Models\TowerType.cs" />
@@ -87,23 +86,6 @@
     <Compile Include="WithIOC\Steps\BaseStep.cs" />
     <Compile Include="WithIOC\Steps\CalculateStep.cs" />
     <Compile Include="WithIOC\Steps\PrepareStep.cs" />
-    <Compile Include="WithoutIOC\Calculators\BigAttackCalculator.cs" />
-    <Compile Include="WithoutIOC\Calculators\BigDefenceCalculator.cs" />
-    <Compile Include="WithoutIOC\Calculators\MiniAttackCalculator.cs" />
-    <Compile Include="WithoutIOC\Calculators\MiniDefenceCalculator.cs" />
-    <Compile Include="WithoutIOC\Calculators\NormalTowerCalculator.cs" />
-    <Compile Include="WithoutIOC\Models\Land.cs" />
-    <Compile Include="WithoutIOC\Models\Tower.cs" />
-    <Compile Include="WithoutIOC\Models\TowerType.cs" />
-    <Compile Include="WithoutIOC\Providers\DataProvider.cs" />
-    <Compile Include="WithoutIOC\Providers\ExcelDataProvider.cs" />
-    <Compile Include="WithoutIOC\Providers\DatFileDataProvider.cs" />
-    <Compile Include="WithoutIOC\Providers\ReadingDatMode.cs" />
-    <Compile Include="WithoutIOC\Steps\BaseStep.cs" />
-    <Compile Include="WithoutIOC\GlobalContext.cs" />
-    <Compile Include="WithoutIOC\Steps\CalculateStep.cs" />
-    <Compile Include="WithoutIOC\Calculators\Calculator.cs" />
-    <Compile Include="WithoutIOC\Steps\PrepareStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

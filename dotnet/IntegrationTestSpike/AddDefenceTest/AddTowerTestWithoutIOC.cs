@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.WithoutIOC;
-using IntegrationTestSpike.WithoutIOC.Calculators;
-using IntegrationTestSpike.WithoutIOC.Providers;
-using IntegrationTestSpike.WithoutIOC.Steps;
+using IntegrationTestSpike.WithIOC;
+using IntegrationTestSpike.WithIOC.Calculators;
+using IntegrationTestSpike.WithIOC.Providers;
+using IntegrationTestSpike.WithIOC.Steps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AddDefenceTest
@@ -14,7 +14,8 @@ namespace AddDefenceTest
         public void WholeProcessTest()
         {
             var prepareStep = new PrepareStep(GlobalContext.Instance);
-            prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
+            prepareStep.LandDataProvider = new ExcelDataProvider();
+            prepareStep.TowerDataProvider = new DatFileDataProvider();
 
             var bigAttackCalculator = new BigAttackCalculator();
             var bigDefendsCalculator = new BigDefenceCalculator();
@@ -34,8 +35,6 @@ namespace AddDefenceTest
 
             //above is object creation
 
-            prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
-
             Assert.AreEqual(null, GlobalContext.Instance.ExistingLands);
             prepareStep.Do();
             Assert.AreEqual(1, GlobalContext.Instance.ExistingLands.Count);
@@ -44,6 +43,13 @@ namespace AddDefenceTest
             Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
             calculateStep.Do();
             Assert.AreEqual(23, GlobalContext.Instance.ExistingLands[0].Towers.Count);
+        }
+
+        [TestCleanup]
+        public void CleanUp()
+        {
+            GlobalContext.Instance.ExistingLands = null;
+            GlobalContext.Instance.ExistingTowers = null;
         }
     }
 }
