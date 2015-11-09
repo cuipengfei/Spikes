@@ -13,13 +13,11 @@ namespace AddDefenceTest
         public void WholeProcessTest()
         {
             var scope = RegisterComponents();
-
             var prep = scope.Resolve<PrepareStep>();
+            var calc = scope.Resolve<CalculateStep>();
 
             prep.Do();
             Assert.AreEqual(1, GlobalContext.Instance.ExistingLands.Count);
-
-            var calc = scope.Resolve<CalculateStep>();
 
             Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
             calc.Do();
