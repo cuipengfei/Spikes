@@ -1,4 +1,6 @@
-﻿using IntegrationTestSpike.WithoutIOC;
+﻿using System.Collections.Generic;
+using IntegrationTestSpike.WithoutIOC;
+using IntegrationTestSpike.WithoutIOC.Calculators;
 using IntegrationTestSpike.WithoutIOC.Providers;
 using IntegrationTestSpike.WithoutIOC.Steps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,18 +13,38 @@ namespace AddDefenceTest
         [TestMethod]
         public void WholeProcessTest()
         {
-            var prep = new PrepareStep(GlobalContext.Instance);
-            prep.Init(new ExcelDataProvider(), new DatFileDataProvider());
+            GlobalContext.Instance.LastId = 10;
+            GlobalContext.Instance.MinimumDefence = 5;
+            var prepareStep = new PrepareStep(GlobalContext.Instance);
+            prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
+
+            var bigAttackCalculator = new BigAttackCalculator();
+            var bigDefendsCalculator = new BigDefendsCalculator();
+            var miniAttackCalculator = new MiniAttackCalculator();
+            var miniDefenceCalculator = new MiniDefenceCalculator();
+            var normalTowerCalculator = new NormalTowerCalculator();
+
+            var calculateStep = new CalculateStep(GlobalContext.Instance,
+                new List<Calculator>
+                {
+                    bigAttackCalculator,
+                    bigDefendsCalculator,
+                    miniAttackCalculator,
+                    miniDefenceCalculator,
+                    normalTowerCalculator
+                });
+
+            //above is object creation
+
+            prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
 
             Assert.AreEqual(null, GlobalContext.Instance.ExistingLands);
-            prep.Do();
+            prepareStep.Do();
             Assert.AreEqual(1, GlobalContext.Instance.ExistingLands.Count);
-
-            var calc = new CalculateStep(GlobalContext.Instance);
 
             GlobalContext.Instance.MinimumDefence = 5;
             Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
-            calc.Do();
+            calculateStep.Do();
             Assert.AreEqual(1, GlobalContext.Instance.ExistingLands[0].Towers.Count);
         }
     }

@@ -13,8 +13,8 @@ namespace IntegrationTestSpike.WithIOC.Steps
             _context = context;
         }
 
-        public DataProvider<List<Land>> LandDataProvider { get; set; }
-        public DataProvider<List<Tower>> TowerDataProvider { get; set; }
+        public ExcelDataProvider LandDataProvider { get; set; }
+        public DatFileDataProvider TowerDataProvider { get; set; }
 
         public abstract void Do();
     }

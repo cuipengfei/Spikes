@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IntegrationTestSpike.WithoutIOC.Calculators;
 using IntegrationTestSpike.WithoutIOC.Providers;
 using IntegrationTestSpike.WithoutIOC.Steps;
 
@@ -18,10 +19,16 @@ namespace IntegrationTestSpike.WithoutIOC
             GlobalContext.Instance.MinimumDefence = 5;
             var prepareStep = new PrepareStep(GlobalContext.Instance);
             prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
+
+            var bigAttackCalculator = new BigAttackCalculator();
+            var bigDefendsCalculator = new BigDefendsCalculator();
+
+            var calculateStep = new CalculateStep(GlobalContext.Instance,
+                new List<Calculator> {bigAttackCalculator, bigDefendsCalculator});
             var steps = new List<BaseStep>
             {
                 prepareStep,
-                new CalculateStep(GlobalContext.Instance)
+                calculateStep
             };
             return steps;
         }

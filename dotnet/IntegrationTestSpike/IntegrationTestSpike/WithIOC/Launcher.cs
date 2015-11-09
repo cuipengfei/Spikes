@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using Autofac.Configuration;
 using IntegrationTestSpike.WithIOC.Models;
 using IntegrationTestSpike.WithIOC.Providers;
 using IntegrationTestSpike.WithIOC.Steps;
@@ -23,11 +24,8 @@ namespace IntegrationTestSpike.WithIOC
 
             builder.RegisterInstance(GlobalContext.Instance);
 
-            builder.RegisterType<DatFileDataProvider>().As<DataProvider<List<Tower>>>();
-            builder.RegisterType<ExcelDataProvider>().As<DataProvider<List<Land>>>();
+            builder.RegisterModule(new ConfigurationSettingsReader("autofac"));
 
-            builder.RegisterType<PrepareStep>().PropertiesAutowired();
-            builder.RegisterType<CalculateStep>().PropertiesAutowired();
             var scope = builder.Build().BeginLifetimeScope();
             return scope;
         }
