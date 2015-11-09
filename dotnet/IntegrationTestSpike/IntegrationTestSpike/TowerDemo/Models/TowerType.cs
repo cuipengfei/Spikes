@@ -1,4 +1,4 @@
-﻿namespace IntegrationTestSpike.WithIOC.Models
+﻿namespace IntegrationTestSpike.TowerDemo.Models
 {
     public enum TowerType
     {

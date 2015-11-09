@@ -1,6 +1,6 @@
-﻿using IntegrationTestSpike.WithIOC.Providers;
+﻿using IntegrationTestSpike.TowerDemo.Providers;
 
-namespace IntegrationTestSpike.WithIOC.Steps
+namespace IntegrationTestSpike.TowerDemo.Steps
 {
     public abstract class BaseStep
     {

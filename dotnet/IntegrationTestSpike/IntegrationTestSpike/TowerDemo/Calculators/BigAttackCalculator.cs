@@ -1,6 +1,6 @@
-﻿using IntegrationTestSpike.WithIOC.Models;
+﻿using IntegrationTestSpike.TowerDemo.Models;
 
-namespace IntegrationTestSpike.WithIOC.Calculators
+namespace IntegrationTestSpike.TowerDemo.Calculators
 {
     public class BigAttackCalculator : Calculator
     {

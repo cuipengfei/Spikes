@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IntegrationTestSpike.WithIOC.Models
+namespace IntegrationTestSpike.TowerDemo.Models
 {
     public struct Land
     {

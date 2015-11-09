@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.WithIOC.Models;
+using IntegrationTestSpike.TowerDemo.Models;
 
-namespace IntegrationTestSpike.WithIOC
+namespace IntegrationTestSpike.TowerDemo
 {
     public class GlobalContext
     {

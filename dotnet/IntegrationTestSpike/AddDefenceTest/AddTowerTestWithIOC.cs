@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Configuration;
-using IntegrationTestSpike.WithIOC;
-using IntegrationTestSpike.WithIOC.Steps;
+using IntegrationTestSpike.TowerDemo;
+using IntegrationTestSpike.TowerDemo.Steps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AddDefenceTest

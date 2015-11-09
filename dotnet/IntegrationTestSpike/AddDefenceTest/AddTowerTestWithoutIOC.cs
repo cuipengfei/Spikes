@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.WithIOC;
-using IntegrationTestSpike.WithIOC.Calculators;
-using IntegrationTestSpike.WithIOC.Providers;
-using IntegrationTestSpike.WithIOC.Steps;
+using IntegrationTestSpike.TowerDemo;
+using IntegrationTestSpike.TowerDemo.Calculators;
+using IntegrationTestSpike.TowerDemo.Providers;
+using IntegrationTestSpike.TowerDemo.Steps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AddDefenceTest

@@ -1,4 +1,4 @@
-﻿namespace IntegrationTestSpike.WithIOC.Providers
+﻿namespace IntegrationTestSpike.TowerDemo.Providers
 {
     public enum ReadingDatMode
     {

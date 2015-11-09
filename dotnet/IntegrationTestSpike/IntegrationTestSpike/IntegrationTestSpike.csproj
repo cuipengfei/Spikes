@@ -69,23 +69,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WithIOC\Calculators\BigAttackCalculator.cs" />
-    <Compile Include="WithIOC\Calculators\BigDefenceCalculator.cs" />
-    <Compile Include="WithIOC\Calculators\Calculator.cs" />
-    <Compile Include="WithIOC\Calculators\MiniAttackCalculator.cs" />
-    <Compile Include="WithIOC\Calculators\MiniDefenceCalculator.cs" />
-    <Compile Include="WithIOC\Calculators\NormalTowerCalculator.cs" />
-    <Compile Include="WithIOC\GlobalContext.cs" />
-    <Compile Include="WithIOC\Models\Land.cs" />
-    <Compile Include="WithIOC\Models\Tower.cs" />
-    <Compile Include="WithIOC\Models\TowerType.cs" />
-    <Compile Include="WithIOC\Providers\DataProvider.cs" />
-    <Compile Include="WithIOC\Providers\DatFileDataProvider.cs" />
-    <Compile Include="WithIOC\Providers\ExcelDataProvider.cs" />
-    <Compile Include="WithIOC\Providers\ReadingDatMode.cs" />
-    <Compile Include="WithIOC\Steps\BaseStep.cs" />
-    <Compile Include="WithIOC\Steps\CalculateStep.cs" />
-    <Compile Include="WithIOC\Steps\PrepareStep.cs" />
+    <Compile Include="TowerDemo\Calculators\BigAttackCalculator.cs" />
+    <Compile Include="TowerDemo\Calculators\BigDefenceCalculator.cs" />
+    <Compile Include="TowerDemo\Calculators\Calculator.cs" />
+    <Compile Include="TowerDemo\Calculators\MiniAttackCalculator.cs" />
+    <Compile Include="TowerDemo\Calculators\MiniDefenceCalculator.cs" />
+    <Compile Include="TowerDemo\Calculators\NormalTowerCalculator.cs" />
+    <Compile Include="TowerDemo\GlobalContext.cs" />
+    <Compile Include="TowerDemo\Models\Land.cs" />
+    <Compile Include="TowerDemo\Models\Tower.cs" />
+    <Compile Include="TowerDemo\Models\TowerType.cs" />
+    <Compile Include="TowerDemo\Providers\DataProvider.cs" />
+    <Compile Include="TowerDemo\Providers\DatFileDataProvider.cs" />
+    <Compile Include="TowerDemo\Providers\ExcelDataProvider.cs" />
+    <Compile Include="TowerDemo\Providers\ReadingDatMode.cs" />
+    <Compile Include="TowerDemo\Steps\BaseStep.cs" />
+    <Compile Include="TowerDemo\Steps\CalculateStep.cs" />
+    <Compile Include="TowerDemo\Steps\PrepareStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

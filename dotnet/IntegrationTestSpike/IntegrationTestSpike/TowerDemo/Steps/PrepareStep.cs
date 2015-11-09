@@ -1,4 +1,4 @@
-﻿namespace IntegrationTestSpike.WithIOC.Steps
+﻿namespace IntegrationTestSpike.TowerDemo.Steps
 {
     public class PrepareStep : BaseStep
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using IntegrationTestSpike.WithIOC.Calculators;
-using IntegrationTestSpike.WithIOC.Models;
+using IntegrationTestSpike.TowerDemo.Calculators;
+using IntegrationTestSpike.TowerDemo.Models;
 
-namespace IntegrationTestSpike.WithIOC.Steps
+namespace IntegrationTestSpike.TowerDemo.Steps
 {
     public class CalculateStep : BaseStep
     {

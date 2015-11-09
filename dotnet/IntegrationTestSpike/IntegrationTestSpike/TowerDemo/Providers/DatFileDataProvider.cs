@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using IntegrationTestSpike.WithIOC.Models;
+using IntegrationTestSpike.TowerDemo.Models;
 
-namespace IntegrationTestSpike.WithIOC.Providers
+namespace IntegrationTestSpike.TowerDemo.Providers
 {
     public class DatFileDataProvider : DataProvider<List<Tower>>
     {
