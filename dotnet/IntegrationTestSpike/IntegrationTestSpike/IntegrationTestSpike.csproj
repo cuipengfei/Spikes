@@ -66,10 +66,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WithIOC\Calculators\BigAttackCalculator.cs" />
+    <Compile Include="WithIOC\Calculators\BigDefenceCalculator.cs" />
+    <Compile Include="WithIOC\Calculators\Calculator.cs" />
+    <Compile Include="WithIOC\Calculators\MiniAttackCalculator.cs" />
+    <Compile Include="WithIOC\Calculators\MiniDefenceCalculator.cs" />
+    <Compile Include="WithIOC\Calculators\NormalTowerCalculator.cs" />
     <Compile Include="WithIOC\GlobalContext.cs" />
     <Compile Include="WithIOC\Launcher.cs" />
     <Compile Include="WithIOC\Models\Land.cs" />
     <Compile Include="WithIOC\Models\Tower.cs" />
+    <Compile Include="WithIOC\Models\TowerType.cs" />
     <Compile Include="WithIOC\Providers\DataProvider.cs" />
     <Compile Include="WithIOC\Providers\DatFileDataProvider.cs" />
     <Compile Include="WithIOC\Providers\ExcelDataProvider.cs" />
@@ -78,7 +85,7 @@
     <Compile Include="WithIOC\Steps\CalculateStep.cs" />
     <Compile Include="WithIOC\Steps\PrepareStep.cs" />
     <Compile Include="WithoutIOC\Calculators\BigAttackCalculator.cs" />
-    <Compile Include="WithoutIOC\Calculators\BigDefendsCalculator.cs" />
+    <Compile Include="WithoutIOC\Calculators\BigDefenceCalculator.cs" />
     <Compile Include="WithoutIOC\Calculators\MiniAttackCalculator.cs" />
     <Compile Include="WithoutIOC\Calculators\MiniDefenceCalculator.cs" />
     <Compile Include="WithoutIOC\Calculators\NormalTowerCalculator.cs" />

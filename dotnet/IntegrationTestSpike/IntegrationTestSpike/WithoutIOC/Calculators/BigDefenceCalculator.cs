@@ -2,7 +2,7 @@
 
 namespace IntegrationTestSpike.WithoutIOC.Calculators
 {
-    public class BigDefendsCalculator:Calculator
+    public class BigDefenceCalculator:Calculator
     {
         public override int Calculate()
         {

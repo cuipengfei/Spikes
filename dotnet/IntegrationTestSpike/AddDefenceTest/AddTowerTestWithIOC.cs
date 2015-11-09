@@ -23,7 +23,7 @@ namespace AddDefenceTest
 
             Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
             calc.Do();
-            Assert.AreEqual(1, GlobalContext.Instance.ExistingLands[0].Towers.Count);
+            Assert.AreEqual(23, GlobalContext.Instance.ExistingLands[0].Towers.Count);
         }
     }
 }

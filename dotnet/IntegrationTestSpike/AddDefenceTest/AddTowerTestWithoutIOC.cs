@@ -19,7 +19,7 @@ namespace AddDefenceTest
             prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
 
             var bigAttackCalculator = new BigAttackCalculator();
-            var bigDefendsCalculator = new BigDefendsCalculator();
+            var bigDefendsCalculator = new BigDefenceCalculator();
             var miniAttackCalculator = new MiniAttackCalculator();
             var miniDefenceCalculator = new MiniDefenceCalculator();
             var normalTowerCalculator = new NormalTowerCalculator();

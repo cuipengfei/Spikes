@@ -21,7 +21,7 @@ namespace IntegrationTestSpike.WithoutIOC
             prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
 
             var bigAttackCalculator = new BigAttackCalculator();
-            var bigDefendsCalculator = new BigDefendsCalculator();
+            var bigDefendsCalculator = new BigDefenceCalculator();
 
             var calculateStep = new CalculateStep(GlobalContext.Instance,
                 new List<Calculator> {bigAttackCalculator, bigDefendsCalculator});

@@ -9,6 +9,8 @@ namespace IntegrationTestSpike.WithoutIOC
 
         private GlobalContext()
         {
+            LastId = 1;
+            MinimumDefence = 5;
         }
 
         public int LastId { get; set; }

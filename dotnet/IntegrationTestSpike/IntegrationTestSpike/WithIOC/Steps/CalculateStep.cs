@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using IntegrationTestSpike.WithIOC.Calculators;
 using IntegrationTestSpike.WithIOC.Models;
 
 namespace IntegrationTestSpike.WithIOC.Steps
@@ -6,17 +8,31 @@ namespace IntegrationTestSpike.WithIOC.Steps
     public class CalculateStep : BaseStep
     {
         private readonly int _height = 10;
+        private IEnumerable<Calculator> _calculators;
 
-        public CalculateStep(GlobalContext context) : base(context)
+        public CalculateStep(GlobalContext context, IEnumerable<Calculator> calculators)
+            : base(context)
         {
+            _calculators = calculators;
         }
 
         public override void Do()
         {
-            var defenceLessLands = _context.ExistingLands.Where(CanNotDefende);
+            var defenceLessLands = _context.ExistingLands.Where(CanNotDefende).ToList();
+            foreach (var calculator in _calculators)
+            {
+                AddTowers(defenceLessLands, calculator.Calculate(), calculator.TowerType);
+            }
+        }
+
+        private void AddTowers(IEnumerable<Land> defenceLessLands, int num, TowerType type)
+        {
             foreach (var defenceLessLand in defenceLessLands)
             {
-                defenceLessLand.Towers.Add(new Tower {Height = _height, ID = (_context.LastId + 1).ToString()});
+                for (int i = 0; i < num; i++)
+                {
+                    defenceLessLand.Towers.Add(new Tower { Height = _height, ID = (_context.LastId + 1).ToString(), Type = type });
+                }
             }
         }
 
@@ -27,12 +43,12 @@ namespace IntegrationTestSpike.WithIOC.Steps
 
         private static int DefenceLevel(Land land)
         {
-            return land.Towers.Count/Area(land);
+            return land.Towers.Count / Area(land);
         }
 
         private static int Area(Land land)
         {
-            return (land.LowerRightX - land.UpperLeftX)*(land.UpperLeftX - land.LowerRightY);
+            return (land.LowerRightX - land.UpperLeftX) * (land.UpperLeftX - land.LowerRightY);
         }
     }
 }

@@ -19,15 +19,9 @@ namespace IntegrationTestSpike.WithIOC
         public static ILifetimeScope RegisterComponents()
         {
             var builder = new ContainerBuilder();
-            GlobalContext.Instance.LastId = 10;
-            GlobalContext.Instance.MinimumDefence = 5;
-
             builder.RegisterInstance(GlobalContext.Instance);
-
             builder.RegisterModule(new ConfigurationSettingsReader("autofac"));
-
-            var scope = builder.Build().BeginLifetimeScope();
-            return scope;
+            return builder.Build().BeginLifetimeScope();
         }
 
         private static List<BaseStep> FindSteps(ILifetimeScope scope)

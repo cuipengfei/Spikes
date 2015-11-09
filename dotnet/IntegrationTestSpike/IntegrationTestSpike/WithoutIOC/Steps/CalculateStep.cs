@@ -30,7 +30,7 @@ namespace IntegrationTestSpike.WithoutIOC.Steps
             {
                 for (int i = 0; i < num; i++)
                 {
-                    defenceLessLand.Towers.Add(new Tower {Height = _height, ID = (_context.LastId + 1).ToString(), type = type});
+                    defenceLessLand.Towers.Add(new Tower {Height = _height, ID = (_context.LastId + 1).ToString(), Type = type});
                 }
             }
         }
