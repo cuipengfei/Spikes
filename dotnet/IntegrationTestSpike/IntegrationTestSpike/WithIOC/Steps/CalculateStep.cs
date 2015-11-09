@@ -8,7 +8,7 @@ namespace IntegrationTestSpike.WithIOC.Steps
     public class CalculateStep : BaseStep
     {
         private readonly int _height = 10;
-        private IEnumerable<Calculator> _calculators;
+        private readonly IEnumerable<Calculator> _calculators;
 
         public CalculateStep(GlobalContext context, IEnumerable<Calculator> calculators)
             : base(context)
@@ -29,9 +29,14 @@ namespace IntegrationTestSpike.WithIOC.Steps
         {
             foreach (var defenceLessLand in defenceLessLands)
             {
-                for (int i = 0; i < num; i++)
+                for (var i = 0; i < num; i++)
                 {
-                    defenceLessLand.Towers.Add(new Tower { Height = _height, ID = (_context.LastId + 1).ToString(), Type = type });
+                    defenceLessLand.Towers.Add(new Tower
+                    {
+                        Height = _height,
+                        ID = (_context.LastId + 1).ToString(),
+                        Type = type
+                    });
                 }
             }
         }
@@ -43,12 +48,12 @@ namespace IntegrationTestSpike.WithIOC.Steps
 
         private static int DefenceLevel(Land land)
         {
-            return land.Towers.Count / Area(land);
+            return land.Towers.Count/Area(land);
         }
 
         private static int Area(Land land)
         {
-            return (land.LowerRightX - land.UpperLeftX) * (land.UpperLeftX - land.LowerRightY);
+            return (land.LowerRightX - land.UpperLeftX)*(land.UpperLeftX - land.LowerRightY);
         }
     }
 }

@@ -13,8 +13,6 @@ namespace AddDefenceTest
         [TestMethod]
         public void WholeProcessTest()
         {
-            GlobalContext.Instance.LastId = 10;
-            GlobalContext.Instance.MinimumDefence = 5;
             var prepareStep = new PrepareStep(GlobalContext.Instance);
             prepareStep.Init(new ExcelDataProvider(), new DatFileDataProvider());
 
@@ -45,7 +43,7 @@ namespace AddDefenceTest
             GlobalContext.Instance.MinimumDefence = 5;
             Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
             calculateStep.Do();
-            Assert.AreEqual(1, GlobalContext.Instance.ExistingLands[0].Towers.Count);
+            Assert.AreEqual(23, GlobalContext.Instance.ExistingLands[0].Towers.Count);
         }
     }
 }

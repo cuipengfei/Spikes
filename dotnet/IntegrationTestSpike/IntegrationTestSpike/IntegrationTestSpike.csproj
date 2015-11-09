@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD223DAD-5F1F-4ECE-ABD9-E8045D44F68D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IntegrationTestSpike</RootNamespace>
     <AssemblyName>IntegrationTestSpike</AssemblyName>
@@ -47,6 +47,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -89,7 +92,6 @@
     <Compile Include="WithoutIOC\Calculators\MiniAttackCalculator.cs" />
     <Compile Include="WithoutIOC\Calculators\MiniDefenceCalculator.cs" />
     <Compile Include="WithoutIOC\Calculators\NormalTowerCalculator.cs" />
-    <Compile Include="WithoutIOC\Launcher.cs" />
     <Compile Include="WithoutIOC\Models\Land.cs" />
     <Compile Include="WithoutIOC\Models\Tower.cs" />
     <Compile Include="WithoutIOC\Models\TowerType.cs" />
@@ -102,7 +104,6 @@
     <Compile Include="WithoutIOC\Steps\CalculateStep.cs" />
     <Compile Include="WithoutIOC\Calculators\Calculator.cs" />
     <Compile Include="WithoutIOC\Steps\PrepareStep.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

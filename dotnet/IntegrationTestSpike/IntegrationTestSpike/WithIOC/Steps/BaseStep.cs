@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using IntegrationTestSpike.WithIOC.Models;
-using IntegrationTestSpike.WithIOC.Providers;
+﻿using IntegrationTestSpike.WithIOC.Providers;
 
 namespace IntegrationTestSpike.WithIOC.Steps
 {

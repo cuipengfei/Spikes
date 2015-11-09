@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Configuration;
 using IntegrationTestSpike.WithIOC;
 using IntegrationTestSpike.WithIOC.Steps;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +12,7 @@ namespace AddDefenceTest
         [TestMethod]
         public void WholeProcessTest()
         {
-            var scope = Launcher.RegisterComponents();
+            var scope = RegisterComponents();
 
             var prep = scope.Resolve<PrepareStep>();
 
@@ -24,6 +25,14 @@ namespace AddDefenceTest
             Assert.AreEqual(0, GlobalContext.Instance.ExistingLands[0].Towers.Count);
             calc.Do();
             Assert.AreEqual(23, GlobalContext.Instance.ExistingLands[0].Towers.Count);
+        }
+        
+        public static ILifetimeScope RegisterComponents()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterInstance(GlobalContext.Instance);
+            builder.RegisterModule(new ConfigurationSettingsReader("autofac"));
+            return builder.Build().BeginLifetimeScope();
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using Autofac.Configuration;
-using IntegrationTestSpike.WithIOC.Models;
-using IntegrationTestSpike.WithIOC.Providers;
 using IntegrationTestSpike.WithIOC.Steps;
 
 namespace IntegrationTestSpike.WithIOC
