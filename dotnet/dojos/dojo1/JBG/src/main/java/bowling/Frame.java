@@ -30,7 +30,7 @@ public class Frame {
     private int getNextNextRoll() {
         int nextNextRoll = 0;
 
-        if (isStrike()) {
+        if (isStrike() && nextFrame != null) {
             if (nextFrame.isStrike()) {
                 nextNextRoll = nextFrame.getNextRoll();
             } else {
