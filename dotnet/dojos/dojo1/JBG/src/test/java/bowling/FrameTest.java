@@ -45,4 +45,34 @@ public class FrameTest {
         //then
         assertThat(score, is(15));
     }
+
+    @Test
+    public void shouldCountNext2RollsFromDifferentFramesAsBonusForStrike() throws Exception {
+        //given
+        Frame frame = new Frame(10, 0);
+        Frame nextFrame = new Frame(10, 0);
+        Frame thirdFrame = new Frame(5, 0);
+        frame.setNextFrame(nextFrame);
+        nextFrame.setNextFrame(thirdFrame);
+
+        //when
+        int score = frame.countScore();
+
+        //then
+        assertThat(score, is(25));
+    }
+
+    @Test
+    public void shouldCountNext1RollAsBonusForStrikeWhenNextFrameIsLast() throws Exception {
+        //given
+        Frame frame = new Frame(10, 0);
+        Frame nextFrame = new Frame(10, 0);
+        frame.setNextFrame(nextFrame);
+
+        //when
+        int score = frame.countScore();
+
+        //then
+        assertThat(score, is(20));
+    }
 }

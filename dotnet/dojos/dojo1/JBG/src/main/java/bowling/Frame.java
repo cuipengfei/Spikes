@@ -1,8 +1,5 @@
 package bowling;
 
-/**
- * Created by pfcui on 11/24/15.
- */
 public class Frame {
     private int firstRoll;
     private int secondRoll;
@@ -20,22 +17,31 @@ public class Frame {
     }
 
     private int getBonus() {
-        int bonus = 0;
-        if (isSpare()) {
-            bonus = nextFrame.firstRoll;
+        return getNextRoll() + getNextNextRoll();
+    }
+
+    private int getNextRoll() {
+        if (nextFrame != null) {
+            return nextFrame.firstRoll;
         }
+        return 0;
+    }
+
+    private int getNextNextRoll() {
+        int nextNextRoll = 0;
+
         if (isStrike()) {
-            bonus = nextFrame.firstRoll + nextFrame.secondRoll;
+            if (nextFrame.isStrike()) {
+                nextNextRoll = nextFrame.getNextRoll();
+            } else {
+                nextNextRoll = nextFrame.secondRoll;
+            }
         }
-        return bonus;
+        return nextNextRoll;
     }
 
     private boolean isStrike() {
         return firstRoll == 10;
-    }
-
-    private boolean isSpare() {
-        return !isStrike() && ownScore == 10;
     }
 
     public void setNextFrame(Frame nextFrame) {
