@@ -8,14 +8,12 @@ public class BowlingGame {
 
     public void playOneFrame(int firstRoll, int secondRoll) {
         Frame frame = new Frame(firstRoll, secondRoll);
-        connectFrames(frame);
-        frames.add(frame);
+        save(frame);
     }
 
     public void playOneFrame(int firstRoll, int secondRoll, int thirdRoll) {
         LastFrame last = new LastFrame(firstRoll, secondRoll, thirdRoll);
-        connectFrames(last);
-        frames.add(last);
+        save(last);
     }
 
     public int totalScore() {
@@ -24,9 +22,11 @@ public class BowlingGame {
                 .reduce(0, (a, b) -> a + b);
     }
 
-    private void connectFrames(Frame frame) {
+    private void save(Frame frame) {
         if (frames.size() > 0) {
             frames.get(frames.size() - 1).setNextFrame(frame);
         }
+        frames.add(frame);
     }
+
 }
