@@ -12,10 +12,10 @@ public class BowlingGame {
         frames.add(frame);
     }
 
-    private void connectFrames(Frame frame) {
-        if (frames.size() > 0) {
-            frames.get(frames.size() - 1).setNextFrame(frame);
-        }
+    public void playOneFrame(int firstRoll, int secondRoll, int thirdRoll) {
+        LastFrame last = new LastFrame(firstRoll, secondRoll, thirdRoll);
+        connectFrames(last);
+        frames.add(last);
     }
 
     public int totalScore() {
@@ -24,9 +24,9 @@ public class BowlingGame {
                 .reduce(0, (a, b) -> a + b);
     }
 
-    public void playOneFrame(int firstRoll, int secondRoll, int thirdRoll) {
-        LastFrame last = new LastFrame(firstRoll, secondRoll, thirdRoll);
-        connectFrames(last);
-        frames.add(last);
+    private void connectFrames(Frame frame) {
+        if (frames.size() > 0) {
+            frames.get(frames.size() - 1).setNextFrame(frame);
+        }
     }
 }
