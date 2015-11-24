@@ -13,6 +13,7 @@ public class Frame {
     }
 
     public int countScore() {
+        System.out.println(ownScore + getBonus());
         return ownScore + getBonus();
     }
 
@@ -32,7 +33,8 @@ public class Frame {
 
     private int getNextNextRoll() {
         boolean isNextLast = nextFrame.nextFrame == null;
-        if (isNextLast) {
+        boolean nextAlsoStrike = nextFrame.isStrike();
+        if (isNextLast || !nextAlsoStrike) {
             return nextFrame.secondRoll;
         }
         return nextFrame.nextFrame.firstRoll;
