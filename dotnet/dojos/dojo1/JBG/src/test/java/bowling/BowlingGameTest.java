@@ -22,4 +22,21 @@ public class BowlingGameTest {
 
         assertThat(game.totalScore(), is(90));
     }
+
+    @Test
+    public void shouldSumUpScoreOfPerfectGame() throws Exception {
+        BowlingGame game = new BowlingGame();
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 0);
+        game.playOneFrame(10, 10, 10);
+
+        assertThat(game.totalScore(), is(300));
+    }
 }
