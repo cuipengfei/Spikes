@@ -3,13 +3,13 @@ package bowling;
 public class Frame {
     private int firstRoll;
     private int secondRoll;
-    private Frame nextFrame;
     private int ownScore;
+    private Frame nextFrame;
 
     public Frame(int firstRoll, int secondRoll) {
         this.firstRoll = firstRoll;
         this.secondRoll = secondRoll;
-        ownScore = firstRoll + secondRoll;
+        this.ownScore = firstRoll + secondRoll;
     }
 
     public int countScore() {
@@ -17,31 +17,33 @@ public class Frame {
     }
 
     private int getBonus() {
-        return getNextRoll() + getNextNextRoll();
-    }
-
-    private int getNextRoll() {
-        if (nextFrame != null) {
-            return nextFrame.firstRoll;
+        if (isSpare()) {
+            return getNextRoll();
+        }
+        if (isStrike()) {
+            return getNextRoll() + getNextNextRoll();
         }
         return 0;
     }
 
-    private int getNextNextRoll() {
-        int nextNextRoll = 0;
+    private int getNextRoll() {
+        return nextFrame.firstRoll;
+    }
 
-        if (isStrike() && nextFrame != null) {
-            if (nextFrame.isStrike()) {
-                nextNextRoll = nextFrame.getNextRoll();
-            } else {
-                nextNextRoll = nextFrame.secondRoll;
-            }
+    private int getNextNextRoll() {
+        boolean isNextLast = nextFrame.nextFrame == null;
+        if (isNextLast) {
+            return nextFrame.secondRoll;
         }
-        return nextNextRoll;
+        return nextFrame.nextFrame.firstRoll;
     }
 
     private boolean isStrike() {
         return firstRoll == 10;
+    }
+
+    private boolean isSpare() {
+        return ownScore == 10 && !isStrike();
     }
 
     public void setNextFrame(Frame nextFrame) {

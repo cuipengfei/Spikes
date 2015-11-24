@@ -19,6 +19,20 @@ public class FrameTest {
     }
 
     @Test
+    public void shouldNotHaveBonusWhenNotSpareNorSpike() {
+        //given
+        Frame frame = new Frame(1, 2);
+        Frame nextFrame = new Frame(1, 2);
+        frame.setNextFrame(nextFrame);
+
+        //when
+        int score = frame.countScore();
+
+        //then
+        assertThat(score, is(3));
+    }
+
+    @Test
     public void shouldCountNextRollAsBonusForSpare() throws Exception {
         //given
         Frame frame = new Frame(5, 5);
@@ -47,7 +61,7 @@ public class FrameTest {
     }
 
     @Test
-    public void shouldCountNext2RollsFromDifferentFramesAsBonusForStrike() throws Exception {
+    public void shouldCountNext2RollsFromDifferentFramesAsBonusFor2Strikes() throws Exception {
         //given
         Frame frame = new Frame(10, 0);
         Frame nextFrame = new Frame(10, 0);
@@ -66,13 +80,13 @@ public class FrameTest {
     public void shouldCountNext1RollAsBonusForStrikeWhenNextFrameIsLast() throws Exception {
         //given
         Frame frame = new Frame(10, 0);
-        Frame nextFrame = new Frame(10, 0);
+        Frame nextFrame = new Frame(2, 0);
         frame.setNextFrame(nextFrame);
 
         //when
         int score = frame.countScore();
 
         //then
-        assertThat(score, is(20));
+        assertThat(score, is(12));
     }
 }
