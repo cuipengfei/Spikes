@@ -17,4 +17,18 @@ public class FrameTest {
         //then
         assertThat(score, is(3));
     }
+
+    @Test
+    public void shouldCountNextRollAsBonusForSpare() throws Exception {
+        //given
+        Frame frame = new Frame(5, 5);
+        Frame nextFrame = new Frame(3, 2);
+        frame.setNextFrame(nextFrame);
+
+        //when
+        int score = frame.countScore();
+
+        //then
+        assertThat(score, is(13));
+    }
 }
