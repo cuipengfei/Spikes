@@ -31,4 +31,18 @@ public class FrameTest {
         //then
         assertThat(score, is(13));
     }
+
+    @Test
+    public void shouldCountNext2RollsAsBonusForStrike() throws Exception {
+        //given
+        Frame frame = new Frame(10, 0);
+        Frame nextFrame = new Frame(3, 2);
+        frame.setNextFrame(nextFrame);
+
+        //when
+        int score = frame.countScore();
+
+        //then
+        assertThat(score, is(15));
+    }
 }
