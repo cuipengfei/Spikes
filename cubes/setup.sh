@@ -1,4 +1,4 @@
 echo "setting up"
-virtualenv --python=python env
-source env/bin/activate
-pip install cubes
+virtualenv --python=python3 localpy
+source localpy/bin/activate
+pip install -r dependencies.txt
