@@ -24,11 +24,15 @@ public class Frame {
     }
 
     private int nextNextBall() {
-        if (next.isStrike()) {
+        if (next.isStrike() && next.isNotLast()) {
             return next.next.firstBall;
         } else {
             return next.secondBall;
         }
+    }
+
+    private boolean isNotLast() {
+        return next != null;
     }
 
     private int nextBall() {
