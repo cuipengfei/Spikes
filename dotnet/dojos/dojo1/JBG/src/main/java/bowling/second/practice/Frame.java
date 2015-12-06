@@ -40,10 +40,14 @@ public class Frame {
     }
 
     private int nextNextBall() {
-        if (nextFrame.isStrike()) {
+        if (nextFrame.isStrike() && nextFrame.isNotLast()) {
             return nextFrame.nextBall();
         }
         return nextFrame.secondBall;
+    }
+
+    private boolean isNotLast() {
+        return nextFrame != null;
     }
 
     private int nextBall() {
