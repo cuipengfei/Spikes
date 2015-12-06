@@ -17,19 +17,36 @@ public class Frame {
         return ownScore + countBonus();
     }
 
+    public void setNextFrame(Frame nextFrame) {
+        this.nextFrame = nextFrame;
+    }
+
     private int countBonus() {
         int bonus = 0;
-        boolean isStrike = firstBall == 10;
-        boolean isSpare = ownScore == 10;
-        if (isStrike) {
-            bonus = nextFrame.firstBall + nextFrame.secondBall;
-        } else if (isSpare) {
-            bonus = nextFrame.firstBall;
+        if (isStrike()) {
+            bonus = nextBall() + nextNextBall();
+        } else if (isSpare()) {
+            bonus = nextBall();
         }
         return bonus;
     }
 
-    public void setNextFrame(Frame nextFrame) {
-        this.nextFrame = nextFrame;
+    private boolean isSpare() {
+        return ownScore == 10;
+    }
+
+    private boolean isStrike() {
+        return firstBall == 10;
+    }
+
+    private int nextNextBall() {
+        if (nextFrame.isStrike()) {
+            return nextFrame.nextBall();
+        }
+        return nextFrame.secondBall;
+    }
+
+    private int nextBall() {
+        return nextFrame.firstBall;
     }
 }
