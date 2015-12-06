@@ -18,7 +18,6 @@ public class FrameTest {
         assertThat(score, is(3));
     }
 
-
     @Test
     public void shouldCountScoreWithSpareBonus() throws Exception {
         //given
@@ -31,5 +30,19 @@ public class FrameTest {
 
         //then
         assertThat(score, is(11));
+    }
+
+    @Test
+    public void shouldCountScoreWithStrikeBonus() throws Exception {
+        //given
+        Frame frame1 = new Frame(10, 0);
+        Frame frame2 = new Frame(1, 2);
+        frame1.setNext(frame2);
+
+        //when
+        int score = frame1.countScore();
+
+        //then
+        assertThat(score, is(13));
     }
 }
