@@ -66,13 +66,13 @@ public class FrameTest {
     public void shouldCountScoreWith2StrikeBonusWhenSecondStrikeIsLastFrame() throws Exception {
         //given
         Frame frame1 = new Frame(10, 0);
-        Frame frame2 = new Frame(10, 0);
+        Frame frame2 = new LastFrame(10, 2, 3);
         frame1.setNext(frame2);
 
         //when
         int score = frame1.countScore();
 
         //then
-        assertThat(score, is(20));
+        assertThat(score, is(22));
     }
 }
