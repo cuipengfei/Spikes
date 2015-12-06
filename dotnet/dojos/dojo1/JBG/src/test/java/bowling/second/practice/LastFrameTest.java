@@ -17,4 +17,10 @@ public class LastFrameTest {
         //then
         assertThat(score, is(18));
     }
+
+    @Test(expected = Exception.class)
+    public void shouldNotHaveNextFrame() throws Exception {
+        LastFrame lastFrame = new LastFrame(1, 2, 3);
+        lastFrame.setNextFrame(new Frame(1, 3));
+    }
 }

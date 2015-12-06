@@ -17,7 +17,7 @@ public class Frame {
         return ownScore + countBonus();
     }
 
-    public void setNextFrame(Frame nextFrame) {
+    public void setNextFrame(Frame nextFrame) throws Exception {
         this.nextFrame = nextFrame;
     }
 

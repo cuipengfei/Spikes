@@ -17,4 +17,9 @@ public class LastFrame extends Frame {
     public int countScore() {
         return firstBall + secondBall + thirdBall;
     }
+
+    @Override
+    public void setNextFrame(Frame nextFrame) throws Exception {
+        throw new Exception("Last Frame should not have next frame");
+    }
 }
