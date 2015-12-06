@@ -16,16 +16,16 @@ public class BowlingGame {
         connectFrames(frame);
     }
 
+    public int totalScore() {
+        return frames.stream()
+                .map(Frame::countScore)
+                .reduce(0, (acc, next) -> acc + next);
+    }
+
     private void connectFrames(Frame frame) throws Exception {
         if (frames.size() > 0) {
             frames.get(frames.size() - 1).setNextFrame(frame);
         }
         frames.add(frame);
-    }
-
-    public int totalScore() {
-        return frames.stream()
-                .map(Frame::countScore)
-                .reduce(0, (acc, next) -> acc + next);
     }
 }
