@@ -14,11 +14,19 @@ public class Frame {
     }
 
     public int countScore() {
+        return ownScore + countBonus();
+    }
+
+    private int countBonus() {
+        int bonus = 0;
+        boolean isStrike = firstBall == 10;
         boolean isSpare = ownScore == 10;
-        if (isSpare) {
-            return ownScore + nextFrame.firstBall;
+        if (isStrike) {
+            bonus = nextFrame.firstBall + nextFrame.secondBall;
+        } else if (isSpare) {
+            bonus = nextFrame.firstBall;
         }
-        return ownScore;
+        return bonus;
     }
 
     public void setNextFrame(Frame nextFrame) {
