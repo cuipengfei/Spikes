@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class BowlingGameTestTest {
+public class BowlingGameTest {
     @Test
     public void shouldCountScoreOf10Frames() throws Exception {
         //given
