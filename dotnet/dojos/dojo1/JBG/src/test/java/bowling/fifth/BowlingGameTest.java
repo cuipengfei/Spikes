@@ -28,4 +28,27 @@ public class BowlingGameTest {
         //then
         assertThat(total, is(112));
     }
+
+    @Test
+    public void shouldCountTotalScoreOfAPerfectGame() throws Exception {
+        //given
+        BowlingGame game = new BowlingGame();
+
+        //when
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 0);
+        game.play(10, 10, 10);
+        int total = game.countTotalScore();
+        //30 * 10 = 300
+
+        //then
+        assertThat(total, is(300));
+    }
 }
