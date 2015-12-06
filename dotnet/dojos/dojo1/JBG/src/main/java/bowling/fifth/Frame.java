@@ -12,7 +12,11 @@ public class Frame {
 
     public int countScore() {
         if (isStrike()) {
-            return ownScore() + next.firstBall + next.secondBall;
+            if (next.isStrike()) {
+                return ownScore() + next.firstBall + next.next.firstBall;
+            } else {
+                return ownScore() + next.firstBall + next.secondBall;
+            }
         } else if (isSpare()) {
             return ownScore() + next.firstBall;
         }
