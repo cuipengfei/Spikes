@@ -7,11 +7,11 @@ public class BowlingGame {
     private List<Frame> frames = new ArrayList<>();
 
     public void play(int first, int second) {
-        chain(new Frame(first, second));
+        chainFrames(new Frame(first, second));
     }
 
     public void play(int first, int second, int third) {
-        chain(new LastFrame(first, second, third));
+        chainFrames(new LastFrame(first, second, third));
     }
 
     public int countTotalScore() {
@@ -20,7 +20,7 @@ public class BowlingGame {
                 .reduce(0, (acc, next) -> acc + next);
     }
 
-    private void chain(Frame frame) {
+    private void chainFrames(Frame frame) {
         if (!frames.isEmpty()) {
             frames.get(frames.size() - 1).setNext(frame);
         }

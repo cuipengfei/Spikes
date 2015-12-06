@@ -14,6 +14,10 @@ public class Frame {
         return ownScore() + countBonus();
     }
 
+    public void setNext(Frame next) {
+        this.next = next;
+    }
+
     private int countBonus() {
         if (isStrike()) {
             return nextBall() + nextNextBall();
@@ -23,12 +27,12 @@ public class Frame {
         return 0;
     }
 
-    private int nextNextBall() {
-        if (next.isStrike() && next.isNotLast()) {
-            return next.next.firstBall;
-        } else {
-            return next.secondBall;
-        }
+    private boolean isStrike() {
+        return firstBall == 10;
+    }
+
+    private boolean isSpare() {
+        return firstBall + secondBall == 10;
     }
 
     private boolean isNotLast() {
@@ -39,19 +43,15 @@ public class Frame {
         return next.firstBall;
     }
 
-    private boolean isStrike() {
-        return firstBall == 10;
+    private int nextNextBall() {
+        if (next.isStrike() && next.isNotLast()) {
+            return next.next.firstBall;
+        } else {
+            return next.secondBall;
+        }
     }
 
     private int ownScore() {
         return firstBall + secondBall;
-    }
-
-    private boolean isSpare() {
-        return firstBall + secondBall == 10;
-    }
-
-    public void setNext(Frame next) {
-        this.next = next;
     }
 }
