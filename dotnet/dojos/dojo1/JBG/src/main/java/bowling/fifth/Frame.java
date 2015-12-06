@@ -11,16 +11,28 @@ public class Frame {
     }
 
     public int countScore() {
+        return ownScore() + countBonus();
+    }
+
+    private int countBonus() {
         if (isStrike()) {
-            if (next.isStrike()) {
-                return ownScore() + next.firstBall + next.next.firstBall;
-            } else {
-                return ownScore() + next.firstBall + next.secondBall;
-            }
+            return nextBall() + nextNextBall();
         } else if (isSpare()) {
-            return ownScore() + next.firstBall;
+            return nextBall();
         }
-        return ownScore();
+        return 0;
+    }
+
+    private int nextNextBall() {
+        if (next.isStrike()) {
+            return next.next.firstBall;
+        } else {
+            return next.secondBall;
+        }
+    }
+
+    private int nextBall() {
+        return next.firstBall;
     }
 
     private boolean isStrike() {
