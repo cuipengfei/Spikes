@@ -1,4 +1,4 @@
-package bowling;
+package bowling.first.practice;
 
 import java.util.ArrayList;
 import java.util.List;

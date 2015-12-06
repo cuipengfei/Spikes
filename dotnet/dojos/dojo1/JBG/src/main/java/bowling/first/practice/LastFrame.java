@@ -1,4 +1,4 @@
-package bowling;
+package bowling.first.practice;
 
 public class LastFrame extends Frame {
     private int firstRoll;
