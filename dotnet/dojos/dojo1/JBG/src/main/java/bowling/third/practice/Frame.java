@@ -11,14 +11,29 @@ public class Frame {
     }
 
     public int countScore() {
-        if (isSpare()) {
-            return firstRoll + secondRoll + next.firstRoll;
+        return ownScore() + countBonus();
+    }
+
+    private int countBonus() {
+        int bonus = 0;
+        if (isStrike()) {
+            bonus = next.firstRoll + next.secondRoll;
+        } else if (isSpare()) {
+            bonus = next.firstRoll;
         }
+        return bonus;
+    }
+
+    private int ownScore() {
         return firstRoll + secondRoll;
     }
 
+    private boolean isStrike() {
+        return firstRoll == 10;
+    }
+
     private boolean isSpare() {
-        return firstRoll + secondRoll == 10;
+        return !isStrike() && ownScore() == 10;
     }
 
     public void setNext(Frame next) {
