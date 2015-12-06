@@ -1,8 +1,5 @@
 package bowling.fourth;
 
-/**
- * Created by pfcui on 12/6/15.
- */
 public class LastFrame extends Frame {
     private final int firstRoll;
     private final int secondRoll;
