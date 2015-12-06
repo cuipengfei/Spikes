@@ -15,13 +15,24 @@ public class Frame {
     }
 
     private int countBonus() {
-        int bonus = 0;
         if (isStrike()) {
-            bonus = next.firstRoll + next.secondRoll;
+            return nextRoll() + nextNextRoll();
         } else if (isSpare()) {
-            bonus = next.firstRoll;
+            return nextRoll();
         }
-        return bonus;
+        return 0;
+    }
+
+    private int nextNextRoll() {
+        if (next.isStrike()) {
+            return next.nextRoll();
+        } else {
+            return next.secondRoll;
+        }
+    }
+
+    private int nextRoll() {
+        return next.firstRoll;
     }
 
     private int ownScore() {
