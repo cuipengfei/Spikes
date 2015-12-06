@@ -7,7 +7,7 @@ import static org.junit.Assert.assertThat;
 
 public class FrameTest {
     @Test
-    public void shouldCountScoreWithNoScore() throws Exception {
+    public void shouldCountScoreWithNoBonus() throws Exception {
         //given
         Frame frame = new Frame(1, 2);
 
@@ -16,5 +16,19 @@ public class FrameTest {
 
         //then
         assertThat(score, is(3));
+    }
+
+    @Test
+    public void shouldCountScoreWithSpareBonus() throws Exception {
+        //given
+        Frame frame1 = new Frame(1, 9);
+        Frame frame2 = new Frame(3, 4);
+        frame1.setNext(frame2);
+
+        //when
+        int score = frame1.countScore();
+
+        //then
+        assertThat(score, is(13));
     }
 }
