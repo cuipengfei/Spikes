@@ -11,10 +11,18 @@ public class Frame {
     }
 
     public int countScore() {
-        if (firstBall + secondBall == 10) {
-            return firstBall + secondBall + next.firstBall;
+        if (isSpare()) {
+            return ownScore() + next.firstBall;
         }
+        return ownScore();
+    }
+
+    private int ownScore() {
         return firstBall + secondBall;
+    }
+
+    private boolean isSpare() {
+        return firstBall + secondBall == 10;
     }
 
     public void setNext(Frame next) {
