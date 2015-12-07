@@ -13,17 +13,10 @@
   "cubes": [{
     "name": "personal_finance",
     "dimensions": ["record", "year"],
-    "measures": [{
-      "name": "amount",
-      "label": "Amount"
-    }, {
-      "name": "type",
-      "label": "type"
-    }],
     "aggregates": [{
       "name": "amount_sum",
       "function": "sum",
-      "measure": "amount"
+      "measure": "record.amount"
     }],
     "mappings": {
       "record.type": "type",
