@@ -26,7 +26,7 @@ public class Frame {
     }
 
     private int nextNextRoll() {
-        if (nextFrame.isStrike()) {
+        if (nextFrame.isStrike() && nextFrame.nextFrame != null) {
             return nextFrame.nextFrame.first;
         } else {
             return nextFrame.second;
