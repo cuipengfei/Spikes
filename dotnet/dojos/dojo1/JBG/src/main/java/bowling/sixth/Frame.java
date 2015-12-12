@@ -26,7 +26,7 @@ public class Frame {
     }
 
     private int nextNextRoll() {
-        if (nextFrame.isStrike() && nextFrame.nextFrame != null) {
+        if (nextFrame.isStrike() && nextFrame.isNotLast()) {
             return nextFrame.nextFrame.first;
         } else {
             return nextFrame.second;
@@ -48,5 +48,9 @@ public class Frame {
     public void setNext(Frame nextFrame) {
 
         this.nextFrame = nextFrame;
+    }
+
+    private boolean isNotLast() {
+        return this.nextFrame != null;
     }
 }
