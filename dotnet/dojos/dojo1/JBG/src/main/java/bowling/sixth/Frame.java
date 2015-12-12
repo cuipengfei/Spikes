@@ -13,10 +13,13 @@ public class Frame {
     }
 
     public int countScore() {
-        if (ownScore == 10) {
-            return first + second + nextFrame.first;
+        if (first == 10) {
+            return ownScore + nextFrame.first + nextFrame.second;
         }
-        return first + second;
+        if (ownScore == 10) {
+            return ownScore + nextFrame.first;
+        }
+        return ownScore;
     }
 
     public void setNext(Frame nextFrame) {
