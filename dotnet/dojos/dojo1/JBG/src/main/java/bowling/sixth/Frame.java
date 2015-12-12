@@ -4,7 +4,7 @@ public class Frame {
     private final int first;
     private final int second;
     private Frame nextFrame;
-    private int ownScore;
+    protected int ownScore;
 
     public Frame(int first, int second) {
         this.first = first;
