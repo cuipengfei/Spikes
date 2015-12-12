@@ -13,13 +13,20 @@ public class Frame {
     }
 
     public int countScore() {
-        if (first == 10) {
-            return ownScore + nextFrame.first + nextFrame.second;
+        return ownScore + countBonus();
+    }
+
+    private int countBonus() {
+        boolean isStrike = first == 10;
+        boolean isSpare = ownScore == 10;
+
+        int bonus = 0;
+        if (isStrike) {
+            bonus = nextFrame.first + nextFrame.second;
+        } else if (isSpare) {
+            bonus = nextFrame.first;
         }
-        if (ownScore == 10) {
-            return ownScore + nextFrame.first;
-        }
-        return ownScore;
+        return bonus;
     }
 
     public void setNext(Frame nextFrame) {
