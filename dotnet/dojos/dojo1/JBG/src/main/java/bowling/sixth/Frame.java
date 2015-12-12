@@ -3,8 +3,8 @@ package bowling.sixth;
 public class Frame {
     private final int first;
     private final int second;
+    private int ownScore;
     private Frame nextFrame;
-    protected int ownScore;
 
     public Frame(int first, int second) {
         this.first = first;
@@ -46,7 +46,6 @@ public class Frame {
     }
 
     public void setNext(Frame nextFrame) {
-
         this.nextFrame = nextFrame;
     }
 
