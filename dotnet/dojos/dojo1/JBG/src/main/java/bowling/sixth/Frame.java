@@ -17,17 +17,24 @@ public class Frame {
     }
 
     private int countBonus() {
-        int bonus = 0;
         if (isStrike()) {
-            if (nextFrame.isStrike()) {
-                bonus = nextFrame.first + nextFrame.nextFrame.first;
-            } else {
-                bonus = nextFrame.first + nextFrame.second;
-            }
+            return nextRoll() + nextNextRoll();
         } else if (isSpare()) {
-            bonus = nextFrame.first;
+            return nextRoll();
         }
-        return bonus;
+        return 0;
+    }
+
+    private int nextNextRoll() {
+        if (nextFrame.isStrike()) {
+            return nextFrame.nextFrame.first;
+        } else {
+            return nextFrame.second;
+        }
+    }
+
+    private int nextRoll() {
+        return nextFrame.first;
     }
 
     private boolean isSpare() {
