@@ -17,17 +17,26 @@ public class Frame {
     }
 
     private int countBonus() {
-        int bonus = 0;
         if (isStrike()) {
-            if (nextFrame.isStrike()) {
-                bonus = nextFrame.firstBall + nextFrame.nextFrame.firstBall;
-            } else {
-                bonus = nextFrame.firstBall + nextFrame.secondBall;
-            }
+            return nextBall() + nextNextBall();
         } else if (isSpare()) {
-            bonus = nextFrame.firstBall;
+            return nextBall();
         }
-        return bonus;
+        return 0;
+    }
+
+    private int nextNextBall() {
+        int nextNextBall = 0;
+        if (nextFrame.isStrike()) {
+            nextNextBall = nextFrame.nextFrame.firstBall;
+        } else {
+            nextNextBall = nextFrame.secondBall;
+        }
+        return nextNextBall;
+    }
+
+    private int nextBall() {
+        return nextFrame.firstBall;
     }
 
     private boolean isSpare() {
