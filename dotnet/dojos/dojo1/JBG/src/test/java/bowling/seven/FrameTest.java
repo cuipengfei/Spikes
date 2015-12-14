@@ -17,4 +17,18 @@ public class FrameTest {
         //when
         assertThat(score, is(7));
     }
+
+    @Test
+    public void shouldCountScoreWithSpareBonus() throws Exception {
+        //given
+        Frame spareFrame = new Frame(3, 7);
+        Frame nextFrame = new Frame(1, 2);
+        spareFrame.setNext(nextFrame);
+
+        //when
+        int score = spareFrame.countScore();
+
+        //when
+        assertThat(score, is(11));
+    }
 }
