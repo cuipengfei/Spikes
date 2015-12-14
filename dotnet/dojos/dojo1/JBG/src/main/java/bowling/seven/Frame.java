@@ -12,6 +12,10 @@ public class Frame {
         ownScore = firstBall + secondBall;
     }
 
+    public void setNext(Frame nextFrame) {
+        this.nextFrame = nextFrame;
+    }
+
     public int countScore() {
         return ownScore + countBonus();
     }
@@ -47,9 +51,5 @@ public class Frame {
 
     private boolean isStrike() {
         return firstBall == 10;
-    }
-
-    public void setNext(Frame nextFrame) {
-        this.nextFrame = nextFrame;
     }
 }
