@@ -4,17 +4,19 @@ public class Frame {
     private final int firstBall;
     private final int secondBall;
     private Frame nextFrame;
+    private int ownScore;
 
     public Frame(int firstBall, int secondBall) {
         this.firstBall = firstBall;
         this.secondBall = secondBall;
+        ownScore = firstBall + secondBall;
     }
 
     public int countScore() {
-        if (firstBall + secondBall == 10) {
-            return firstBall + secondBall + nextFrame.firstBall;
+        if (ownScore == 10) {
+            return ownScore + nextFrame.firstBall;
         }
-        return firstBall + secondBall;
+        return ownScore;
     }
 
     public void setNext(Frame nextFrame) {
