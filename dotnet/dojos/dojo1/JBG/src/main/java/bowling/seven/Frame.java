@@ -27,12 +27,16 @@ public class Frame {
 
     private int nextNextBall() {
         int nextNextBall = 0;
-        if (nextFrame.isStrike()) {
+        if (nextFrame.isStrike() && nextFrame.isNotLast()) {
             nextNextBall = nextFrame.nextFrame.firstBall;
         } else {
             nextNextBall = nextFrame.secondBall;
         }
         return nextNextBall;
+    }
+
+    private boolean isNotLast() {
+        return nextFrame != null;
     }
 
     private int nextBall() {
