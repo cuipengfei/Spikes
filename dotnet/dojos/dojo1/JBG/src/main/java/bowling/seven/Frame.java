@@ -13,7 +13,11 @@ public class Frame {
     }
 
     public int countScore() {
-        if (ownScore == 10) {
+        boolean isSpare = ownScore == 10;
+        boolean isStrike = firstBall == 10;
+        if (isStrike) {
+            return ownScore + nextFrame.firstBall + nextFrame.secondBall;
+        } else if (isSpare) {
             return ownScore + nextFrame.firstBall;
         }
         return ownScore;
