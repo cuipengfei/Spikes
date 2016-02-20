@@ -1,0 +1,55 @@
+
+/*
+
+Build script for Grocery-Sync Android, an example application based on Couchbase Lite
+
+This project depends on Couchbase Lite via Maven artifacts by default.  Instructions
+below are included to depend on the source code directly via submodules.  If you are
+using the Maven artifacts, the submodules are not needed.
+
+Warning: this may be pointed to an out-of-date release of Couchbase Lite,
+See https://github.com/couchbase/couchbase-lite-android#latest-maven-release
+for instructions on getting the latest release version.
+
+ */
+
+apply plugin: 'android'
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 23
+    }
+
+    // workaround for "duplicate files during packaging of APK" issue
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+dependencies {
+    debugCompile 'im.dino:dbinspector:3.2.2@aar'
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+
+    // By default, this depends on couchbase lite via the maven artifact
+    compile 'com.couchbase.lite:couchbase-lite-android:1.2.0'
+
+}
+
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task generateJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+}

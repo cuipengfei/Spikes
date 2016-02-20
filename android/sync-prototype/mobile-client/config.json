@@ -1,0 +1,19 @@
+{
+  "log": [
+    "*"
+  ],
+  "databases": {
+    "demodb": {
+      "server": "http://localhost:8091",
+      "bucket": "demodb",
+      "users": {
+        "GUEST": {
+          "disabled": true,
+          "admin_channels": [
+            "*"
+          ]
+        }
+      }
+    }
+  }
+}
