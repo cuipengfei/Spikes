@@ -152,11 +152,11 @@ public class MainActivity extends Activity implements Replication.ChangeListener
 
         Replication pullReplication = database.createPullReplication(syncUrl);
         //{"session_id":"a8a069833b2f4866222a1ee6b174849b4e907735","expires":"2016-02-20T15:34:51.473147348+08:00","cookie_name":"SyncGatewaySession"}
-        pullReplication.setCookie("SyncGatewaySession", "b42e35f0db67b3b2abfb81a7a9cea88b55a44308", null, 86400000000000L, false, false);
+        pullReplication.setCookie("SyncGatewaySession", "a469f18027647e4957ffd1743e2ea33ce0386dbc", null, 86400000000000L, false, false);
         pullReplication.setContinuous(true);
 
         Replication pushReplication = database.createPushReplication(syncUrl);
-        pushReplication.setCookie("SyncGatewaySession", "b42e35f0db67b3b2abfb81a7a9cea88b55a44308", null, 86400000000000L, false, false);
+        pushReplication.setCookie("SyncGatewaySession", "a469f18027647e4957ffd1743e2ea33ce0386dbc", null, 86400000000000L, false, false);
         pushReplication.setContinuous(true);
 
         pullReplication.start();
