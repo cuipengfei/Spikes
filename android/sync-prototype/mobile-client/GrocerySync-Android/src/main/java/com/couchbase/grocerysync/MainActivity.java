@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
+
 public class MainActivity extends Activity implements Replication.ChangeListener,
         OnItemClickListener, OnItemLongClickListener, OnKeyListener {
 
@@ -151,12 +153,13 @@ public class MainActivity extends Activity implements Replication.ChangeListener
         }
 
         Replication pullReplication = database.createPullReplication(syncUrl);
-        //{"session_id":"a8a069833b2f4866222a1ee6b174849b4e907735","expires":"2016-02-20T15:34:51.473147348+08:00","cookie_name":"SyncGatewaySession"}
-        pullReplication.setCookie("SyncGatewaySession", "a469f18027647e4957ffd1743e2ea33ce0386dbc", null, 86400000000000L, false, false);
+        pullReplication.setCookie("SyncGatewaySession", "afd7d5de24a19adc94427297ad7f64ffe23e8ac5", null, 86400000000000L, false, false);
+        pullReplication.setChannels(asList("user2"));
         pullReplication.setContinuous(true);
 
         Replication pushReplication = database.createPushReplication(syncUrl);
-        pushReplication.setCookie("SyncGatewaySession", "a469f18027647e4957ffd1743e2ea33ce0386dbc", null, 86400000000000L, false, false);
+        pushReplication.setCookie("SyncGatewaySession", "afd7d5de24a19adc94427297ad7f64ffe23e8ac5", null, 86400000000000L, false, false);
+        pushReplication.setChannels(asList("user2"));
         pushReplication.setContinuous(true);
 
         pullReplication.start();
@@ -361,6 +364,7 @@ public class MainActivity extends Activity implements Replication.ChangeListener
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("_id", id);
         properties.put("text", text);
+        properties.put("channels", asList("user2"));
         properties.put("check", Boolean.FALSE);
         properties.put("created_at", currentTimeString);
         document.putProperties(properties);
