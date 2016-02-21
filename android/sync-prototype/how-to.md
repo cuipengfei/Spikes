@@ -14,7 +14,7 @@
 
 6. create a user for sync-gateway with the script: create_user.sh
 
-    after running the script, check http://localhost:4985/_admin/db/demodb/users (the sync gateway admin console) to see if a user named user1 is created
+    after running the script, check the sync gateway admin console(http://localhost:4985/_admin/db/demodb/users) to see if a user named user1 is created
     and make sure this user has access to a channel also called user1, that's how we can achieve data isolation between users
 
 7. create a session for user1 with the script: create_session.sh
@@ -28,6 +28,7 @@
     (4984 is the default port that sync gateway receives requests from its clients, 4985 is the admin port that only receives requests from localhost)
 
 8. put the cookie created in step 7 in the android app code:
+        
         //......
         Replication pullReplication = database.createPullReplication(syncUrl);
         pullReplication.setCookie("SyncGatewaySession", "a469f18027647e4957ffd1743e2ea33ce0386dbc", null, 86400000000000L, false, false);
