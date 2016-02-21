@@ -54,3 +54,6 @@
 
 10. to try out user data isolation, create another user that has access to another channel, create a session for it, put the session id cookie and channels in the code.
     then run it in another android emulator, you will see that the two users will only have access to the documents that they have each created.
+
+11. to try out offline mode, turn off internet on the android emulator, create a few new items
+    then turn the internet back on, check the couchbase server console to see the new items
