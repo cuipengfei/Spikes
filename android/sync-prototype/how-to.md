@@ -48,7 +48,7 @@
 
     The cookie will make sure sync gateway will treat the android app as authorized user.
     
-    The channels setting will make sure this android app will mark documents that it syncs up as created by user1, and only syncs down data that was created by itself.
+    The channels setting will make sure this android app will mark documents that it syncs up as created by user1, and only syncs down data that is marked by user1.
 
 9. then start the app in genymotion, it'll be able to sync up data to the server and able to sync down data from the server after local tablet data is cleared.
 
