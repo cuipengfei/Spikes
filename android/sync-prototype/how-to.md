@@ -53,4 +53,4 @@
 9. then start the app in genymotion, it'll be able to sync up data to the server and able to sync down data from the server after local tablet data is cleared.
 
 10. to try out user data isolation, create another user that has access to another channel, create a session for it, put the session id cookie and channels in the code.
-    then run it in another android emulator, you will see that the two users will only has access to the documents that they have each created.
+    then run it in another android emulator, you will see that the two users will only have access to the documents that they have each created.
