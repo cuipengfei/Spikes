@@ -23,4 +23,13 @@ public class FreeAdditionDiscountTest {
 
         assertThat(price, is(60d));//买7送3,前10个7*6=42,剩下3个还要单独付款18,共计60
     }
+
+    @Test
+    public void shouldCalculateSavedByProducts() throws Exception {
+        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(2, 1);//buy 2 get 1 free
+
+        int saved = freeAdditionDiscount.savedByProducts(OrderLineItem.create(Product.create("xyz", 50d), 10));
+
+        assertThat(saved, is(3));//相当于白送3个
+    }
 }

@@ -3,8 +3,8 @@ package cashregister;
 public abstract class Discount {
     public abstract Double price(OrderLineItem lineItem);
 
-    protected int savedByAmount() {
-        return 0;
+    protected int savedByProducts(OrderLineItem lineItem) {
+        return (int) (savedByPrice(lineItem) / lineItem.product().singleUnitPrice());
     }
 
     protected Double savedByPrice(OrderLineItem lineItem) {
