@@ -48,9 +48,7 @@ public final class ReceiptPrinter {
             stringBuilder.append(newLine)
                     .append(discount.output(orderLineItem));
         }
-        stringBuilder.append(newLine)
-                .append("----------------------")
-                .append(newLine);
+        stringBuilder.append(newLine);
         return linesSum;
     }
 

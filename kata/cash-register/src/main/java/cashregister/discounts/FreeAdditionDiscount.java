@@ -11,10 +11,10 @@ public class FreeAdditionDiscount extends Discount {
     private final int freeAdditional;
     private Map<String, String> discountCache = new HashMap<>();
 
-    public FreeAdditionDiscount(int bought, int freeAdditional, int priority) {
+    public FreeAdditionDiscount(int bought, int freeAddition, int priority) {
         super(priority);
         this.bought = bought;
-        this.freeAdditional = freeAdditional;
+        this.freeAdditional = freeAddition;
     }
 
     @Override
@@ -29,7 +29,8 @@ public class FreeAdditionDiscount extends Discount {
     @Override
     public String outputDiscountSummary() {
         if (discountCache.size() > 0) {
-            StringBuilder stringBuilder = new StringBuilder("买二赠一商品：");
+            StringBuilder stringBuilder = new StringBuilder("----------------------");
+            stringBuilder.append(newLine).append("买二赠一商品：");//todo: bought, freeAddition 转汉字
             for (String key : discountCache.keySet()) {
                 stringBuilder.append(newLine)
                         .append("名称：" + key + "，数量：" + discountCache.get(key));

@@ -33,7 +33,8 @@ public class FreeAdditionDiscountTest {
         freeAdditionDiscount.discountedPrice(new OrderLineItem(new Product("xyz", "ItemXXX", 50d, "kilogram", null), 10));
         String discountSummary = freeAdditionDiscount.outputDiscountSummary();
 
-        assertThat(discountSummary, is("买二赠一商品：\n" +
+        assertThat(discountSummary, is("----------------------\n" +
+                "买二赠一商品：\n" +
                 "名称：xyz，数量：3kilogram"));
     }
 }
