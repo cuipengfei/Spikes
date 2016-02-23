@@ -28,6 +28,10 @@ public final class ConfigReader {
                 .collect(Collectors.toList());
     }
 
+    public static List<Discount> discounts() {
+        return discounts;
+    }
+
     private static Product toProduct(String productCode, Properties properties) {
         String name = properties.getProperty(PREFIX + productCode + ".name");
         double price = Double.parseDouble(properties.getProperty(PREFIX + productCode + ".price"));
