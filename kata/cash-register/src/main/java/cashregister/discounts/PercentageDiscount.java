@@ -1,4 +1,6 @@
-package cashregister;
+package cashregister.discounts;
+
+import cashregister.models.OrderLineItem;
 
 public class PercentageDiscount extends Discount {
     private double percentage;

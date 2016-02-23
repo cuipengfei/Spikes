@@ -1,4 +1,4 @@
-package cashregister;
+package cashregister.models;
 
 import org.junit.Test;
 

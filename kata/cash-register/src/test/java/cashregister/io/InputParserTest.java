@@ -1,5 +1,6 @@
-package cashregister;
+package cashregister.io;
 
+import cashregister.models.OrderLineItem;
 import org.junit.Test;
 
 import java.util.List;

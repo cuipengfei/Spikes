@@ -1,4 +1,4 @@
-package cashregister;
+package cashregister.models;
 
 public class OrderLineItem {
     private final Product product;

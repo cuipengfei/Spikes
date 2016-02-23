@@ -1,4 +1,6 @@
-package cashregister;
+package cashregister.models;
+
+import cashregister.discounts.Discount;
 
 import java.util.List;
 

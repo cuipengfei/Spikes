@@ -1,4 +1,7 @@
-package cashregister;
+package cashregister.io;
+
+import cashregister.models.OrderLineItem;
+import cashregister.models.Product;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static cashregister.ConfigReader.loadProducts;
+import static cashregister.io.ConfigReader.loadProducts;
 
 public final class InputParser {
     private static List<Product> products = loadProducts(InputParser.class.getClassLoader().getResource("config.properties").getPath());

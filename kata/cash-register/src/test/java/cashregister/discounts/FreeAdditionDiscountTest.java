@@ -1,5 +1,7 @@
-package cashregister;
+package cashregister.discounts;
 
+import cashregister.models.OrderLineItem;
+import cashregister.models.Product;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

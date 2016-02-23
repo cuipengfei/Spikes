@@ -1,4 +1,6 @@
-package cashregister;
+package cashregister.discounts;
+
+import cashregister.models.OrderLineItem;
 
 public abstract class Discount {
 

@@ -1,4 +1,9 @@
-package cashregister;
+package cashregister.io;
+
+import cashregister.discounts.Discount;
+import cashregister.discounts.FreeAdditionDiscount;
+import cashregister.discounts.PercentageDiscount;
+import cashregister.models.Product;
 
 import java.io.FileInputStream;
 import java.io.IOException;
