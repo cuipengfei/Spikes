@@ -14,4 +14,13 @@ public class FreeAdditionDiscountTest {
 
         assertThat(price, is(350d));
     }
+
+    @Test
+    public void shouldCalculateDiscountByAmountBoughtWithOddNumbers() throws Exception {//odd number: 买几送几都行
+        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(7, 3);//买7送3
+
+        Double price = freeAdditionDiscount.price(OrderLineItem.create(Product.create("xyz", 6d), 13));
+
+        assertThat(price, is(60d));//买7送3,前10个7*6=42,剩下3个还要单独付款18,共计60
+    }
 }
