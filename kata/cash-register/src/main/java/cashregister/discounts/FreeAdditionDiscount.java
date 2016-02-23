@@ -9,7 +9,7 @@ public class FreeAdditionDiscount extends Discount {
     private static String newLine = System.getProperty("line.separator");
     private final int bought;
     private final int freeAdditional;
-    private Map<String, String> discountCache = new HashMap<>();
+    private Map<String, String> discountCache = new HashMap<>();//可变状态,不安全
 
     public FreeAdditionDiscount(int bought, int freeAddition, int priority) {
         super(priority);

@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
 public final class ConfigReader {
 
     private static final String PREFIX = "Product.";
-    private static List<Discount> discounts;
+    private static List<Discount> discounts;//可变状态,不安全
 
     public static List<Product> loadProducts(String configPath) {
         discounts = null;

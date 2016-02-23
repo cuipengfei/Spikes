@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static cashregister.io.ConfigReader.loadProducts;
 
 public final class InputParser {
-    private static List<Product> products;
+    private static List<Product> products;//可变状态,不安全
 
     public static List<OrderLineItem> parse(String json) {
         products = loadProducts(InputParser.class.getClassLoader().getResource("config.properties").getPath());
