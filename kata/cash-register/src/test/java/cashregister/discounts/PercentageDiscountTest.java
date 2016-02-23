@@ -18,15 +18,6 @@ public class PercentageDiscountTest {
     }
 
     @Test
-    public void shouldCalculateSavedByPrice() throws Exception {
-        PercentageDiscount percentageDiscount = new PercentageDiscount(0.5, 0);
-
-        Double saved = percentageDiscount.savedByPrice(new OrderLineItem(new Product("abc", "ItemXXX", 10d, "bottle", null), 10));
-
-        assertThat(saved, is(50d));
-    }
-
-    @Test
     public void shouldConcatLineOutput() throws Exception {
         PercentageDiscount percentageDiscount = new PercentageDiscount(0.5, 0);
 

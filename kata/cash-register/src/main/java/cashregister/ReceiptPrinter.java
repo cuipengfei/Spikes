@@ -15,12 +15,12 @@ public final class ReceiptPrinter {
     public static String processOrder(String json) {
         StringBuilder stringBuilder = new StringBuilder("***<没钱赚商店>购物清单***");
         List<OrderLineItem> orderLineItems = InputParser.parse(json);
-        Double sumPrice = 0d;
-        Double sumSaved = 0d;
+        Double sumDiscountPrice = 0d;
+        Double sumOriginalPrice = 0d;
         for (OrderLineItem orderLineItem : orderLineItems) {
             Discount discount = findSuitableDiscount(orderLineItem);
-            sumPrice += discount.price(orderLineItem);
-            sumSaved += discount.savedByPrice(orderLineItem);
+            sumDiscountPrice += discount.price(orderLineItem);
+            sumOriginalPrice += orderLineItem.price();
             stringBuilder.append(newLine)
                     .append(discount.output(orderLineItem));
         }
@@ -28,9 +28,9 @@ public final class ReceiptPrinter {
         stringBuilder.append(newLine)
                 .append("----------------------")
                 .append(newLine)
-                .append("总计: " + sumPrice + "(元)")
+                .append("总计: " + sumDiscountPrice + "(元)")
                 .append(newLine)
-                .append("节省：" + sumSaved + "(元)")
+                .append("节省：" + (sumOriginalPrice - sumDiscountPrice) + "(元)")
                 .append(newLine)
                 .append("**********************");
         return stringBuilder.toString();

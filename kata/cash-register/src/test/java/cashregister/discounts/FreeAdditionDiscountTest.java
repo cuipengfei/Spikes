@@ -27,11 +27,13 @@ public class FreeAdditionDiscountTest {
     }
 
     @Test
-    public void shouldCalculateSavedByProducts() throws Exception {
+    public void shouldConcatDiscountSummary() throws Exception {
         FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(2, 1, 0);//buy 2 get 1 free
 
-        int saved = freeAdditionDiscount.savedByProducts(new OrderLineItem(new Product("xyz", "ItemXXX", 50d, "kilogram", null), 10));
+        freeAdditionDiscount.price(new OrderLineItem(new Product("xyz", "ItemXXX", 50d, "kilogram", null), 10));
+        String discountSummary = freeAdditionDiscount.outputDiscountSummary();
 
-        assertThat(saved, is(3));//相当于白送3个
+        assertThat(discountSummary, is("买二赠一商品：\n" +
+                "名称：xyz，数量：3kilogram"));
     }
 }
