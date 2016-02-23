@@ -14,9 +14,8 @@ public final class ConfigReader {
     private static final String PREFIX = "Product.";
     private static List<Discount> discounts;
 
-    public static List<Product> loadProducts(String configPath) throws IOException {
-        Properties properties = new Properties();
-        properties.load(new InputStreamReader(new FileInputStream(configPath), "UTF-8"));
+    public static List<Product> loadProducts(String configPath) {
+        Properties properties = loadProperties(configPath);
         return properties.stringPropertyNames().stream()
                 .filter(ConfigReader::isProductNameLine)
                 .map(ConfigReader::toProductCode)
@@ -48,6 +47,16 @@ public final class ConfigReader {
             discounts = asList(new PercentageDiscount(percentage, percentagePriority), new FreeAdditionDiscount(buy, get, freeAdditionPriority));
         }
         return discounts;
+    }
+
+    private static Properties loadProperties(String configPath) {
+        Properties properties = new Properties();
+        try {
+            properties.load(new InputStreamReader(new FileInputStream(configPath), "UTF-8"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return properties;
     }
 
     private static boolean isProductNameLine(String key) {
