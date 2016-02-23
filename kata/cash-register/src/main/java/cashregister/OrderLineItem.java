@@ -13,6 +13,14 @@ public class OrderLineItem {
         return new OrderLineItem(product, amount);
     }
 
+    public int amount() {
+        return amount;
+    }
+
+    public Product product() {
+        return product;
+    }
+
     public Double price() {
         return product.singleUnitPrice() * amount;
     }
