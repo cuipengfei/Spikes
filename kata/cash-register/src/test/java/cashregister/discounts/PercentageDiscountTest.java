@@ -25,4 +25,13 @@ public class PercentageDiscountTest {
 
         assertThat(saved, is(50d));
     }
+
+    @Test
+    public void shouldConcatLineOutput() throws Exception {
+        PercentageDiscount percentageDiscount = new PercentageDiscount(0.5, 0);
+
+        String output = percentageDiscount.output(new OrderLineItem(new Product("abc", "ItemXXX", 10d, "bottle", null), 10));
+
+        assertThat(output, is("名称：abc，数量：10bottle，单价：10.00(元)，小计：50.00(元)，节省50.00(元)"));
+    }
 }
