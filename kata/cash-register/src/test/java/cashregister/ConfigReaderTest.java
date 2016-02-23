@@ -17,8 +17,12 @@ public class ConfigReaderTest {
         assertThat(products.size(), is(3));
 
         assertThat(products.get(0).name(), is("可口可乐"));
+        assertThat(products.get(0).appliedDiscounts().size(), is(1));
+
         assertThat(products.get(1).unit(), is("个"));
+        assertThat(products.get(1).appliedDiscounts().size(), is(0));
+
         assertThat(products.get(2).singleUnitPrice(), is(5.5d));
-        assertThat(products.get(2).code(), is("ITEM000003"));
+        assertThat(products.get(2).appliedDiscounts().size(), is(2));
     }
 }
