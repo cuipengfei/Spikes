@@ -22,8 +22,7 @@ public class FreeAdditionDiscount extends Discount {
         Double originalPrice = lineItem.price();
         int numberOfSets = lineItem.amount() / (bought + freeAdditional);
         double discountedPrice = originalPrice - numberOfSets * freeAdditional * lineItem.product().singleUnitPrice();
-        int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
-        discountCache.put(lineItem.product().name(), savedByProducts + lineItem.product().unit());
+        saveCache(lineItem, originalPrice, discountedPrice);
         return discountedPrice;
     }
 
@@ -33,12 +32,16 @@ public class FreeAdditionDiscount extends Discount {
             StringBuilder stringBuilder = new StringBuilder("买二赠一商品：");
             for (String key : discountCache.keySet()) {
                 stringBuilder.append(newLine)
-                        .append("名称：" + key +
-                                "，数量：" + discountCache.get(key));
+                        .append("名称：" + key + "，数量：" + discountCache.get(key));
             }
             return stringBuilder.toString();
         } else {
             return super.outputDiscountSummary();
         }
+    }
+
+    private void saveCache(OrderLineItem lineItem, Double originalPrice, double discountedPrice) {
+        int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
+        discountCache.put(lineItem.product().name(), savedByProducts + lineItem.product().unit());
     }
 }
