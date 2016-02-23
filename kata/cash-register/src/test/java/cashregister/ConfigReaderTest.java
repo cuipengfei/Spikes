@@ -24,5 +24,7 @@ public class ConfigReaderTest {
 
         assertThat(products.get(2).singleUnitPrice(), is(5.5d));
         assertThat(products.get(2).appliedDiscounts().size(), is(2));
+        assertThat(products.get(2).appliedDiscounts().get(0).priority(), is(100));
+        assertThat(products.get(2).appliedDiscounts().get(1).priority(), is(200));
     }
 }

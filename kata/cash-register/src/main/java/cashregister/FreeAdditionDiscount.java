@@ -4,7 +4,8 @@ public class FreeAdditionDiscount extends Discount {
     private final int bought;
     private final int freeAdditional;
 
-    public FreeAdditionDiscount(int bought, int freeAdditional) {
+    public FreeAdditionDiscount(int bought, int freeAdditional, int priority) {
+        super(priority);
         this.bought = bought;
         this.freeAdditional = freeAdditional;
     }

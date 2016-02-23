@@ -42,7 +42,10 @@ public final class ConfigReader {
             double percentage = Double.parseDouble(properties.getProperty("PercentageDiscount.percentage"));
             int buy = Integer.parseInt(properties.getProperty("FreeAdditionDiscount.buy"));
             int get = Integer.parseInt(properties.getProperty("FreeAdditionDiscount.get"));
-            discounts = asList(new PercentageDiscount(percentage), new FreeAdditionDiscount(buy, get));
+            int percentagePriority = Integer.parseInt(properties.getProperty("PercentageDiscount.priority"));
+            int freeAdditionPriority = Integer.parseInt(properties.getProperty("FreeAdditionDiscount.priority"));
+
+            discounts = asList(new PercentageDiscount(percentage, percentagePriority), new FreeAdditionDiscount(buy, get, freeAdditionPriority));
         }
         return discounts;
     }

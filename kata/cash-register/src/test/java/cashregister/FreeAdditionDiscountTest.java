@@ -8,7 +8,7 @@ import static org.hamcrest.core.Is.is;
 public class FreeAdditionDiscountTest {
     @Test
     public void shouldCalculateDiscountByAmountBought() throws Exception {
-        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(2, 1);//buy 2 get 1 free
+        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(2, 1, 0);//buy 2 get 1 free
 
         Double price = freeAdditionDiscount.price(OrderLineItem.create(Product.create("xyz", "ItemXXX", "pill", 50d, null), 10));
 
@@ -17,7 +17,7 @@ public class FreeAdditionDiscountTest {
 
     @Test
     public void shouldCalculateDiscountByAmountBoughtWithOddNumbers() throws Exception {//odd number: 买几送几都行
-        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(7, 3);//买7送3
+        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(7, 3, 0);//买7送3
 
         Double price = freeAdditionDiscount.price(OrderLineItem.create(Product.create("xyz", "ItemXXX", "piece", 6d, null), 13));
 
@@ -26,7 +26,7 @@ public class FreeAdditionDiscountTest {
 
     @Test
     public void shouldCalculateSavedByProducts() throws Exception {
-        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(2, 1);//buy 2 get 1 free
+        FreeAdditionDiscount freeAdditionDiscount = new FreeAdditionDiscount(2, 1, 0);//buy 2 get 1 free
 
         int saved = freeAdditionDiscount.savedByProducts(OrderLineItem.create(Product.create("xyz", "ItemXXX", "kilogram", 50d, null), 10));
 

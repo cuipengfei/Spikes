@@ -1,6 +1,17 @@
 package cashregister;
 
 public abstract class Discount {
+
+    private int priority;
+
+    public Discount(int priority) {
+        this.priority = priority;
+    }
+
+    public int priority() {
+        return priority;
+    }
+
     public abstract Double price(OrderLineItem lineItem);
 
     protected int savedByProducts(OrderLineItem lineItem) {

@@ -3,7 +3,8 @@ package cashregister;
 public class PercentageDiscount extends Discount {
     private double percentage;
 
-    public PercentageDiscount(double percentage) {
+    public PercentageDiscount(double percentage, int priority) {
+        super(priority);
         this.percentage = percentage;
     }
 
