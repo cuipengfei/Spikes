@@ -1,6 +1,6 @@
 package cashregister;
 
-public class PercentageDiscount implements Discount {
+public class PercentageDiscount extends Discount {
     private double percentage;
 
     public PercentageDiscount(double percentage) {

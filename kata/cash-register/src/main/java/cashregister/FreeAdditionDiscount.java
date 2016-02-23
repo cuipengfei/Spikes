@@ -1,6 +1,6 @@
 package cashregister;
 
-public class FreeAdditionDiscount implements Discount {
+public class FreeAdditionDiscount extends Discount {
     private final int bought;
     private final int freeAdditional;
 

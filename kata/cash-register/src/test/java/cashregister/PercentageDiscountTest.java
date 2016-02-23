@@ -14,4 +14,13 @@ public class PercentageDiscountTest {
 
         assertThat(price, is(1168.5d));
     }
+
+    @Test
+    public void shouldCalculateSavedAmount() throws Exception {
+        PercentageDiscount percentageDiscount = new PercentageDiscount(0.5);
+
+        Double price = percentageDiscount.savedByPrice(OrderLineItem.create(Product.create("abc", 10d), 10));
+
+        assertThat(price, is(50d));
+    }
 }
