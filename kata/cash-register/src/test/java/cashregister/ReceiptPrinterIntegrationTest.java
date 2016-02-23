@@ -32,4 +32,25 @@ public class ReceiptPrinterIntegrationTest {
                 "节省：6.25(元)\n" +
                 "**********************"));
     }
+
+    @Test
+    public void shouldPrintReceiptWithoutDiscount() throws Exception {
+        String receiptString = ReceiptPrinter.processOrder("[" +
+                " 'ITEM000001'," +
+                " 'ITEM000001'," +
+                " 'ITEM000001'," +
+                " 'ITEM000002-5'," +
+                " 'ITEM000003'," +
+                " 'ITEM000003'" +
+                "]");
+
+        assertThat(receiptString, is("***<没钱赚商店>购物清单***\n" +
+                "名称：可口可乐，数量：3瓶，单价：3.00(元)，小计：8.55(元)，节省0.45(元)\n" +
+                "名称：羽毛球，数量：5个，单价：1.00(元)，小计：5.00(元)\n" +
+                "名称：苹果，数量：2斤，单价：5.50(元)，小计：11.00(元)\n" +
+                "----------------------\n" +
+                "总计: 24.55(元)\n" +
+                "节省：0.45(元)\n" +
+                "**********************"));
+    }
 }

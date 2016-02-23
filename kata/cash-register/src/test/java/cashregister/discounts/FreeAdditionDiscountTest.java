@@ -35,6 +35,6 @@ public class FreeAdditionDiscountTest {
 
         assertThat(discountSummary, is("----------------------\n" +
                 "买二赠一商品：\n" +
-                "名称：xyz，数量：3kilogram"));
+                "名称：xyz，数量：3kilogram\n"));
     }
 }

@@ -12,9 +12,10 @@ import java.util.stream.Collectors;
 import static cashregister.io.ConfigReader.loadProducts;
 
 public final class InputParser {
-    private static List<Product> products = loadProducts(InputParser.class.getClassLoader().getResource("config.properties").getPath());
+    private static List<Product> products;
 
     public static List<OrderLineItem> parse(String json) {
+        products = loadProducts(InputParser.class.getClassLoader().getResource("config.properties").getPath());
         String cleanItems = json.replace("[", "").replace("]", "").replaceAll(" ", "").replaceAll("'", "");
         String[] items = cleanItems.split(",");
 

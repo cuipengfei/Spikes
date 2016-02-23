@@ -6,10 +6,11 @@ import cashregister.io.ConfigReader;
 import cashregister.io.InputParser;
 import cashregister.models.OrderLineItem;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public final class ReceiptPrinter {
-
+    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
     private static String newLine = System.getProperty("line.separator");
 
     public static String processOrder(String json) {
@@ -24,17 +25,19 @@ public final class ReceiptPrinter {
 
     private static void discountSummary(StringBuilder stringBuilder) {
         for (Discount discount : ConfigReader.discounts()) {
-            stringBuilder.append(discount.outputDiscountSummary());
+            String discountSummary = discount.outputDiscountSummary();
+            if (discountSummary.length() > 0) {
+                stringBuilder.append(discountSummary);
+            }
         }
     }
 
     private static void finalSummary(StringBuilder stringBuilder, LinesSum linesSum) {
-        stringBuilder.append(newLine)
-                .append("----------------------")
+        stringBuilder.append("----------------------")
                 .append(newLine)
-                .append("总计: " + linesSum.sumDiscountPrice + "(元)")
+                .append("总计: " + decimalFormat.format(linesSum.sumDiscountPrice) + "(元)")
                 .append(newLine)
-                .append("节省：" + (linesSum.sumOriginalPrice - linesSum.sumDiscountPrice) + "(元)")
+                .append("节省：" + decimalFormat.format(linesSum.sumOriginalPrice - linesSum.sumDiscountPrice) + "(元)")
                 .append(newLine)
                 .append("**********************");
     }

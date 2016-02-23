@@ -20,6 +20,7 @@ public final class ConfigReader {
     private static List<Discount> discounts;
 
     public static List<Product> loadProducts(String configPath) {
+        discounts = null;
         Properties properties = loadProperties(configPath);
         return properties.stringPropertyNames().stream()
                 .filter(ConfigReader::isProductNameLine)

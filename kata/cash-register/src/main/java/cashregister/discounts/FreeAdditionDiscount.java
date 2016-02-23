@@ -33,7 +33,8 @@ public class FreeAdditionDiscount extends Discount {
             stringBuilder.append(newLine).append("买二赠一商品：");//todo: bought, freeAddition 转汉字
             for (String key : discountCache.keySet()) {
                 stringBuilder.append(newLine)
-                        .append("名称：" + key + "，数量：" + discountCache.get(key));
+                        .append("名称：" + key + "，数量：" + discountCache.get(key))
+                        .append(newLine);
             }
             return stringBuilder.toString();
         } else {
@@ -42,7 +43,9 @@ public class FreeAdditionDiscount extends Discount {
     }
 
     private void saveCache(OrderLineItem lineItem, Double originalPrice, double discountedPrice) {
-        int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
-        discountCache.put(lineItem.product().name(), savedByProducts + lineItem.product().unit());
+        if (originalPrice != discountedPrice) {
+            int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
+            discountCache.put(lineItem.product().name(), savedByProducts + lineItem.product().unit());
+        }
     }
 }
