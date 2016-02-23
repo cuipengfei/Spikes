@@ -9,10 +9,6 @@ public class OrderLineItem {
         this.amount = amount;
     }
 
-    public static OrderLineItem create(Product product, int amount) {
-        return new OrderLineItem(product, amount);
-    }
-
     public int amount() {
         return amount;
     }

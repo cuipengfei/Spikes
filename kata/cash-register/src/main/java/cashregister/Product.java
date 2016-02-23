@@ -10,10 +10,6 @@ public class Product {
     private String unit;
     private List<Discount> appliedDiscounts;
 
-    public static Product create(String name, String code, String unit, Double singleUnitPrice, List<Discount> appliedDiscounts) {
-        return new Product(name, code, singleUnitPrice, unit, appliedDiscounts);
-    }
-
     public Product(String name, String code, Double singleUnitPrice, String unit, List<Discount> appliedDiscounts) {
         this.name = name;
         this.code = code;

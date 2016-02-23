@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class OrderLineItemTest {
     @Test
     public void shouldCalculateItsOwnPrice() throws Exception {
-        OrderLineItem orderLineItem = OrderLineItem.create(Product.create("a product", "ItemXXX", "meter", 5d, null), 5);
+        OrderLineItem orderLineItem = new OrderLineItem(new Product("a product", "ItemXXX", 5d, "meter", null), 5);
 
         Double linePrice = orderLineItem.price();
 
