@@ -13,25 +13,45 @@ public final class ReceiptPrinter {
     private static String newLine = System.getProperty("line.separator");
 
     public static String processOrder(String json) {
+        List<OrderLineItem> orderLineItems = InputParser.parse(json);
         StringBuilder stringBuilder = new StringBuilder("***<没钱赚商店>购物清单***");
-        Summarizer summarizer = new Summarizer(json, stringBuilder).summarize();
-        List<Discount> discounts = ConfigReader.discounts();
-        for (Discount discount : discounts) {
-            stringBuilder.append(discount.outputDiscountSummary());
-        }
-        finalSummary(stringBuilder, summarizer.sumDiscountPrice(), summarizer.sumOriginalPrice());
+
+        LinesSum linesSum = processLineItems(stringBuilder, orderLineItems);
+        discountSummary(stringBuilder);
+        finalSummary(stringBuilder, linesSum);
         return stringBuilder.toString();
     }
 
-    private static void finalSummary(StringBuilder stringBuilder, Double sumDiscountPrice, Double sumOriginalPrice) {
+    private static void discountSummary(StringBuilder stringBuilder) {
+        for (Discount discount : ConfigReader.discounts()) {
+            stringBuilder.append(discount.outputDiscountSummary());
+        }
+    }
+
+    private static void finalSummary(StringBuilder stringBuilder, LinesSum linesSum) {
         stringBuilder.append(newLine)
                 .append("----------------------")
                 .append(newLine)
-                .append("总计: " + sumDiscountPrice + "(元)")
+                .append("总计: " + linesSum.sumDiscountPrice + "(元)")
                 .append(newLine)
-                .append("节省：" + (sumOriginalPrice - sumDiscountPrice) + "(元)")
+                .append("节省：" + (linesSum.sumOriginalPrice - linesSum.sumDiscountPrice) + "(元)")
                 .append(newLine)
                 .append("**********************");
+    }
+
+    private static LinesSum processLineItems(StringBuilder stringBuilder, List<OrderLineItem> parse) {
+        LinesSum linesSum = new LinesSum();
+        for (OrderLineItem orderLineItem : parse) {
+            Discount discount = findSuitableDiscount(orderLineItem);
+            linesSum.sumDiscountPrice += discount.discountedPrice(orderLineItem);
+            linesSum.sumOriginalPrice += orderLineItem.price();
+            stringBuilder.append(newLine)
+                    .append(discount.output(orderLineItem));
+        }
+        stringBuilder.append(newLine)
+                .append("----------------------")
+                .append(newLine);
+        return linesSum;
     }
 
     private static Discount findSuitableDiscount(OrderLineItem orderLineItem) {
@@ -44,38 +64,8 @@ public final class ReceiptPrinter {
         }
     }
 
-    private static class Summarizer {
-        private String json;
-        private StringBuilder stringBuilder;
-        private Double sumDiscountPrice = 0d;
-        private Double sumOriginalPrice = 0d;
-
-        public Summarizer(String json, StringBuilder stringBuilder) {
-            this.json = json;
-            this.stringBuilder = stringBuilder;
-        }
-
-        public Double sumDiscountPrice() {
-            return sumDiscountPrice;
-        }
-
-        public Double sumOriginalPrice() {
-            return sumOriginalPrice;
-        }
-
-        public Summarizer summarize() {
-            List<OrderLineItem> orderLineItems = InputParser.parse(json);
-            for (OrderLineItem orderLineItem : orderLineItems) {
-                Discount discount = findSuitableDiscount(orderLineItem);
-                sumDiscountPrice += discount.discountedPrice(orderLineItem);
-                sumOriginalPrice += orderLineItem.price();
-                stringBuilder.append(newLine)
-                        .append(discount.output(orderLineItem));
-            }
-            stringBuilder.append(newLine)
-                    .append("----------------------")
-                    .append(newLine);
-            return this;
-        }
+    private static class LinesSum {
+        public Double sumDiscountPrice = 0d;
+        public Double sumOriginalPrice = 0d;
     }
 }
