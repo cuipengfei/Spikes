@@ -13,7 +13,7 @@ public class PercentageDiscount extends Discount {
     }
 
     @Override
-    public Double price(OrderLineItem lineItem) {
+    public Double discountedPrice(OrderLineItem lineItem) {
         return lineItem.price() * percentage;
     }
 
@@ -21,6 +21,7 @@ public class PercentageDiscount extends Discount {
     public String output(OrderLineItem lineItem) {
         DecimalFormat decimalFormat = new DecimalFormat("####0.00");
         return super.output(lineItem)
-                + "，节省" + decimalFormat.format(savedByPrice(lineItem)) + "(元)";
+                + "，节省" + decimalFormat.format(lineItem.price() - this.discountedPrice(lineItem)) + "(元)";
     }
+
 }

@@ -8,7 +8,7 @@ public class NoDiscount extends Discount {
     }
 
     @Override
-    public Double price(OrderLineItem lineItem) {
+    public Double discountedPrice(OrderLineItem lineItem) {
         return lineItem.price();
     }
 }

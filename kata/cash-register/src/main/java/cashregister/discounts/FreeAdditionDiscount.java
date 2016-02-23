@@ -18,13 +18,13 @@ public class FreeAdditionDiscount extends Discount {
     }
 
     @Override
-    public Double price(OrderLineItem lineItem) {
-        Double priceWithoutDiscount = lineItem.price();
+    public Double discountedPrice(OrderLineItem lineItem) {
+        Double originalPrice = lineItem.price();
         int numberOfSets = lineItem.amount() / (bought + freeAdditional);
-        double discountPrice = priceWithoutDiscount - numberOfSets * freeAdditional * lineItem.product().singleUnitPrice();
-        int savedByProducts = (int) ((priceWithoutDiscount - discountPrice) / lineItem.product().singleUnitPrice());
+        double discountedPrice = originalPrice - numberOfSets * freeAdditional * lineItem.product().singleUnitPrice();
+        int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
         discountCache.put(lineItem.product().name(), savedByProducts + lineItem.product().unit());
-        return discountPrice;
+        return discountedPrice;
     }
 
     @Override
@@ -40,9 +40,5 @@ public class FreeAdditionDiscount extends Discount {
         } else {
             return super.outputDiscountSummary();
         }
-    }
-
-    public int savedByProducts(OrderLineItem lineItem) {
-        return (int) (savedByPrice(lineItem) / lineItem.product().singleUnitPrice());
     }
 }

@@ -16,21 +16,17 @@ public abstract class Discount {
         return priority;
     }
 
-    public abstract Double price(OrderLineItem lineItem);
+    public abstract Double discountedPrice(OrderLineItem lineItem);
 
     public String output(OrderLineItem lineItem) {
         DecimalFormat decimalFormat = new DecimalFormat("####0.00");
         return "名称：" + lineItem.product().name()
                 + "，数量：" + lineItem.amount() + lineItem.product().unit()
                 + "，单价：" + decimalFormat.format(lineItem.product().singleUnitPrice()) + "(元)"
-                + "，小计：" + decimalFormat.format(price(lineItem)) + "(元)";
+                + "，小计：" + decimalFormat.format(discountedPrice(lineItem)) + "(元)";
     }
 
     public String outputDiscountSummary() {
         return "";
-    }
-
-    protected Double savedByPrice(OrderLineItem lineItem) {
-        return lineItem.price() - this.price(lineItem);
     }
 }

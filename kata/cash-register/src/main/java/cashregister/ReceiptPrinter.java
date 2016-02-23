@@ -19,7 +19,7 @@ public final class ReceiptPrinter {
         Double sumOriginalPrice = 0d;
         for (OrderLineItem orderLineItem : orderLineItems) {
             Discount discount = findSuitableDiscount(orderLineItem);
-            sumDiscountPrice += discount.price(orderLineItem);
+            sumDiscountPrice += discount.discountedPrice(orderLineItem);
             sumOriginalPrice += orderLineItem.price();
             stringBuilder.append(newLine)
                     .append(discount.output(orderLineItem));
