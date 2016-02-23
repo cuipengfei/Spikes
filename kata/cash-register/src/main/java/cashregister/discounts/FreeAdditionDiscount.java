@@ -18,4 +18,8 @@ public class FreeAdditionDiscount extends Discount {
         int numberOfSets = lineItem.amount() / (bought + freeAdditional);
         return priceWithoutDiscount - numberOfSets * freeAdditional * lineItem.product().singleUnitPrice();
     }
+
+    public int savedByProducts(OrderLineItem lineItem) {
+        return (int) (savedByPrice(lineItem) / lineItem.product().singleUnitPrice());
+    }
 }

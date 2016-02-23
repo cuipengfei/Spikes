@@ -18,10 +18,6 @@ public abstract class Discount {
 
     public abstract Double price(OrderLineItem lineItem);
 
-    public int savedByProducts(OrderLineItem lineItem) {
-        return (int) (savedByPrice(lineItem) / lineItem.product().singleUnitPrice());
-    }
-
     public Double savedByPrice(OrderLineItem lineItem) {
         return lineItem.price() - this.price(lineItem);
     }
