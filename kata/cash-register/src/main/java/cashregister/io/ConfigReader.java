@@ -1,7 +1,7 @@
 package cashregister.io;
 
 import cashregister.discounts.Discount;
-import cashregister.discounts.FreeAdditionDiscount;
+import cashregister.discounts.FreeGiftDiscount;
 import cashregister.discounts.PercentageDiscount;
 import cashregister.models.Product;
 
@@ -49,12 +49,12 @@ public final class ConfigReader {
     private static List<Discount> loadDiscounts(Properties properties) {
         if (discounts == null) {
             double percentage = Double.parseDouble(properties.getProperty("PercentageDiscount.percentage"));
-            int buy = Integer.parseInt(properties.getProperty("FreeAdditionDiscount.buy"));
-            int get = Integer.parseInt(properties.getProperty("FreeAdditionDiscount.get"));
+            int buy = Integer.parseInt(properties.getProperty("FreeGiftDiscount.buy"));
+            int get = Integer.parseInt(properties.getProperty("FreeGiftDiscount.get"));
             int percentagePriority = Integer.parseInt(properties.getProperty("PercentageDiscount.priority"));
-            int freeAdditionPriority = Integer.parseInt(properties.getProperty("FreeAdditionDiscount.priority"));
+            int freeAdditionPriority = Integer.parseInt(properties.getProperty("FreeGiftDiscount.priority"));
 
-            discounts = asList(new PercentageDiscount(percentage, percentagePriority), new FreeAdditionDiscount(buy, get, freeAdditionPriority));
+            discounts = asList(new PercentageDiscount(percentage, percentagePriority), new FreeGiftDiscount(buy, get, freeAdditionPriority));
         }
         return discounts;
     }

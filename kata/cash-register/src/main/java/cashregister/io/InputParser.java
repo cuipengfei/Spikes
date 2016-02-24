@@ -7,38 +7,41 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static cashregister.io.ConfigReader.loadProducts;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public final class InputParser {
     private static List<Product> products;//可变状态,不安全
+    private static String configFilePath = InputParser.class.getClassLoader().getResource("config.properties").getPath();
 
     public static List<OrderLineItem> parse(String json) {
-        products = loadProducts(InputParser.class.getClassLoader().getResource("config.properties").getPath());
+        products = loadProducts(configFilePath);
         String cleanItems = json.replace("[", "").replace("]", "").replaceAll(" ", "").replaceAll("'", "");
-        String[] items = cleanItems.split(",");
+        String[] jsonLines = cleanItems.split(",");
 
-        Map<String, List<String>> groups = Arrays.asList(items).stream()
-                .collect(Collectors.groupingBy(item -> item));
+        Map<String, List<String>> jsonLineGroups = Arrays.asList(jsonLines).stream()
+                .collect(groupingBy(item -> item));
 
-        return groups.keySet().stream()
-                .map(line -> stringToLineItem(line, groups))
+        return jsonLineGroups.keySet().stream()
+                .map(jsonLine -> jsonLineToOrderLineItem(jsonLine, jsonLineGroups))
                 .sorted((x, y) -> x.product().code().compareTo(y.product().code()))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
-    private static OrderLineItem stringToLineItem(String line, Map<String, List<String>> groups) {
-        String code;
-        int amount;
+    private static OrderLineItem jsonLineToOrderLineItem(String line, Map<String, List<String>> groups) {
         if (line.contains("-")) {
-            String[] codeAndAmount = line.split("-");
-            code = codeAndAmount[0];
-            amount = Integer.parseInt(codeAndAmount[1]);
+            return jsonLineWithDashToOrderLineItem(line);
         } else {
-            code = line;
-            amount = groups.get(line).size();
+            return createLineItem(line, groups.get(line).size());
         }
+    }
+
+    private static OrderLineItem jsonLineWithDashToOrderLineItem(String line) {
+        String[] codeAndAmount = line.split("-");
+        String code = codeAndAmount[0];
+        int amount = Integer.parseInt(codeAndAmount[1]);
         return createLineItem(code, amount);
     }
 

@@ -7,10 +7,10 @@ import java.util.List;
 public class Product {
 
     private final String name;
-    private String code;
+    private final String code;
     private final Double singleUnitPrice;
-    private String unit;
-    private List<Discount> appliedDiscounts;
+    private final String unit;
+    private final List<Discount> appliedDiscounts;
 
     public Product(String name, String code, Double singleUnitPrice, String unit, List<Discount> appliedDiscounts) {
         this.name = name;
