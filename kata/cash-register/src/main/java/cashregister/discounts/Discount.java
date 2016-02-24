@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 public abstract class Discount {
 
     private int priority;
-    protected DecimalFormat decimalFormat = new DecimalFormat("####0.00");
+    protected DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public Discount(int priority) {
         this.priority = priority;

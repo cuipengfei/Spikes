@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public final class ReceiptPrinter {
-    private static DecimalFormat decimalFormat = new DecimalFormat("####0.00");
+    private static DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private static String newLine = System.getProperty("line.separator");
 
     public static String processOrder(String json) {
