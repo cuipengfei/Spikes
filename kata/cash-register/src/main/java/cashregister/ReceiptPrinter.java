@@ -1,7 +1,6 @@
 package cashregister;
 
 import cashregister.discounts.Discount;
-import cashregister.discounts.NoDiscount;
 import cashregister.io.ConfigReader;
 import cashregister.io.InputParser;
 import cashregister.models.OrderLineItem;
@@ -56,13 +55,9 @@ public final class ReceiptPrinter {
     }
 
     private static Discount findSuitableDiscount(OrderLineItem orderLineItem) {
-        if (orderLineItem.product().appliedDiscounts().size() == 0) {
-            return new NoDiscount(0);
-        } else {
-            return orderLineItem.product().appliedDiscounts().stream()
-                    .sorted((x, y) -> y.priority() - x.priority())
-                    .findFirst().get();
-        }
+        return orderLineItem.product().appliedDiscounts().stream()
+                .sorted((x, y) -> y.priority() - x.priority())
+                .findFirst().get();
     }
 
     private static class LinesSum {

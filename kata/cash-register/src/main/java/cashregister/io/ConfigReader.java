@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import static cashregister.discounts.NoDiscount.noDiscount;
 import static java.util.Arrays.asList;
 
 public final class ConfigReader {
@@ -37,13 +38,18 @@ public final class ConfigReader {
         String name = properties.getProperty(PREFIX + productCode + ".name");
         double price = Double.parseDouble(properties.getProperty(PREFIX + productCode + ".price"));
         String unit = properties.getProperty(PREFIX + productCode + ".unit");
+        List<Discount> appliedDiscounts = findAppliedDiscounts(productCode, properties);
 
+        return new Product(name, productCode, price, unit, appliedDiscounts);
+    }
+
+    private static List<Discount> findAppliedDiscounts(String productCode, Properties properties) {
         String appliedDiscountNames = properties.getProperty(PREFIX + productCode + ".appliedDiscounts", "");
         List<Discount> appliedDiscounts = loadDiscounts(properties).stream()
                 .filter(discount -> appliedDiscountNames.contains(discount.getClass().getSimpleName()))
                 .collect(Collectors.toList());
-
-        return new Product(name, productCode, price, unit, appliedDiscounts);
+        appliedDiscounts.add(noDiscount());
+        return appliedDiscounts;
     }
 
     private static List<Discount> loadDiscounts(Properties properties) {
