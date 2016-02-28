@@ -9,7 +9,7 @@ public abstract class Discount {
 
     private int priority;
 
-    protected DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
 
     public Discount(int priority) {
         this.priority = priority;
@@ -22,6 +22,6 @@ public abstract class Discount {
     public abstract Double discountedPrice(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel);
 
     protected String lineSummary(OrderLineItem lineItem, double discountedPrice) {
-        return lineItem.toString() + "，小计：" + decimalFormat.format(discountedPrice) + "(元)";
+        return lineItem.toString() + "，小计：" + DECIMAL_FORMAT.format(discountedPrice) + "(元)";
     }
 }

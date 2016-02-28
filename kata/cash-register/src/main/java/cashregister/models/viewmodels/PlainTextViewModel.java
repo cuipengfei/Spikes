@@ -1,12 +1,12 @@
 package cashregister.models.viewmodels;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static cashregister.discounts.Discount.DECIMAL_FORMAT;
+
 public class PlainTextViewModel {
-    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private static final String newLine = System.getProperty("line.separator");
     private static final String sectionSeparator = "----------------------";
 
@@ -48,9 +48,9 @@ public class PlainTextViewModel {
     private void outputFinalSummary(StringBuilder stringBuilder) {
         stringBuilder
                 .append(newLine)
-                .append("总计: " + decimalFormat.format(discountedTotal) + "(元)")
+                .append("总计: " + DECIMAL_FORMAT.format(discountedTotal) + "(元)")
                 .append(newLine)
-                .append("节省：" + decimalFormat.format(originalTotal - discountedTotal) + "(元)");
+                .append("节省：" + DECIMAL_FORMAT.format(originalTotal - discountedTotal) + "(元)");
     }
 
     private void outputCustomSections(StringBuilder stringBuilder) {

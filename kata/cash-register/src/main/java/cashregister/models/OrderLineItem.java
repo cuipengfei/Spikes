@@ -1,11 +1,8 @@
 package cashregister.models;
 
-import cashregister.discounts.Discount;
-
-import java.text.DecimalFormat;
+import static cashregister.discounts.Discount.DECIMAL_FORMAT;
 
 public class OrderLineItem {
-    private DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     private final Product product;
     private final int amount;
@@ -30,6 +27,6 @@ public class OrderLineItem {
     public String toString() {
         return "名称：" + product().name()
                 + "，数量：" + amount() + product().unit()
-                + "，单价：" + decimalFormat.format(product().singleUnitPrice()) + "(元)";
+                + "，单价：" + DECIMAL_FORMAT.format(product().singleUnitPrice()) + "(元)";
     }
 }
