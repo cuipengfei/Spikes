@@ -1,6 +1,7 @@
 package cashregister.discounts;
 
 import cashregister.models.OrderLineItem;
+import cashregister.models.viewmodels.PlainTextViewModel;
 
 public class NoDiscount extends Discount {
 
@@ -15,7 +16,11 @@ public class NoDiscount extends Discount {
     }
 
     @Override
-    public Double discountedPrice(OrderLineItem lineItem) {
-        return lineItem.price();
+    public Double discountedPrice(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel) {
+        Double price = lineItem.price();
+        plainTextViewModel.addToOriginalTotal(price);
+        plainTextViewModel.addToDiscountedTotal(price);
+        plainTextViewModel.addToLinesSection(lineItem.toString() + "，小计：" + decimalFormat.format(price) + "(元)");
+        return price;
     }
 }

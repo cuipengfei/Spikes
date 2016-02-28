@@ -1,6 +1,7 @@
 package cashregister.discounts;
 
 import cashregister.models.OrderLineItem;
+import cashregister.models.viewmodels.PlainTextViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class FreeGiftDiscount extends Discount {
     }
 
     @Override
-    public Double discountedPrice(OrderLineItem lineItem) {
+    public Double discountedPrice(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel) {
         Double originalPrice = lineItem.price();
 
         int numberOfSets = lineItem.amount() / (bought + freeGift);
@@ -29,7 +30,7 @@ public class FreeGiftDiscount extends Discount {
         double freeGiftWorth = numberOfFreeGift * lineItem.product().singleUnitPrice();
         double discountedPrice = originalPrice - freeGiftWorth;
 
-        saveCache(lineItem, originalPrice, discountedPrice);
+        appendToViewModel(lineItem, plainTextViewModel, originalPrice, discountedPrice);
 
         return discountedPrice;
     }
@@ -50,11 +51,14 @@ public class FreeGiftDiscount extends Discount {
         }
     }
 
-    //改写可变状态,不安全
-    private void saveCache(OrderLineItem lineItem, Double originalPrice, double discountedPrice) {
-        if (originalPrice != discountedPrice) {
-            int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
-            discountCache.put(lineItem.product().name(), savedByProducts + lineItem.product().unit());
+    private void appendToViewModel(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel, Double originalPrice, double discountedPrice) {
+        plainTextViewModel.addToOriginalTotal(originalPrice);
+        plainTextViewModel.addToDiscountedTotal(discountedPrice);
+        plainTextViewModel.addToLinesSection(lineItem.toString() + "，小计：" + decimalFormat.format(discountedPrice) + "(元)");
+        int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
+        if (savedByProducts > 0) {
+            plainTextViewModel.addToSection("买二赠一商品：", "名称：" + lineItem.product().name() + "，数量：" + savedByProducts + lineItem.product().unit());//写死了 有必要的话 买几送几 转汉字
         }
     }
+
 }

@@ -19,11 +19,10 @@ public class PlainTextViewModel {
         linesSection.add(line);
     }
 
-    public void createSection(String sectionName) {
-        sections.put(sectionName, new ArrayList<>());
-    }
-
     public void addToSection(String sectionName, String line) {
+        if (!sections.containsKey(sectionName)) {
+            sections.put(sectionName, new ArrayList<>());
+        }
         sections.get(sectionName).add(line);
     }
 

@@ -1,6 +1,7 @@
 package cashregister.discounts;
 
 import cashregister.models.OrderLineItem;
+import cashregister.models.viewmodels.PlainTextViewModel;
 
 public class PercentageDiscount extends Discount {
     private double percentage;
@@ -11,14 +12,11 @@ public class PercentageDiscount extends Discount {
     }
 
     @Override
-    public Double discountedPrice(OrderLineItem lineItem) {
-        return lineItem.price() * percentage;
+    public Double discountedPrice(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel) {
+        double discountedPrice = lineItem.price() * percentage;
+        plainTextViewModel.addToOriginalTotal(lineItem.price());
+        plainTextViewModel.addToDiscountedTotal(discountedPrice);
+        plainTextViewModel.addToLinesSection(lineItem.toString() + "，小计：" + decimalFormat.format(discountedPrice) + "(元)" + "，节省" + decimalFormat.format(lineItem.price() - discountedPrice) + "(元)");
+        return discountedPrice;
     }
-
-    @Override
-    public String output(OrderLineItem lineItem) {
-        return super.output(lineItem)
-                + "，节省" + decimalFormat.format(lineItem.price() - this.discountedPrice(lineItem)) + "(元)";
-    }
-
 }

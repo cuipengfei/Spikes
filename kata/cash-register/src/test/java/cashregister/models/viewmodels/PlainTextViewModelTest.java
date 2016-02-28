@@ -25,7 +25,6 @@ public class PlainTextViewModelTest {
     public void shouldOutPutDiscountSection() throws Exception {
         PlainTextViewModel plainTextViewModel = new PlainTextViewModel();
 
-        plainTextViewModel.createSection("whatever discount");
         plainTextViewModel.addToSection("whatever discount", "blah blah");
 
         String linesSectionInString = plainTextViewModel.output();
@@ -64,7 +63,6 @@ public class PlainTextViewModelTest {
         plainTextViewModel.addToLinesSection("apple");
         plainTextViewModel.addToOriginalTotal(10d);
         plainTextViewModel.addToDiscountedTotal(9d);
-        plainTextViewModel.createSection("something discount");
         plainTextViewModel.addToSection("something discount", "apple something");
 
         plainTextViewModel.addToLinesSection("orange");

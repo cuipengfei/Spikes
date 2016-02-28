@@ -2,6 +2,7 @@ package cashregister.discounts;
 
 import cashregister.models.OrderLineItem;
 import cashregister.models.Product;
+import cashregister.models.viewmodels.PlainTextViewModel;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,7 +13,7 @@ public class FreeGiftDiscountTest {
     public void shouldCalculateDiscountByAmountBought() throws Exception {
         FreeGiftDiscount freeGiftDiscount = new FreeGiftDiscount(2, 1, 0);//buy 2 get 1 free
 
-        Double price = freeGiftDiscount.discountedPrice(new OrderLineItem(new Product("xyz", "ItemXXX", 50d, "pill", null), 10));
+        Double price = freeGiftDiscount.discountedPrice(new OrderLineItem(new Product("xyz", "ItemXXX", 50d, "pill", null), 10), new PlainTextViewModel());
 
         assertThat(price, is(350d));
     }
@@ -21,20 +22,8 @@ public class FreeGiftDiscountTest {
     public void shouldCalculateDiscountByAmountBoughtWithOddNumbers() throws Exception {//odd number: 买几送几都行
         FreeGiftDiscount freeGiftDiscount = new FreeGiftDiscount(7, 3, 0);//买7送3
 
-        Double price = freeGiftDiscount.discountedPrice(new OrderLineItem(new Product("xyz", "ItemXXX", 6d, "piece", null), 13));
+        Double price = freeGiftDiscount.discountedPrice(new OrderLineItem(new Product("xyz", "ItemXXX", 6d, "piece", null), 13), new PlainTextViewModel());
 
         assertThat(price, is(60d));//买7送3,前10个7*6=42,剩下3个还要单独付款18,共计60
-    }
-
-    @Test
-    public void shouldConcatDiscountSummary() throws Exception {
-        FreeGiftDiscount freeGiftDiscount = new FreeGiftDiscount(2, 1, 0);//buy 2 get 1 free
-
-        freeGiftDiscount.discountedPrice(new OrderLineItem(new Product("xyz", "ItemXXX", 50d, "kilogram", null), 10));
-        String discountSummary = freeGiftDiscount.outputDiscountSummary();
-
-        assertThat(discountSummary, is("----------------------\n" +
-                "买二赠一商品：\n" +
-                "名称：xyz，数量：3kilogram\n"));
     }
 }
