@@ -21,7 +21,7 @@ public class NoDiscount extends Discount {
 
         plainTextViewModel.addToOriginalTotal(price);
         plainTextViewModel.addToDiscountedTotal(price);
-        plainTextViewModel.addToLinesSection(lineItem.toString() + "，小计：" + decimalFormat.format(price) + "(元)");
+        plainTextViewModel.addToLinesSection(lineSummary(lineItem, price));
 
         return price;
     }

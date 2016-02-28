@@ -17,8 +17,9 @@ public class PercentageDiscount extends Discount {
 
         plainTextViewModel.addToOriginalTotal(lineItem.price());
         plainTextViewModel.addToDiscountedTotal(discountedPrice);
-        plainTextViewModel.addToLinesSection(lineItem.toString() + "，小计：" + decimalFormat.format(discountedPrice) + "(元)" + "，节省" + decimalFormat.format(lineItem.price() - discountedPrice) + "(元)");
+        plainTextViewModel.addToLinesSection(lineSummary(lineItem, discountedPrice) + "，节省" + decimalFormat.format(lineItem.price() - discountedPrice) + "(元)");
 
         return discountedPrice;
     }
+
 }

@@ -32,7 +32,7 @@ public class FreeGiftDiscount extends Discount {
     private void appendToViewModel(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel, Double originalPrice, double discountedPrice) {
         plainTextViewModel.addToOriginalTotal(originalPrice);
         plainTextViewModel.addToDiscountedTotal(discountedPrice);
-        plainTextViewModel.addToLinesSection(lineItem.toString() + "，小计：" + decimalFormat.format(discountedPrice) + "(元)");
+        plainTextViewModel.addToLinesSection(lineSummary(lineItem, discountedPrice));
         int savedByProducts = (int) ((originalPrice - discountedPrice) / lineItem.product().singleUnitPrice());
         if (savedByProducts > 0) {
             plainTextViewModel.addToSection("买二赠一商品：", "名称：" + lineItem.product().name() + "，数量：" + savedByProducts + lineItem.product().unit());//写死了 有必要的话 买几送几 转汉字

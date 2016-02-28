@@ -20,4 +20,8 @@ public abstract class Discount {
     }
 
     public abstract Double discountedPrice(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel);
+
+    protected String lineSummary(OrderLineItem lineItem, double discountedPrice) {
+        return lineItem.toString() + "，小计：" + decimalFormat.format(discountedPrice) + "(元)";
+    }
 }
