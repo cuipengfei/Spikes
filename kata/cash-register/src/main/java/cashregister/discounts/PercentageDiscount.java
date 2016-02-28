@@ -21,5 +21,4 @@ public class PercentageDiscount extends Discount {
 
         return discountedPrice;
     }
-
 }
