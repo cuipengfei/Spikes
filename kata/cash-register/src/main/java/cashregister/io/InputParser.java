@@ -13,11 +13,10 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 public final class InputParser {
-    private static List<Product> products;//可变状态,不安全
     private static String configFilePath = InputParser.class.getClassLoader().getResource("config.properties").getPath();
+    private static List<Product> products = loadProducts(configFilePath);
 
     public static List<OrderLineItem> parse(String json) {
-        products = loadProducts(configFilePath);
         String cleanItems = json.replace("[", "").replace("]", "").replaceAll(" ", "").replaceAll("'", "");
         String[] jsonLines = cleanItems.split(",");
 

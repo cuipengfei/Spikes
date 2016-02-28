@@ -18,20 +18,15 @@ import static java.util.Arrays.asList;
 public final class ConfigReader {
 
     private static final String PREFIX = "Product.";
-    private static List<Discount> discounts;//可变状态,不安全
+    private static List<Discount> discounts;
 
     public static List<Product> loadProducts(String configPath) {
-        discounts = null;
         Properties properties = loadProperties(configPath);
         return properties.stringPropertyNames().stream()
                 .filter(ConfigReader::isProductNameLine)
                 .map(ConfigReader::toProductCode)
                 .map(productCode -> toProduct(productCode, properties))
                 .collect(Collectors.toList());
-    }
-
-    public static List<Discount> discounts() {
-        return discounts;
     }
 
     private static Product toProduct(String productCode, Properties properties) {
