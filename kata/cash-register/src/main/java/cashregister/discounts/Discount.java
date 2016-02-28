@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 public abstract class Discount {
 
     private int priority;
+
     protected DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public Discount(int priority) {
@@ -26,6 +27,7 @@ public abstract class Discount {
                 + "，小计：" + decimalFormat.format(discountedPrice(lineItem)) + "(元)";
     }
 
+    //就是这个设计导致了可变性,不好
     public String outputDiscountSummary() {
         return "";
     }

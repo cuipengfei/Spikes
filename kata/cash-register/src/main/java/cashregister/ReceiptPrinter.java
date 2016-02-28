@@ -14,14 +14,16 @@ public final class ReceiptPrinter {
 
     public static String processOrder(String json) {
         List<OrderLineItem> orderLineItems = InputParser.parse(json);
-        StringBuilder stringBuilder = new StringBuilder("***<没钱赚商店>购物清单***");
 
+        StringBuilder stringBuilder = new StringBuilder("***<没钱赚商店>购物清单***");
         LinesSum linesSum = processLineItems(stringBuilder, orderLineItems);
         discountSummary(stringBuilder);
         finalSummary(stringBuilder, linesSum);
+
         return stringBuilder.toString();
     }
 
+    //消费可变状态,不安全
     private static void discountSummary(StringBuilder stringBuilder) {
         for (Discount discount : ConfigReader.discounts()) {
             String discountSummary = discount.outputDiscountSummary();
@@ -41,9 +43,9 @@ public final class ReceiptPrinter {
                 .append("**********************");
     }
 
-    private static LinesSum processLineItems(StringBuilder stringBuilder, List<OrderLineItem> parse) {
+    private static LinesSum processLineItems(StringBuilder stringBuilder, List<OrderLineItem> orderLineItems) {
         LinesSum linesSum = new LinesSum();
-        for (OrderLineItem orderLineItem : parse) {
+        for (OrderLineItem orderLineItem : orderLineItems) {
             Discount discount = findSuitableDiscount(orderLineItem);
             linesSum.sumDiscountPrice += discount.discountedPrice(orderLineItem);
             linesSum.sumOriginalPrice += orderLineItem.price();

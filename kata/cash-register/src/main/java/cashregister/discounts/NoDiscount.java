@@ -4,7 +4,7 @@ import cashregister.models.OrderLineItem;
 
 public class NoDiscount extends Discount {
 
-    private static NoDiscount noDiscount = new NoDiscount(0);
+    private static NoDiscount noDiscount = new NoDiscount(-100);//没有打折是 最低/默认 优先级
 
     public NoDiscount(int priority) {
         super(priority);
