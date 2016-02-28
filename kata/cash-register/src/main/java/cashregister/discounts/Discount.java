@@ -20,9 +20,4 @@ public abstract class Discount {
     }
 
     public abstract Double discountedPrice(OrderLineItem lineItem, PlainTextViewModel plainTextViewModel);
-
-    //就是这个设计导致了可变性,不好
-    public String outputDiscountSummary() {
-        return "";
-    }
 }
