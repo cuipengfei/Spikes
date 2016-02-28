@@ -24,6 +24,7 @@ public class OrderLineItem {
         return product.singleUnitPrice() * amount;
     }
 
+    @Override
     public String toString() {
         return "名称：" + product().name()
                 + "，数量：" + amount() + product().unit()

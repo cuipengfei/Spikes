@@ -12,7 +12,7 @@ public class PlainTextViewModelTest {
 
         plainTextViewModel.addToLinesSection("what ever line");
 
-        String linesSectionInString = plainTextViewModel.output();
+        String linesSectionInString = plainTextViewModel.toString();
         assertThat(linesSectionInString, is("***<没钱赚商店>购物清单***\n" +
                 "what ever line\n" +
                 "----------------------\n" +
@@ -27,7 +27,7 @@ public class PlainTextViewModelTest {
 
         plainTextViewModel.addToSection("whatever discount", "blah blah");
 
-        String linesSectionInString = plainTextViewModel.output();
+        String linesSectionInString = plainTextViewModel.toString();
         assertThat(linesSectionInString, is("***<没钱赚商店>购物清单***\n" +
                 "----------------------\n" +
                 "whatever discount\n" +
@@ -35,24 +35,6 @@ public class PlainTextViewModelTest {
                 "----------------------\n" +
                 "总计: 0.00(元)\n" +
                 "节省：0.00(元)\n" +
-                "**********************"));
-    }
-
-    @Test
-    public void plainTextOutputIntegrationTest() throws Exception {
-        PlainTextViewModel plainTextViewModel = new PlainTextViewModel();
-
-        plainTextViewModel.addToOriginalTotal(10d);
-        plainTextViewModel.addToDiscountedTotal(9d);
-
-        plainTextViewModel.addToOriginalTotal(10d);
-        plainTextViewModel.addToDiscountedTotal(9d);
-
-        String linesSectionInString = plainTextViewModel.output();
-        assertThat(linesSectionInString, is("***<没钱赚商店>购物清单***\n" +
-                "----------------------\n" +
-                "总计: 18.00(元)\n" +
-                "节省：2.00(元)\n" +
                 "**********************"));
     }
 
@@ -70,7 +52,7 @@ public class PlainTextViewModelTest {
         plainTextViewModel.addToDiscountedTotal(9d);
         plainTextViewModel.addToSection("something discount", "orange something");
 
-        String linesSectionInString = plainTextViewModel.output();
+        String linesSectionInString = plainTextViewModel.toString();
         assertThat(linesSectionInString, is("***<没钱赚商店>购物清单***\n" +
                 "apple\n" +
                 "orange\n" +
@@ -78,6 +60,24 @@ public class PlainTextViewModelTest {
                 "something discount\n" +
                 "apple something\n" +
                 "orange something\n" +
+                "----------------------\n" +
+                "总计: 18.00(元)\n" +
+                "节省：2.00(元)\n" +
+                "**********************"));
+    }
+
+    @Test
+    public void plainTextOutputIntegrationTest() throws Exception {
+        PlainTextViewModel plainTextViewModel = new PlainTextViewModel();
+
+        plainTextViewModel.addToOriginalTotal(10d);
+        plainTextViewModel.addToDiscountedTotal(9d);
+
+        plainTextViewModel.addToOriginalTotal(10d);
+        plainTextViewModel.addToDiscountedTotal(9d);
+
+        String linesSectionInString = plainTextViewModel.toString();
+        assertThat(linesSectionInString, is("***<没钱赚商店>购物清单***\n" +
                 "----------------------\n" +
                 "总计: 18.00(元)\n" +
                 "节省：2.00(元)\n" +

@@ -17,7 +17,7 @@ public final class ReceiptPrinter {
             discount.discountedPrice(orderLineItem, plainTextViewModel);
         }
 
-        return plainTextViewModel.output();
+        return plainTextViewModel.toString();
     }
 
     private static Discount findSuitableDiscount(OrderLineItem orderLineItem) {
