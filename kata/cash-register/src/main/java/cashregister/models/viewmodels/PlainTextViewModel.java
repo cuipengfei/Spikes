@@ -1,15 +1,19 @@
 package cashregister.models.viewmodels;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class PlainTextViewModel {
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private static final String newLine = System.getProperty("line.separator");
     private static final String sectionSeparator = "----------------------";
 
     private List<String> linesSection = new ArrayList<>();
     private HashMap<String, List<String>> sections = new HashMap<>();
+    private double originalTotal = 0;
+    private double discountedTotal = 0;
 
     public void addToLinesSection(String line) {
         linesSection.add(line);
@@ -23,14 +27,31 @@ public class PlainTextViewModel {
         sections.get(sectionName).add(line);
     }
 
+    public void addToOriginalTotal(double delta) {
+        originalTotal += delta;
+    }
+
+    public void addToDiscountedTotal(double delta) {
+        discountedTotal += delta;
+    }
+
     public String output() {
         StringBuilder stringBuilder = new StringBuilder("***<没钱赚商店>购物清单***");
         outputLinesSection(stringBuilder);
         outputCustomSections(stringBuilder);
+        outputFinalSummary(stringBuilder);
         stringBuilder
                 .append(newLine)
                 .append("**********************");
         return stringBuilder.toString();
+    }
+
+    private void outputFinalSummary(StringBuilder stringBuilder) {
+        stringBuilder
+                .append(newLine)
+                .append("总计: " + decimalFormat.format(discountedTotal) + "(元)")
+                .append(newLine)
+                .append("节省：" + decimalFormat.format(originalTotal - discountedTotal) + "(元)");
     }
 
     private void outputCustomSections(StringBuilder stringBuilder) {
