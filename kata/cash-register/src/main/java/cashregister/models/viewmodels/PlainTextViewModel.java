@@ -26,6 +26,7 @@ public class PlainTextViewModel {
         customSections.get(sectionName).add(line);
     }
 
+    //todo: combine those two apis, they always appear together
     public void addToOriginalTotal(double delta) {
         originalTotal += delta;
     }
