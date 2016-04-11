@@ -2,4 +2,4 @@
 FROM ubuntu:14.04
 MAINTAINER Cui Pengfei
 RUN apt-get update && apt-get install -y tree git
-CMD echo "tree and git"
+CMD echo "tree and git, only text"
