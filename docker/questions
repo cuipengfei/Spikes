@@ -1,2 +1,2 @@
 automated build or jenkins?
-latest tag? update it? or use a different tag everytime?
+latest tag? update it? or use a different tag everytime? how do we now in prod/test server which image to pull?
