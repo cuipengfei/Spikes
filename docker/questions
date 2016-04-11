@@ -2,3 +2,4 @@ automated build or jenkins?
 latest tag? update it? or use a different tag everytime? how do we now in prod/test server which image to pull?
 strategy for docker image versioning?
 what if nothing in the dockerfile changes at all, but we just use the same tag?
+remote provision?(docker client in jenkins, docker server in aws ec2?)
