@@ -1,5 +1,29 @@
+
 automated build or jenkins?
+
 latest tag? update it? or use a different tag everytime? how do we now in prod/test server which image to pull?
+
 strategy for docker image versioning?
+
 what if nothing in the dockerfile changes at all, but we just use the same tag?
+
 remote provision?(docker client in jenkins, docker server in aws ec2?)
+
+different configs for different envs, what is the best practice?
+
+which storage driver should we use?
+
+CD practice
+
+
+==========
+my own base image for apt-get and other dependencies
+tag in dev, just one, test server stop, pull newer, and run
+use swarm, not docker machine
+concept overlay, network, coupled with swarm, (consule)
+db storage: compose code and data. db挂到ceph，nfs. Or just use RDS
+kubernetes networks, you have to do it yourself
+ecs, elb, ebs consider those options
+diff env, one image, run with different parameter
+db credential should not be in image, if the image is public
+docker file env, what does it mean?
