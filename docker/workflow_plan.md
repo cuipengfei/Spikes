@@ -40,6 +40,12 @@ For example:
 
 (Note: Having multiple images with different tags for one service to deploy to different environments is not recommended. Rather, having all of config files in the code base, packed into the same image and passing a parameter at run time would be preferable. Reasoning being that this will help to bring down network traffic.)
 
+<h3 id="lt">Local testing</h3>
+
+When running locally, developers should avoid using their local OS and infrastructures, instead, the code should be ran in containers.
+
+This is to ensure environment configuration problems can be spotted as early as possible and also to put the topology of containers through most frequent scrutiny.
+
 <h2 id="ci">Continuous Deployment</h2>
 
 <h3 id="tric">Tests running in containers</h3>
