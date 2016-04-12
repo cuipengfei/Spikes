@@ -14,6 +14,7 @@
   * [Credentials management](#crm)
   * [Deploying to test server](#dtts)
   * [Deploying to prod server](#dtps)
+* References
 
 <h2 id="dev">Development</h2>
 
