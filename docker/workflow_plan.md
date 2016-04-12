@@ -1,6 +1,6 @@
 # Development team workflow plan for containerized micro-services architecture
 
-* [Development](##Development)
+* [Development](#dev)
   * [Services as modules](###Services as modules)
   * [Base image](###Base image)
   * [Images for services](###Images for services)
@@ -14,7 +14,7 @@
   * [Deploying to test server](###Deploying to test server)
   * [Deploying to prod server](###Deploying to prod server)
 
-## Development
+<h2 id="dev">Development</h2>
 
 ### Services as modules
 ### Base image
