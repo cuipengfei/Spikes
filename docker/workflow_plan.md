@@ -55,7 +55,7 @@ This is to ensure environment configuration problems can be spotted as early as 
 
 A script(or scripts) should be in place for developers to perform local testing, the existence of the extra layer brought by docker should be kept as transparent as possible.
 
-<h2 id="ci">Continuous Deployment</h2>
+<h2 id="ci">Continuous Integration</h2>
 
 <h3 id="tric">Tests running in containers</h3>
 
