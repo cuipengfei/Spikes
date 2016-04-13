@@ -9,12 +9,11 @@
   * [Tests running in containers](#tric)
   * [Building and distributing images](#badi)
 * [Continuous Deployment](#dep)
-  * [Cluster management](#cm)
-  * [Scaling](#s)
+  * [Cluster management and scaling](#cmas)
   * [Credentials management](#crm)
   * [Deploying to test server](#dtts)
   * [Deploying to prod server](#dtps)
-* [Misc](#misc)
+* [Storage](#st)
 * [References](#refs)
 
 <h2 id="dev">Development</h2>
@@ -69,13 +68,11 @@ Instead of jar or war files, the end product of a CI pipeline would be docker im
 
 <h2 id="dep">Continuous Deployment</h2>
 
-<h3 id="cm">Cluster management</h3>
+<h3 id="cmas">Cluster management and scaling</h3>
 
-Swarm, TBD
+Presumably, a cluster of servers might be needed for the production deployment environment, and some of the services might be under more pressure than others.
 
-<h3 id="s">Scaling</h3>
-
-Swarm, TBD
+Docker provides Swarm as a cluster management tool to deploy and scale horizontally as well as vertically. 
 
 <h3 id="crm">Credentials management</h3>
 
@@ -85,12 +82,32 @@ Rather, the credentials should be stored in a secure and private place(TBD) and 
 
 <h3 id="dtts">Deploying to test server</h3>
 
-Swarm gets triggered automatically after a CI job finishes, and ... TBD
+Swarm could be running on a machine or in a container where it's accessible by CI.
+
+Thus, a redeploy command could be issue from CI to Swarm once the build pipeline finishes, this will make sure environments for QA is always running the latest code.
+
+Other less frequently updated environments like Staging or UAT could also be redeployed through a manual operation exposed by CI's web gui.
 
 <h3 id="dtps">Deploying to prod server</h3>
 
-Swarm gets triggered manually, ... ... TBD
+Technically, this could be done similarly to how test servers are deployed. 
 
-<h2 id="misc">Misc</h2>
+However, given the sensitivity, it would be preferable to deploy to prod server via a jump box that is only accessible by few.
+
+<h2 id="st">Storage</h2>
+
+If docker were utilized to build, manage the deployment environment, then it would be preferable to not involve another provisioning solution for DB server setup.
+ 
+The database could be running in contain/containers, same as any other component that makes up the whole application. 
+
+Or, another solution would be to use AWS RDS, which is Amazon's hosted relational database as a service.
+
+RDS would remove the necessity for us to set up/maintain a database and its replicates/clusters.
 
 <h2 id="refs">References</h2>
+
+[Docker image](https://docs.docker.com/engine/userguide/containers/dockerimages/)
+
+[Swarm](https://docs.docker.com/swarm/overview/)
+
+[RDS](https://aws.amazon.com/rds/)
