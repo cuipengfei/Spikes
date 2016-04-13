@@ -26,7 +26,8 @@ For example, the very root base image could include ubuntu os, java, since they 
 
 By doing this we can ensure all developers' machines will be running the same infrastructure at the same version with the same config as well as all the servers.
 
-Any change to the base image will be recorded in the source control system, used by all developers and all servers. This helps to achieve full traceability and avoid untracked ad-hoc changes to the base image, such is the benefit of "infrastructure as code".
+Any change to the base image will be recorded in the source control system, used by all developers and all servers. 
+This helps to achieve full traceability and avoid untracked ad-hoc changes to the base image, and keeps us away from [snow flake server](http://martinfowler.com/bliki/SnowflakeServer.html).
 
 <h3 id="sam">Services as modules</h3>
 
