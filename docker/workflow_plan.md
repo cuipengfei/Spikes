@@ -24,11 +24,15 @@ Each docker image could be built upon a "base image".
 
 For example, the very root base image could include ubuntu os, java and tomcat, since they are highly likely to be needed everywhere.
 
-By doing this we can ensure all developers' machines will be running the same infrastructure as well as all the servers.
+By doing this we can ensure all developers' machines will be running the same infrastructure at the same version with the same config as well as all the servers.
+
+Any change to the base image will be recorded in the source control system, used by all developers and all servers. This helps to achieve full traceability and avoid untracked ad-hoc changes.
 
 <h3 id="sam">Services as modules</h3>
 
-Modules in a monolithic architecture could be thought of as counterparts of a micro-services architecture.
+Modules in a monolithic architecture could be thought of as counterparts of services in a micro-services architecture.
+
+(TBD, granularity)
 
 <h3 id="ifs">Images for services</h3>
 
@@ -38,13 +42,17 @@ For example:
 * A service that talks to the DB may have a docker file that adds postgres driver atop the base image.
 * A service that serves static files could add nginx on top of the base image.
 
-(Note: Having multiple images with different tags for one service to deploy to different environments is not recommended. Rather, having all of config files in the code base, packed into the same image and passing a parameter at run time would be preferable. Reasoning being that this will help to bring down network traffic.)
+Like the base image, these docker files will also be tracked by the source control system, for the same reason.
+
+(Note: Having multiple images with different tags for one service to deploy to different environments is not recommended. Rather, having all of config files in the code base, packed into the same image and passing a parameter at run time would be preferable. Reasoning being that this will help to bring down network traffic for downloading images.)
 
 <h3 id="lt">Local testing</h3>
 
-When running locally, developers should avoid using their local OS and infrastructures, instead, the code should be ran in containers.
+When running locally, either for testing purposes or for debugging, developers should avoid using their local OS and infrastructures, instead, the code should be ran in containers.
 
-This is to ensure environment configuration problems can be spotted as early as possible and also to put the topology of containers through most frequent scrutiny.
+This is to ensure environment configuration problems can be spotted as early as possible and also to put the topology of docker containers through most frequent scrutiny.
+
+A script(or scripts) should be in place for developers to perform local testing, the existence of the extra layer brought by docker should be kept as transparent as possible.
 
 <h2 id="ci">Continuous Deployment</h2>
 
