@@ -14,7 +14,8 @@
   * [Credentials management](#crm)
   * [Deploying to test server](#dtts)
   * [Deploying to prod server](#dtps)
-* References
+* [Misc](#misc)
+* [References](#refs)
 
 <h2 id="dev">Development</h2>
 
@@ -22,11 +23,11 @@
 
 Each docker image could be built upon a "base image".
 
-For example, the very root base image could include ubuntu os, java and tomcat, since they are highly likely to be needed everywhere.
+For example, the very root base image could include ubuntu os, java, since they are highly likely to be needed everywhere.
 
 By doing this we can ensure all developers' machines will be running the same infrastructure at the same version with the same config as well as all the servers.
 
-Any change to the base image will be recorded in the source control system, used by all developers and all servers. This helps to achieve full traceability and avoid untracked ad-hoc changes.
+Any change to the base image will be recorded in the source control system, used by all developers and all servers. This helps to achieve full traceability and avoid untracked ad-hoc changes to the base image, such is the benefit of "infrastructure as code".
 
 <h3 id="sam">Services as modules</h3>
 
@@ -40,7 +41,7 @@ Each micro-service, either in its own git repo or in a directory of a central re
 
 For example:
 * A service that talks to the DB may have a docker file that adds postgres driver atop the base image.
-* A service that serves static files could add nginx on top of the base image.
+* A service that serves static files(html, css, js) could add nginx on top of the base image.
 
 Like the base image, these docker files will also be tracked by the source control system, for the same reason.
 
@@ -50,7 +51,7 @@ Like the base image, these docker files will also be tracked by the source contr
 
 When running locally, either for testing purposes or for debugging, developers should avoid using their local OS and infrastructures, instead, the code should be ran in containers.
 
-This is to ensure environment configuration problems can be spotted as early as possible and also to put the topology of docker containers through most frequent scrutiny.
+This is to ensure environment configuration problems can be spotted as early as possible and also to put the topology of docker containers through most frequent use and scrutiny.
 
 A script(or scripts) should be in place for developers to perform local testing, the existence of the extra layer brought by docker should be kept as transparent as possible.
 
@@ -58,13 +59,13 @@ A script(or scripts) should be in place for developers to perform local testing,
 
 <h3 id="tric">Tests running in containers</h3>
 
-To ensure maximum level of environment similarity, the CI server(jenkins and alike) should run tests in a container that is identical to the container that will be deployed to any server.
+To ensure maximum level of environment similarity, the CI server(jenkins and alike) should run tests in a container that is identical to the container that will be deployed to any server, following the same reasoning for the local testing section.
 
 <h3 id="badi">Building and distributing images</h3>
 
-Instead of jar or war files, the end product of a CI pipeline would be docker images that are pushed to a docker registry(the official one or our own).
+Instead of jar or war files, the end product of a CI pipeline would be docker images that are pushed to a docker registry(the official one or a privately set up one).
 
-(Note: for open source code, it might make more sense if the docker image is as public as the code)
+(Note: for open source code, it might make more sense if the docker image is as publicly accessible as the code)
 
 <h2 id="dep">Continuous Deployment</h2>
 
@@ -89,3 +90,7 @@ Swarm gets triggered automatically after a CI job finishes, and ... TBD
 <h3 id="dtps">Deploying to prod server</h3>
 
 Swarm gets triggered manually, ... ... TBD
+
+<h2 id="misc">Misc</h2>
+
+<h2 id="refs">References</h2>
