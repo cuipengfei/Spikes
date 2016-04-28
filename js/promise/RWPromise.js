@@ -1,27 +1,38 @@
 function RWPromise() {
     var self = this;
-    self.isFrozen = false;
     self.isInitiated = false;
 
     self.then = function (onFulfilled, onRejected) {
         self.onFulfilled = onFulfilled;
         self.onRejected = onRejected;
         self.isInitiated = true;
+        if (self.isRejected) {
+            onRejected();
+        }
+        return self;
     };
 
     self.resolve = function (value) {
-        if (self.isInitiated && !self.isFrozen) {
+        var isOnFulfilledFunction = typeof self.onFulfilled === "function";
+        if (isOnFulfilledFunction && !isFrozen(self)) {
             self.onFulfilled(value);
-            self.isFrozen = true;
         }
+        self.isResolved = true;
+        return self;
     };
 
     self.reject = function (reason) {
-        if (self.isInitiated && !self.isFrozen) {
+        var isOnRejectedFunction = typeof self.onFulfilled === "function";
+        if (isOnRejectedFunction && !isFrozen(self)) {
             self.onRejected(reason);
-            self.isFrozen = true;
         }
+        self.isRejected = true;
+        return self;
     };
+
+    function isFrozen(p) {
+        return p.isInitiated && (p.isRejected || p.isResolved);
+    }
 }
 
 module.exports.deferred = function () {
