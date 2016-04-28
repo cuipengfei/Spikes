@@ -5,11 +5,11 @@ function RWPromise() {
     self.then = function (onFulfilled, onRejected) {
         self.onFulfilled = onFulfilled;
         self.onRejected = onRejected;
-        if (self.isRejected) {
-            callIfIsFunction(onRejected);
-        }
         if (self.isResolved) {
-            callIfIsFunction(onFulfilled);
+            callIfIsFunction(onFulfilled, self.resolvedValue);
+        }
+        if (self.isRejected) {
+            callIfIsFunction(onRejected, self.rejectedReason);
         }
         return self;
     };
@@ -17,6 +17,7 @@ function RWPromise() {
     self.resolve = function (value) {
         if (!isFrozen(self)) {
             callIfIsFunction(self.onFulfilled, value);
+            self.resolvedValue = value;
             self.isResolved = true;
         }
         return self;
@@ -25,6 +26,7 @@ function RWPromise() {
     self.reject = function (reason) {
         if (!isFrozen(self)) {
             callIfIsFunction(self.onRejected, reason);
+            self.rejectedReason = reason;
             self.isRejected = true;
         }
         return self;
