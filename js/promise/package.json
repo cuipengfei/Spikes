@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "promises-aplus-tests": "*",
+    "mocha": "*"
+  },
+  "scripts": {
+    "mocha": "mocha"
+  }
+}
