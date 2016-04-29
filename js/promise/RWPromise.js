@@ -15,20 +15,24 @@ function RWPromise() {
     };
 
     self.resolve = function (value) {
-        if (!isFrozen(self)) {
-            callIfIsFunction(self.onFulfilled, value);
-            self.resolvedValue = value;
-            self.isResolved = true;
-        }
+        self.isResolved = true;
+        self.resolvedValue = value;
+        setTimeout(function () {
+            if (!isFrozen(self)) {
+                callIfIsFunction(self.onFulfilled, value);
+            }
+        });
         return self;
     };
 
     self.reject = function (reason) {
-        if (!isFrozen(self)) {
-            callIfIsFunction(self.onRejected, reason);
-            self.rejectedReason = reason;
-            self.isRejected = true;
-        }
+        self.isRejected = true;
+        self.rejectedReason = reason;
+        setTimeout(function () {
+            if (!isFrozen(self)) {
+                callIfIsFunction(self.onRejected, reason);
+            }
+        });
         return self;
     };
 
