@@ -1,51 +1,77 @@
 function RWPromise() {
     var self = this;
-    self.isInitiated = false;
-
-    self.then = function (onFulfilled, onRejected) {
-        self.onFulfilled = onFulfilled;
-        self.onRejected = onRejected;
-        if (self.isResolved) {
-            callIfIsFunction(onFulfilled, self.resolvedValue);
-        }
-        if (self.isRejected) {
-            callIfIsFunction(onRejected, self.rejectedReason);
-        }
-        return self;
-    };
+    self.isPending = true;
 
     self.resolve = function (value) {
-        self.isResolved = true;
-        self.resolvedValue = value;
-        setTimeout(function () {
-            if (!isFrozen(self)) {
-                callIfIsFunction(self.onFulfilled, value);
-            }
-        });
+        if (!isSettled(self)) {
+            kickOffChainReaction(value, self.fulfillChain);
+            self.isResolved = true;
+        }
         return self;
     };
 
     self.reject = function (reason) {
-        self.isRejected = true;
-        self.rejectedReason = reason;
-        setTimeout(function () {
-            if (!isFrozen(self)) {
-                callIfIsFunction(self.onRejected, reason);
-            }
-        });
+        if (!isSettled(self)) {
+            kickOffChainReaction(reason, self.rejectChain);
+            self.isRejected = true;
+        }
         return self;
     };
 
-    function callIfIsFunction(func, para) {
-        var isFunc = typeof func === "function";
-        if (isFunc) {
-            func(para);
-        }
-    }
+    self.then = function (onFulfilled, onRejected) {
+        function chain() {
+            var fulfillNode = {func: onFulfilled};
+            if (self.fulfillChain === undefined) {
+                self.fulfillChain = fulfillNode;
+                self.fulfillChain.last = fulfillNode;
+            } else {
+                self.fulfillChain.last.next = fulfillNode;
+                self.fulfillChain.last = fulfillNode;
+            }
 
-    function isFrozen(p) {
-        return p.isRejected || p.isResolved;
-    }
+            var rejectNode = {func: onRejected};
+            if (self.rejectChain === undefined) {
+                self.rejectChain = rejectNode;
+                self.rejectChain.last = rejectNode;
+            } else {
+                self.rejectChain.last.next = rejectNode;
+                self.rejectChain.last = rejectNode;
+            }
+        }
+
+        if (isSettled(self)) {
+            if (self.isResolved) {
+                kickOffChainReaction(self.x, {func: onFulfilled});
+            } else if (self.isRejected) {
+                kickOffChainReaction(self.x, {func: onRejected});
+            }
+        } else {
+            chain();
+        }
+        return self;
+    };
+
+    var isSettled = function (p) {
+        return p.isResolved || p.isRejected;
+    };
+
+    var kickOffChainReaction = function (x, chainNode) {
+        self.x = x;
+        if (chainNode !== undefined) {
+            setTimeout(function () {
+                self.x = callIfIsFunction(chainNode.func, self.x);
+                kickOffChainReaction(self.x, chainNode.next);
+            });
+        }
+    };
+
+    var callIfIsFunction = function (f, param) {
+        if (typeof f === "function") {
+            return f(param);
+        } else {
+            return param;
+        }
+    };
 }
 
 module.exports.deferred = function () {
