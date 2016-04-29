@@ -1,7 +1,8 @@
 {
   "devDependencies": {
     "promises-aplus-tests": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "chalk": "*"
   },
   "scripts": {
     "mocha": "mocha"
