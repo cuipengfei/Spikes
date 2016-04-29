@@ -4,7 +4,7 @@ function RWPromise() {
 
     self.resolve = function (value) {
         if (!isSettled(self)) {
-            kickOffChainReaction(value, self.fulfillChain);
+            kickOffChainReaction1(value, self.fulfillChain);
             self.isResolved = true;
         }
         return self;
@@ -12,7 +12,7 @@ function RWPromise() {
 
     self.reject = function (reason) {
         if (!isSettled(self)) {
-            kickOffChainReaction(reason, self.rejectChain);
+            kickOffChainReaction1(reason, self.rejectChain);
             self.isRejected = true;
         }
         return self;
@@ -41,9 +41,9 @@ function RWPromise() {
 
         if (isSettled(self)) {
             if (self.isResolved) {
-                kickOffChainReaction(self.x, {func: onFulfilled});
+                kickOffChainReaction1(self.x, {func: onFulfilled});
             } else if (self.isRejected) {
-                kickOffChainReaction(self.x, {func: onRejected});
+                kickOffChainReaction1(self.x, {func: onRejected});
             }
         } else {
             chain();
@@ -55,12 +55,12 @@ function RWPromise() {
         return p.isResolved || p.isRejected;
     };
 
-    var kickOffChainReaction = function (x, chainNode) {
+    var kickOffChainReaction1 = function (x, chainNode) {
         self.x = x;
         if (chainNode !== undefined) {
             setTimeout(function () {
                 self.x = callIfIsFunction(chainNode.func, self.x);
-                kickOffChainReaction(self.x, chainNode.next);
+                kickOffChainReaction1(self.x, chainNode.next);
             });
         }
     };
