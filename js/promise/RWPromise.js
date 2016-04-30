@@ -56,18 +56,27 @@ function RWPromise() {
     };
 
     var kickOffChainReaction = function (x, chainNode) {
-        self.x = x;
+        tryReplaceX(self, x);
         if (chainNode !== undefined) {
             setTimeout(function () {
-                self.x = callIfIsFunction(chainNode.func, self.x);
+                tryReplaceX(self, callIfIsFunction(chainNode.func, self.x));
                 kickOffChainReaction(self.x, chainNode.next);
             });
         }
     };
 
+    var tryReplaceX = function (p, newX) {
+        if (!isSettled(p)) {
+            p.x = newX;
+        }
+    };
+
     var callIfIsFunction = function (f, param) {
         if (typeof f === "function") {
-            return f(param);
+            try {
+                return f(param);
+            } catch (err) {
+            }
         } else {
             return param;
         }
