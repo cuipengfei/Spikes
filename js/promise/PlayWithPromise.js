@@ -1,22 +1,22 @@
 var p3 = require("./Promise3");
 var chalk = require("chalk");
 
-(function stringFromWebExample() {
-    function sayHello() {
-        function getStringFromWeb(resolve, reject) {
-            setTimeout(function () {
-                var someString = "string from response";
-                if (Math.random() >= 0.5) { //50/50 fail success rate
-                    resolve(someString);
-                } else {
-                    reject("network failure");
-                }
-            }, 1000 + Math.random() * 2000); //each web request may take different time to finish
-        }
-
-        return new p3(getStringFromWeb);
+function sayHello() {
+    function getStringFromWeb(resolve, reject) {
+        setTimeout(function () {
+            var someString = "string from response";
+            if (Math.random() >= 0.5) { //50/50 fail success rate
+                resolve(someString);
+            } else {
+                reject("network failure");
+            }
+        }, 1000 + Math.random() * 2000); //each web request may take different time to finish
     }
 
+    return new p3(getStringFromWeb);
+}
+
+(function stringFromWebExample() {
     function sendAsyncWebRequestAndHandleResult(index) {
         function successHandlerStep1(value) {
             console.log("{\n" + chalk.green("    " + index + " success step 1: '" + value + "' add additional info to value"));
@@ -77,5 +77,46 @@ var chalk = require("chalk");
     //这个例子演示的是:
     //1. 异步操作是被顺序触发的
     //2. 每个异步操作完成所需要的时间不等
-    //3. 异步操作完成之后,多次then的调用所构成的onFulfilled或者onRejected链条并不是在同一个time slot里面执行的
+    //3. 异步操作完成之后,多次then的调用所构成的onFulfilled或者onRejected链条并不是在同一个time slot里面执行的2.2.4
+});
+
+(function branchChainsExample() {
+
+    function testBranches(index) {
+        var promiseOfHello = sayHello();
+
+        var chain1 = promiseOfHello.then(function (value) {
+            console.log(chalk.green(index + " this is the first chain"));
+            return value + " (this is from the first chain)";
+        }, function (reason) {
+            console.log(chalk.red(index + " this is the first chain"));
+            throw reason + " the first chain rethrows the error";
+        });
+
+        var chain2 = promiseOfHello.then(function (value) {
+            console.log(chalk.green(index + " this is the second chain"));
+            return value + " (this is from the second chain)";
+        }, function (reason) {
+            console.log(chalk.red(index + " this is the second chain"));
+            return reason + " the second chain returns the error";
+        });
+
+        var finalOnFulfilled = function (value) {
+            console.log(chalk.yellow(index + " this is final onFulfilled function, value is: " + value));
+        };
+        var finalOnRejected = function (reason) {
+            console.log(chalk.yellow(index + " this is final onRejected function, error is: " + reason));
+        };
+
+        chain1.then(finalOnFulfilled, finalOnRejected);
+        chain2.then(finalOnFulfilled, finalOnRejected);
+    }
+
+    for (var i = 0; i < 10; i++) {
+        testBranches(i);
+    }
+
+    //1. 每次调用then会形成一个新的支链
+    //2. 支链之间是互不干扰的
+    //3. onRejected如果返回一个值,会导致它的下一个onFulfilled被调用
 })();
