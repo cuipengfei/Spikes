@@ -1,69 +1,97 @@
+var n = 0;
 function RWPromise() {
     var self = this;
-    self.isPending = true;
     self.callBacks = [];
+    self.branches = [];
+    self.name = n++;
 
     self.resolve = function (value) {
         if (!isSettled(self)) {
-            kickOffChainReaction(value, self.callBacks.map(function (callBack) {
-                return callBack.onFulFilled;
-            }));
-            self.isResolved = true;
+            self.x = value;
+            kickOffChainReaction(true);
         }
         return self;
     };
 
     self.reject = function (reason) {
         if (!isSettled(self)) {
-            kickOffChainReaction(reason, self.callBacks.map(function (callBack) {
-                return callBack.onRejected;
-            }));
-            self.isRejected = true;
+            self.x = reason;
+            kickOffChainReaction(false);
         }
         return self;
     };
 
     self.then = function (onFulfilled, onRejected) {
-        if (isSettled(self)) {
-            if (self.isResolved) {
-                kickOffChainReaction(self.x, [onFulfilled]);
-            } else if (self.isRejected) {
-                kickOffChainReaction(self.x, [onRejected]);
+        var branchedPromise = new RWPromise();
+        branchedPromise.name = self.name + "-" + branchedPromise.name;
+        branchedPromise.callBacks.push({onFulFilled: onFulfilled, onRejected: onRejected});
+
+        self.branches.push(branchedPromise);
+        setTimeout(function () {
+            if (isSettled(self)) {
+                var delayedRetrievalOfX = function () {
+                    return typeof self.x === "function" ? self.x() : self.x;
+                };
+                if (self.state === "resolved") {
+                    branchedPromise.resolve(delayedRetrievalOfX);
+                } else if (self.state === "rejected") {
+                    branchedPromise.reject(delayedRetrievalOfX());
+                }
             }
-        } else {
-            self.callBacks.push({onFulFilled: onFulfilled, onRejected: onRejected});
-        }
-        return self;
+        });
+        return branchedPromise;
     };
 
     var isSettled = function (p) {
-        return p.isResolved || p.isRejected;
+        return p.state === "resolved" || p.state === "rejected";
     };
 
-    var kickOffChainReaction = function (x, callBacks) {
-        tryReplaceX(self, x);
+    var kickOffChainReaction = function (tryFulfill) {
         setTimeout(function () {
-            for (var i = 0; i < callBacks.length; i++) {
-                tryReplaceX(self, callIfIsFunction(callBacks[i], self.x));
+            if (self.callBacks.length === 0) {
+                if (tryFulfill) {
+                    self.state = "resolved";
+                } else {
+                    self.state = "rejected";
+                }
+            }
+            else {
+                self.callBacks.forEach(function (callBack) {
+
+                    var f = (self.state === "resolved" || (self.state === undefined && tryFulfill)) ? callBack.onFulFilled : callBack.onRejected;
+                    var param = typeof self.x === "function" ? self.x() : self.x;
+
+                    if (typeof f === "function") {
+                        try {
+                            self.x = f(param);
+                            self.state = "resolved";
+                        } catch (err) {
+                            self.x = err;
+                            self.state = "rejected";
+                        }
+                    } else {
+                        self.x = param;
+                        if (self.state === undefined) {
+                            if (tryFulfill) {
+                                self.state = "resolved";
+                            } else {
+                                self.state = "rejected";
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (self.state === "resolved") {
+                self.branches.forEach(function (branch) {
+                    branch.resolve(self.x);
+                });
+            } else {
+                self.branches.forEach(function (branch) {
+                    branch.reject(self.x);
+                });
             }
         });
-    };
-
-    var tryReplaceX = function (p, newX) {
-        if (!isSettled(p)) {
-            p.x = newX;
-        }
-    };
-
-    var callIfIsFunction = function (f, param) {
-        if (typeof f === "function") {
-            try {
-                return f(param);
-            } catch (err) {
-            }
-        } else {
-            return param;
-        }
     };
 }
 
