@@ -1,10 +1,13 @@
 function RWPromise() {
     var self = this;
     self.isPending = true;
+    self.callBacks = [];
 
     self.resolve = function (value) {
         if (!isSettled(self)) {
-            kickOffChainReaction(value, self.fulfillChain);
+            kickOffChainReaction(value, self.callBacks.map(function (callBack) {
+                return callBack.onFulFilled;
+            }));
             self.isResolved = true;
         }
         return self;
@@ -12,41 +15,23 @@ function RWPromise() {
 
     self.reject = function (reason) {
         if (!isSettled(self)) {
-            kickOffChainReaction(reason, self.rejectChain);
+            kickOffChainReaction(reason, self.callBacks.map(function (callBack) {
+                return callBack.onRejected;
+            }));
             self.isRejected = true;
         }
         return self;
     };
 
     self.then = function (onFulfilled, onRejected) {
-        function chain() {
-            var fulfillNode = {func: onFulfilled};
-            if (self.fulfillChain === undefined) {
-                self.fulfillChain = fulfillNode;
-                self.fulfillChain.last = fulfillNode;
-            } else {
-                self.fulfillChain.last.next = fulfillNode;
-                self.fulfillChain.last = fulfillNode;
-            }
-
-            var rejectNode = {func: onRejected};
-            if (self.rejectChain === undefined) {
-                self.rejectChain = rejectNode;
-                self.rejectChain.last = rejectNode;
-            } else {
-                self.rejectChain.last.next = rejectNode;
-                self.rejectChain.last = rejectNode;
-            }
-        }
-
         if (isSettled(self)) {
             if (self.isResolved) {
-                kickOffChainReaction(self.x, {func: onFulfilled});
+                kickOffChainReaction(self.x, [onFulfilled]);
             } else if (self.isRejected) {
-                kickOffChainReaction(self.x, {func: onRejected});
+                kickOffChainReaction(self.x, [onRejected]);
             }
         } else {
-            chain();
+            self.callBacks.push({onFulFilled: onFulfilled, onRejected: onRejected});
         }
         return self;
     };
@@ -55,14 +40,13 @@ function RWPromise() {
         return p.isResolved || p.isRejected;
     };
 
-    var kickOffChainReaction = function (x, chainNode) {
+    var kickOffChainReaction = function (x, callBacks) {
         tryReplaceX(self, x);
-        if (chainNode !== undefined) {
-            setTimeout(function () {
-                tryReplaceX(self, callIfIsFunction(chainNode.func, self.x));
-                kickOffChainReaction(self.x, chainNode.next);
-            });
-        }
+        setTimeout(function () {
+            for (var i = 0; i < callBacks.length; i++) {
+                tryReplaceX(self, callIfIsFunction(callBacks[i], self.x));
+            }
+        });
     };
 
     var tryReplaceX = function (p, newX) {
