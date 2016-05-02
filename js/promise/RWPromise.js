@@ -21,7 +21,7 @@ function RWPromise() {
 
     self.tryResolveWith = function (x, state) {
 
-        var takeOverPromise;
+        var stepParentPromise;
 
         function resolveSelf() {
             console.log("children: " + self.children.length);
@@ -31,10 +31,6 @@ function RWPromise() {
                 self.state = state;
             }
             else {
-                if (takeOverPromise) {
-                    takeOverPromise.then(self.callBacks.onFulFilled, self.callBacks.onRejected);
-                    return;//skip self, the other promise will take over
-                }
                 var isResolved = self.state === states.resolved;
                 var isTryingToResolve = (self.state === states.pending && state === states.resolved);
                 var f = (isResolved || isTryingToResolve) ? self.callBacks.onFulFilled : self.callBacks.onRejected;
@@ -48,7 +44,7 @@ function RWPromise() {
                                 self.x = new TypeError("Violation of 2.3.1.");
                                 self.state = states.rejected;
                             } else {
-                                takeOverPromise = newX;
+                                stepParentPromise = newX;
                             }
                         }
                         // else if (typeof newXThen === "function") {
@@ -71,12 +67,12 @@ function RWPromise() {
         }
 
         function resolveChildren() {
-            self.children.forEach(function (branch) {
-                if (takeOverPromise) {
-                    takeOverPromise.children.push(branch);
-                    return;//skip self, the other promise will take over
+            self.children.forEach(function (child) {
+                if (stepParentPromise) {//if there is a step parent, let it adopt the children
+                    stepParentPromise.children.push(child);
+                } else {
+                    child.tryResolveWith(self.x, self.state);
                 }
-                branch.tryResolveWith(self.x, self.state);
             });
         }
 
