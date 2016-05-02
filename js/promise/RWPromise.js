@@ -45,6 +45,7 @@ function RWPromise() {
                                 self.state = states.rejected;
                             } else {
                                 stepParentPromise = newX;
+                                self.state = states.resolved;
                             }
                         }
                         // else if (typeof newXThen === "function") {
@@ -68,8 +69,9 @@ function RWPromise() {
 
         function resolveChildren() {
             self.children.forEach(function (child) {
-                if (stepParentPromise) {//if there is a step parent, let it adopt the children
-                    stepParentPromise.children.push(child);
+                if (stepParentPromise) {
+                    //adoption: give children to step parent promise, self has been marked as resolved
+                    stepParentPromise.then(child.callBacks.onFulFilled, child.callBacks.onRejected);
                 } else {
                     child.tryResolveWith(self.x, self.state);
                 }
