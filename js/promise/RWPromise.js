@@ -4,7 +4,7 @@ function RWPromise() {
     var states = {pending: "pending", resolved: "resolved", rejected: "rejected"};
 
     var self = this;
-    self.callBacks = [];
+    self.callBacks = undefined;
     self.children = [];
     self.state = states.pending;
     self.name = n++;// this is only for debugging, the name is like: 1 -> 1's son -> 1's grandson
@@ -24,43 +24,49 @@ function RWPromise() {
         var takeOverPromise;
 
         function resolveSelf() {
-            if (self.callBacks.length === 0) {
+            console.log("children: " + self.children.length);
+            console.log("");
+
+            if (self.callBacks === undefined) {
                 self.state = state;
             }
             else {
-                self.callBacks.forEach(function (callBack) {
-                    if (takeOverPromise) {
-                        takeOverPromise.then(callBack.onFulFilled, callBack.onRejected);
-                        return;//skip self, the other promise will take over
-                    }
-                    var isResolved = self.state === states.resolved;
-                    var isTryingToResolve = (self.state === states.pending && state === states.resolved);
-                    var f = (isResolved || isTryingToResolve) ? callBack.onFulFilled : callBack.onRejected;
+                if (takeOverPromise) {
+                    takeOverPromise.then(self.callBacks.onFulFilled, self.callBacks.onRejected);
+                    return;//skip self, the other promise will take over
+                }
+                var isResolved = self.state === states.resolved;
+                var isTryingToResolve = (self.state === states.pending && state === states.resolved);
+                var f = (isResolved || isTryingToResolve) ? self.callBacks.onFulFilled : self.callBacks.onRejected;
 
-                    if (typeof f === "function") {
-                        try {
-                            var newX = f(self.x);
-                            if (newX instanceof RWPromise) {
-                                if (newX === self) {
-                                    self.x = new TypeError("Violation of 2.3.1.");
-                                    self.state = states.rejected;
-                                } else {
-                                    takeOverPromise = newX;
-                                }
+                if (typeof f === "function") {
+                    try {
+                        var newX = f(self.x);
+                        var newXThen = newX.then;
+                        if (newX instanceof RWPromise) {
+                            if (newX === self) {
+                                self.x = new TypeError("Violation of 2.3.1.");
+                                self.state = states.rejected;
                             } else {
-                                self.x = newX;
-                                self.state = states.resolved;
+                                takeOverPromise = newX;
                             }
-                        } catch (err) {
-                            self.x = err;
-                            self.state = states.rejected;
                         }
-                    } else {
-                        if (self.state === states.pending) {
-                            self.state = state;
+                        // else if (typeof newXThen === "function") {
+                        //     newXThen.call();
+                        // }
+                        else {
+                            self.x = newX;
+                            self.state = states.resolved;
                         }
+                    } catch (err) {
+                        self.x = err;
+                        self.state = states.rejected;
                     }
-                });
+                } else {
+                    if (self.state === states.pending) {
+                        self.state = state;
+                    }
+                }
             }
         }
 
@@ -86,7 +92,7 @@ function RWPromise() {
     self.then = function (onFulfilled, onRejected) {
         var child = new RWPromise();
         child.name = self.name + " -> " + child.name;
-        child.callBacks.push({onFulFilled: onFulfilled, onRejected: onRejected});
+        child.callBacks = {onFulFilled: onFulfilled, onRejected: onRejected};
 
         self.children.push(child);
 
