@@ -22,24 +22,23 @@ function RWPromise() {
     };
 
     self.then = function (onFulfilled, onRejected) {
-        var branchedPromise = new RWPromise();
-        branchedPromise.name = self.name + "-" + branchedPromise.name;
-        branchedPromise.callBacks.push({onFulFilled: onFulfilled, onRejected: onRejected});
+        var branch = new RWPromise();
+        branch.name = self.name + " - " + branch.name;
+        branch.callBacks.push({onFulFilled: onFulfilled, onRejected: onRejected});
 
-        self.branches.push(branchedPromise);
+        self.branches.push(branch);
+
         setTimeout(function () {
             if (isSettled(self)) {
-                var delayedRetrievalOfX = function () {
-                    return typeof self.x === "function" ? self.x() : self.x;
-                };
                 if (self.state === "resolved") {
-                    branchedPromise.resolve(delayedRetrievalOfX);
+                    branch.resolve(self.x);
                 } else if (self.state === "rejected") {
-                    branchedPromise.reject(delayedRetrievalOfX());
+                    branch.reject(self.x);
                 }
             }
         });
-        return branchedPromise;
+
+        return branch;
     };
 
     var isSettled = function (p) {
@@ -59,18 +58,15 @@ function RWPromise() {
                 self.callBacks.forEach(function (callBack) {
 
                     var f = (self.state === "resolved" || (self.state === undefined && tryFulfill)) ? callBack.onFulFilled : callBack.onRejected;
-                    var param = typeof self.x === "function" ? self.x() : self.x;
-
                     if (typeof f === "function") {
                         try {
-                            self.x = f(param);
+                            self.x = f(self.x);
                             self.state = "resolved";
                         } catch (err) {
                             self.x = err;
                             self.state = "rejected";
                         }
                     } else {
-                        self.x = param;
                         if (self.state === undefined) {
                             if (tryFulfill) {
                                 self.state = "resolved";
