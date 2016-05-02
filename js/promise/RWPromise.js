@@ -53,15 +53,14 @@ function RWPromise() {
                 branch.tryResolveWith(self.x, self.state);
             });
         }
-
-        if (!isSettled()) {
-            self.x = x;
-
-            setTimeout(function () {
+        
+        setTimeout(function () {
+            if (!isSettled()) {
+                self.x = x;
                 resolveSelf();
                 resolveChildren();
-            });
-        }
+            }
+        });
     };
 
     self.then = function (onFulfilled, onRejected) {
