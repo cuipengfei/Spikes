@@ -53,7 +53,7 @@ function RWPromise() {
                 branch.tryResolveWith(self.x, self.state);
             });
         }
-        
+
         setTimeout(function () {
             if (!isSettled()) {
                 self.x = x;
