@@ -43,6 +43,7 @@ function RWPromise() {
             function potentialThenableResolve() {
                 var newXThen = newX.then;
                 if (typeof newXThen === "function") {
+                    normalResolve();
                     // newXThen.call();
                 } else {
                     normalResolve();
