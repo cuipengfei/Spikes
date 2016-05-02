@@ -22,6 +22,11 @@ function RWPromise() {
     self.tryResolveWith = function (x, state) {
 
         function resolveSelf() {
+            if (self === x) {
+                x = new TypeError("violated 2.3.1");
+                state = states.rejected;
+            }
+
             if (self.callBacks.length === 0) {
                 self.state = state;
             }
@@ -33,8 +38,14 @@ function RWPromise() {
 
                     if (typeof f === "function") {
                         try {
-                            self.x = f(self.x);
-                            self.state = states.resolved;
+                            var newX = f(self.x);
+                            if (newX !== self) {
+                                self.x = newX;
+                                self.state = states.resolved;
+                            } else {
+                                self.x = new TypeError("Violation of 2.3.1.");
+                                self.state = states.rejected;
+                            }
                         } catch (err) {
                             self.x = err;
                             self.state = states.rejected;
