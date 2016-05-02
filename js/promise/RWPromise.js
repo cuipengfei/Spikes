@@ -25,6 +25,30 @@ function RWPromise() {
 
         function resolveSelf() {
 
+            function normalResolve() {
+                self.x = newX;
+                self.state = states.resolved;
+            }
+
+            function promiseResolve() {
+                if (newX === self) {
+                    self.x = new TypeError("Violation of 2.3.1.");
+                    self.state = states.rejected;
+                } else {
+                    stepParentPromise = newX;
+                    self.state = states.resolved;
+                }
+            }
+
+            function potentialThenableResolve() {
+                var newXThen = newX.then;
+                if (typeof newXThen === "function") {
+                    // newXThen.call();
+                } else {
+                    normalResolve();
+                }
+            }
+
             if (self.callBacks === undefined) {
                 self.state = state;
             }
@@ -37,35 +61,23 @@ function RWPromise() {
                     try {
                         var newX = f(self.x);
 
-                        if (newX instanceof RWPromise) {
-                            if (newX === self) {
-                                self.x = new TypeError("Violation of 2.3.1.");
-                                self.state = states.rejected;
-                            } else {
-                                stepParentPromise = newX;
-                                self.state = states.resolved;
-                            }
-                        } else if ((newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'))) {
-                            var newXThen = newX.then;
-                            if (typeof newXThen === "function") {
-                                // newXThen.call();
-                            } else {
-                                self.x = newX;
-                                self.state = states.resolved;
-                            }
+                        var isNewXPromise = newX instanceof RWPromise;
+                        var isNewXPotentialThenable = (newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'));
+
+                        if (isNewXPromise) {
+                            promiseResolve();
+                        } else if (isNewXPotentialThenable) {
+                            potentialThenableResolve();
                         }
                         else {
-                            self.x = newX;
-                            self.state = states.resolved;
+                            normalResolve();
                         }
                     } catch (err) {
                         self.x = err;
                         self.state = states.rejected;
                     }
-                } else {
-                    if (self.state === states.pending) {
-                        self.state = state;
-                    }
+                } else if (self.state === states.pending) {
+                    self.state = state;
                 }
             }
         }
