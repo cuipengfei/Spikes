@@ -21,17 +21,18 @@ function RWPromise() {
 
     self.tryResolveWith = function (x, state) {
 
-        function resolveSelf() {
-            if (self === x) {
-                x = new TypeError("violated 2.3.1");
-                state = states.rejected;
-            }
+        var takeOverPromise;
 
+        function resolveSelf() {
             if (self.callBacks.length === 0) {
                 self.state = state;
             }
             else {
                 self.callBacks.forEach(function (callBack) {
+                    if (takeOverPromise) {
+                        takeOverPromise.then(callBack.onFulFilled, callBack.onRejected);
+                        return;//skip self, the other promise will take over
+                    }
                     var isResolved = self.state === states.resolved;
                     var isTryingToResolve = (self.state === states.pending && state === states.resolved);
                     var f = (isResolved || isTryingToResolve) ? callBack.onFulFilled : callBack.onRejected;
@@ -39,12 +40,16 @@ function RWPromise() {
                     if (typeof f === "function") {
                         try {
                             var newX = f(self.x);
-                            if (newX !== self) {
+                            if (newX instanceof RWPromise) {
+                                if (newX === self) {
+                                    self.x = new TypeError("Violation of 2.3.1.");
+                                    self.state = states.rejected;
+                                } else {
+                                    takeOverPromise = newX;
+                                }
+                            } else {
                                 self.x = newX;
                                 self.state = states.resolved;
-                            } else {
-                                self.x = new TypeError("Violation of 2.3.1.");
-                                self.state = states.rejected;
                             }
                         } catch (err) {
                             self.x = err;
@@ -61,6 +66,10 @@ function RWPromise() {
 
         function resolveChildren() {
             self.children.forEach(function (branch) {
+                if (takeOverPromise) {
+                    takeOverPromise.children.push(branch);
+                    return;//skip self, the other promise will take over
+                }
                 branch.tryResolveWith(self.x, self.state);
             });
         }
