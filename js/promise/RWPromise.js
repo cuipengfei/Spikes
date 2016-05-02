@@ -24,8 +24,6 @@ function RWPromise() {
         var stepParentPromise;
 
         function resolveSelf() {
-            console.log("children: " + self.children.length);
-            console.log("");
 
             if (self.callBacks === undefined) {
                 self.state = state;
@@ -38,7 +36,7 @@ function RWPromise() {
                 if (typeof f === "function") {
                     try {
                         var newX = f(self.x);
-                        var newXThen = newX.then;
+
                         if (newX instanceof RWPromise) {
                             if (newX === self) {
                                 self.x = new TypeError("Violation of 2.3.1.");
@@ -47,10 +45,15 @@ function RWPromise() {
                                 stepParentPromise = newX;
                                 self.state = states.resolved;
                             }
+                        } else if ((newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'))) {
+                            var newXThen = newX.then;
+                            if (typeof newXThen === "function") {
+                                // newXThen.call();
+                            } else {
+                                self.x = newX;
+                                self.state = states.resolved;
+                            }
                         }
-                        // else if (typeof newXThen === "function") {
-                        //     newXThen.call();
-                        // }
                         else {
                             self.x = newX;
                             self.state = states.resolved;
