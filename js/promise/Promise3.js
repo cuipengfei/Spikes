@@ -4,9 +4,7 @@ function Promise() {
     self.status = 'pending';
 
     self.resolve = function (value) {
-        if (value instanceof Promise) {
-            return value.then(self.resolve, self.reject)
-        }
+        
         setTimeout(function () {
             if (self.status !== 'pending') {
                 return
