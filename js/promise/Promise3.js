@@ -41,11 +41,9 @@ function Promise() {
         onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
             throw r
         }
-        var self = this
-        var promise2
+        var promise2 = new Promise();
 
         if (self.status === 'resolved') {
-            promise2 = new Promise();
             setTimeout(function () {
                 try {
                     resolvePromise(promise2, onResolved(self.data))
@@ -56,7 +54,6 @@ function Promise() {
         }
 
         if (self.status === 'rejected') {
-            promise2 = new Promise()
             setTimeout(function () {
                 try {
                     resolvePromise(promise2, onRejected(self.data))
@@ -67,7 +64,6 @@ function Promise() {
         }
 
         if (self.status === 'pending') {
-            promise2 = new Promise()
             self.callbacks.push({
                 onResolved: function (value) {
                     try {
@@ -135,10 +131,7 @@ function resolvePromise(promise, x) {
 }
 
 module.exports.deferred = function () {
-    var promise = new Promise(function () {
-        //empty promise does nothing
-    });
-
+    var promise = new Promise();//empty pending promise
     return {
         promise: promise,
         resolve: promise.resolve,
