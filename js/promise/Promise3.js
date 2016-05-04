@@ -34,6 +34,68 @@ function Promise(resolver) {
         })
     }
 
+    function then(onResolved, onRejected) {
+        onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
+            return v
+        }
+        onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
+            throw r
+        }
+        var self = this
+        var promise2
+
+        if (self.status === 'resolved') {
+            promise2 = new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    try {
+                        resolvePromise(promise2, onResolved(self.data))
+                    } catch (e) {
+                        return reject(e)
+                    }
+                })
+            })
+        }
+
+        if (self.status === 'rejected') {
+            promise2 = new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    try {
+                        resolvePromise(promise2, onRejected(self.data))
+                    } catch (e) {
+                        return reject(e)
+                    }
+                })
+            })
+        }
+
+        if (self.status === 'pending') {
+            promise2 = new Promise(function (resolve, reject) {
+                self.callbacks.push({
+                    onResolved: function (value) {
+                        try {
+                            resolvePromise(promise2, onResolved(value))
+                        } catch (e) {
+                            return reject(e)
+                        }
+                    },
+                    onRejected: function (reason) {
+                        try {
+                            resolvePromise(promise2, onRejected(reason))
+                        } catch (e) {
+                            return reject(e)
+                        }
+                    }
+                })
+            })
+        }
+
+        return promise2
+    }
+
+    self.resolve = resolve;
+    self.reject = reject;
+    self.then = then
+
     try {
         resolver(resolve, reject)
     } catch (e) {
@@ -41,21 +103,20 @@ function Promise(resolver) {
     }
 }
 
-function resolvePromise(promise, x, resolve, reject) {
+function resolvePromise(promise, x) {
     var then
     var thenCalledOrThrow = false
-
     if (promise === x) {
-        return reject(new TypeError('Chaining cycle detected for promise!'))
+        return promise.reject(new TypeError('Chaining cycle detected for promise!'))
     }
 
     if (x instanceof Promise) {
         if (x.status === 'pending') {
             x.then(function (v) {
-                resolvePromise(promise, v, resolve, reject);
-            }, reject);
+                resolvePromise(promise, v);
+            }, promise.reject);
         } else {
-            x.then(resolve, reject)
+            x.then(promise.resolve, promise.reject)
         }
         return
     }
@@ -67,90 +128,33 @@ function resolvePromise(promise, x, resolve, reject) {
                 then.call(x, function rs(y) {
                     if (thenCalledOrThrow) return
                     thenCalledOrThrow = true
-                    return resolvePromise(promise, y, resolve, reject)
+                    return resolvePromise(promise, y)
                 }, function rj(r) {
                     if (thenCalledOrThrow) return
                     thenCalledOrThrow = true
-                    return reject(r)
+                    return promise.reject(r)
                 })
             } else {
-                return resolve(x)
+                return promise.resolve(x)
             }
         } catch (e) {
             if (thenCalledOrThrow) return
             thenCalledOrThrow = true
-            return reject(e)
+            return promise.reject(e)
         }
     } else {
-        return resolve(x)
-    }
-}
-
-Promise.prototype.then = function (onResolved, onRejected) {
-    onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
-        return v
-    }
-    onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
-        throw r
-    }
-    var self = this
-    var promise2
-
-    if (self.status === 'resolved') {
-        return promise2 = new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                try {
-                    var value = onResolved(self.data)
-                    resolvePromise(promise2, value, resolve, reject)
-                } catch (e) {
-                    return reject(e)
-                }
-            })
-        })
-    }
-
-    if (self.status === 'rejected') {
-        return promise2 = new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                try {
-                    var value = onRejected(self.data)
-                    resolvePromise(promise2, value, resolve, reject)
-                } catch (e) {
-                    return reject(e)
-                }
-            })
-        })
-    }
-
-    if (self.status === 'pending') {
-        return promise2 = new Promise(function (resolve, reject) {
-            self.callbacks.push({
-                onResolved: function (value) {
-                    try {
-                        var value = onResolved(value)
-                        resolvePromise(promise2, value, resolve, reject)
-                    } catch (e) {
-                        return reject(e)
-                    }
-                },
-                onRejected: function (reason) {
-                    try {
-                        var value = onRejected(reason)
-                        resolvePromise(promise2, value, resolve, reject)
-                    } catch (e) {
-                        return reject(e)
-                    }
-                }
-            })
-        })
+        return promise.resolve(x)
     }
 }
 
 module.exports.deferred = function () {
-    var dfd = {}
-    dfd.promise = new Promise(function (resolve, reject) {
-        dfd.resolve = resolve
-        dfd.reject = reject
-    })
-    return dfd
+    var promise = new Promise(function () {
+        //empty promise does nothing
+    });
+
+    return {
+        promise: promise,
+        resolve: promise.resolve,
+        reject: promise.reject
+    }
 }
