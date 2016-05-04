@@ -10,9 +10,9 @@ function Promise() {
         self.status = 'resolved';
         self.data = value;
 
-        for (var i = 0; i < self.callbacks.length; i++) {
-            self.callbacks[i].onResolved(value)
-        }
+        self.callbacks.forEach(function (callBack) {
+            callBack.onResolved(value)
+        });
     };
 
     self.reject = function (reason) {
@@ -22,9 +22,9 @@ function Promise() {
         self.status = 'rejected';
         self.data = reason;
 
-        for (var i = 0; i < self.callbacks.length; i++) {
-            self.callbacks[i].onRejected(reason);
-        }
+        self.callbacks.forEach(function (callBack) {
+            callBack.onRejected(reason)
+        });
     };
 
     self.then = function (onResolved, onRejected) {
@@ -78,35 +78,35 @@ function Promise() {
 }
 
 function resolutionProcedure(promise, x) {
-    var then
-    var thenCalledOrThrow = false
+    var then;
+    var thenCalledOrThrow = false;
     if (promise === x) {
         return promise.reject(new TypeError('Chaining cycle detected for promise!'))
     }
 
     if ((x !== null) && ((typeof x === 'object') || (typeof x === 'function'))) {
         try {
-            then = x.then
+            then = x.then;
             if (typeof then === 'function') {
                 then.call(x, function rs(y) {
-                    if (thenCalledOrThrow) return
-                    thenCalledOrThrow = true
-                    return resolutionProcedure(promise, y)
+                    if (thenCalledOrThrow) return;
+                    thenCalledOrThrow = true;
+                    return resolutionProcedure(promise, y);
                 }, function rj(r) {
-                    if (thenCalledOrThrow) return
-                    thenCalledOrThrow = true
-                    return promise.reject(r)
+                    if (thenCalledOrThrow) return;
+                    thenCalledOrThrow = true;
+                    return promise.reject(r);
                 })
             } else {
-                return promise.resolve(x)
+                return promise.resolve(x);
             }
         } catch (e) {
-            if (thenCalledOrThrow) return
-            thenCalledOrThrow = true
-            return promise.reject(e)
+            if (thenCalledOrThrow) return;
+            thenCalledOrThrow = true;
+            return promise.reject(e);
         }
     } else {
-        return promise.resolve(x)
+        return promise.resolve(x);
     }
 }
 
