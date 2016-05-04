@@ -45,44 +45,44 @@ function Promise(resolver) {
         var promise2
 
         if (self.status === 'resolved') {
-            promise2 = new Promise(function (resolve, reject) {
+            promise2 = new Promise(function () {
                 setTimeout(function () {
                     try {
                         resolvePromise(promise2, onResolved(self.data))
                     } catch (e) {
-                        return reject(e)
+                        return promise2.reject(e)
                     }
                 })
             })
         }
 
         if (self.status === 'rejected') {
-            promise2 = new Promise(function (resolve, reject) {
+            promise2 = new Promise(function () {
                 setTimeout(function () {
                     try {
                         resolvePromise(promise2, onRejected(self.data))
                     } catch (e) {
-                        return reject(e)
+                        return promise2.reject(e)
                     }
                 })
             })
         }
 
         if (self.status === 'pending') {
-            promise2 = new Promise(function (resolve, reject) {
+            promise2 = new Promise(function () {
                 self.callbacks.push({
                     onResolved: function (value) {
                         try {
                             resolvePromise(promise2, onResolved(value))
                         } catch (e) {
-                            return reject(e)
+                            return promise2.reject(e)
                         }
                     },
                     onRejected: function (reason) {
                         try {
                             resolvePromise(promise2, onRejected(reason))
                         } catch (e) {
-                            return reject(e)
+                            return promise2.reject(e)
                         }
                     }
                 })
