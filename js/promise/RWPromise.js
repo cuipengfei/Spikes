@@ -31,13 +31,32 @@ function RWPromise() {
             }
 
             function potentialThenableResolve() {
+                //self is promise1
+                //child is promise2
                 var newXThen = newX.then;
                 if (typeof newXThen === "function") {
+                    //if then is a function, call it with x as this, first argument resolutionProcedure, and second argument rejectPromise, where:
+                    // If/when resolutionProcedure is called with a value y, run [[Resolve]](promise, y).
+                    //     If/when rejectPromise is called with a reason r, reject promise with r.
                     takeOverThen = newXThen;
-                    // self.x = newX;
-                    self.callBacks = undefined;
+                    self.x = newX;
+                    self.isTakenOver = true;
                     takeOverThen.call(newX, self.resolve, self.reject);
                 } else {
+                    resolveWith(newX, states.resolved);
+                }
+            }
+
+            function resolveBasedOnNewX() {
+                var isSameRef = newX === self;
+                var isPotentialThenable = (newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'));
+
+                if (isSameRef) {
+                    resolveWith(new TypeError("Violation of 2.3.1."), states.rejected);
+                } else if (isPotentialThenable) {
+                    potentialThenableResolve();
+                }
+                else {
                     resolveWith(newX, states.resolved);
                 }
             }
@@ -50,21 +69,19 @@ function RWPromise() {
                 var isTryingToResolve = (self.state === states.pending && state === states.resolved);
                 var f = (isResolved || isTryingToResolve) ? self.callBacks.onFulfilled : self.callBacks.onRejected;
 
-                if (typeof f === "function") {
+                var newX;
+                if (self.isTakenOver) {
+                    newX = x;
                     try {
-                        var newX = f(x);
-
-                        var isSameRef = newX === self;
-                        var isPotentialThenable = (newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'));
-
-                        if (isSameRef) {
-                            resolveWith(new TypeError("Violation of 2.3.1."), states.rejected);
-                        } else if (isPotentialThenable) {
-                            potentialThenableResolve();
-                        }
-                        else {
-                            resolveWith(newX, states.resolved);
-                        }
+                        resolveBasedOnNewX();
+                    } catch (err) {
+                        resolveWith(err, states.rejected);
+                    }
+                }
+                else if (typeof f === "function") {
+                    try {
+                        newX = self.isTakenOver ? x : f(x);
+                        resolveBasedOnNewX();
                     } catch (err) {
                         resolveWith(err, states.rejected);
                     }
@@ -84,7 +101,10 @@ function RWPromise() {
 
         setTimeout(function () {
             if (!isSettled()) {
+                // console.log("TRYING " + state + " " + self.name + " with: " + JSON.stringify(x));
                 resolveSelf();
+                // console.log("FINISHED " + self.state + " " + self.name + " with: " + JSON.stringify(self.x));
+                // console.log();
                 resolveChildren();
             }
         });

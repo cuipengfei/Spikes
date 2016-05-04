@@ -3,8 +3,5 @@
     "promises-aplus-tests": "*",
     "mocha": "*",
     "chalk": "*"
-  },
-  "scripts": {
-    "mocha": "mocha"
   }
 }

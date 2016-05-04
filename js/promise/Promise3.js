@@ -81,18 +81,18 @@ function resolutionProcedure(promise, x) {
     var then;
     var thenCalledOrThrow = false;
     if (promise === x) {
-        return promise.reject(new TypeError('Chaining cycle detected for promise!'))
+        return promise.reject(new TypeError('Spec 2.3.1, promise and x should not be the same object'))
     }
 
     if ((x !== null) && ((typeof x === 'object') || (typeof x === 'function'))) {
         try {
             then = x.then;
             if (typeof then === 'function') {
-                then.call(x, function rs(y) {
+                then.call(x, function (y) {
                     if (thenCalledOrThrow) return;
                     thenCalledOrThrow = true;
                     return resolutionProcedure(promise, y);
-                }, function rj(r) {
+                }, function (r) {
                     if (thenCalledOrThrow) return;
                     thenCalledOrThrow = true;
                     return promise.reject(r);
