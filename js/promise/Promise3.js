@@ -3,22 +3,6 @@ function Promise(resolver) {
     self.callbacks = []
     self.status = 'pending'
 
-    function resolve(value) {
-        if (value instanceof Promise) {
-            return value.then(resolve, reject)
-        }
-        setTimeout(function () {
-            if (self.status !== 'pending') {
-                return
-            }
-            self.status = 'resolved'
-            self.data = value
-
-            for (var i = 0; i < self.callbacks.length; i++) {
-                self.callbacks[i].onResolved(value)
-            }
-        })
-    }
 
     function reject(reason) {
         setTimeout(function () {
@@ -34,7 +18,24 @@ function Promise(resolver) {
         })
     }
 
-    function then(onResolved, onRejected) {
+    self.resolve = function (value) {
+        if (value instanceof Promise) {
+            return value.then(self.resolve, reject)
+        }
+        setTimeout(function () {
+            if (self.status !== 'pending') {
+                return
+            }
+            self.status = 'resolved'
+            self.data = value
+
+            for (var i = 0; i < self.callbacks.length; i++) {
+                self.callbacks[i].onResolved(value)
+            }
+        })
+    };
+    self.reject = reject;
+    self.then = function (onResolved, onRejected) {
         onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
             return v
         }
@@ -90,14 +91,10 @@ function Promise(resolver) {
         }
 
         return promise2
-    }
-
-    self.resolve = resolve;
-    self.reject = reject;
-    self.then = then
+    };
 
     try {
-        resolver(resolve, reject)
+        resolver(self.resolve, reject)
     } catch (e) {
         reject(e)
     }
