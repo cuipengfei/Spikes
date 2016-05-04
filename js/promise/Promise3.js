@@ -1,4 +1,4 @@
-function Promise(resolver) {
+function Promise() {
     var self = this
     self.callbacks = []
     self.status = 'pending'
@@ -45,58 +45,49 @@ function Promise(resolver) {
         var promise2
 
         if (self.status === 'resolved') {
-            promise2 = new Promise(function () {
-                setTimeout(function () {
-                    try {
-                        resolvePromise(promise2, onResolved(self.data))
-                    } catch (e) {
-                        return promise2.reject(e)
-                    }
-                })
+            promise2 = new Promise();
+            setTimeout(function () {
+                try {
+                    resolvePromise(promise2, onResolved(self.data))
+                } catch (e) {
+                    return promise2.reject(e)
+                }
             })
         }
 
         if (self.status === 'rejected') {
-            promise2 = new Promise(function () {
-                setTimeout(function () {
-                    try {
-                        resolvePromise(promise2, onRejected(self.data))
-                    } catch (e) {
-                        return promise2.reject(e)
-                    }
-                })
+            promise2 = new Promise()
+            setTimeout(function () {
+                try {
+                    resolvePromise(promise2, onRejected(self.data))
+                } catch (e) {
+                    return promise2.reject(e)
+                }
             })
         }
 
         if (self.status === 'pending') {
-            promise2 = new Promise(function () {
-                self.callbacks.push({
-                    onResolved: function (value) {
-                        try {
-                            resolvePromise(promise2, onResolved(value))
-                        } catch (e) {
-                            return promise2.reject(e)
-                        }
-                    },
-                    onRejected: function (reason) {
-                        try {
-                            resolvePromise(promise2, onRejected(reason))
-                        } catch (e) {
-                            return promise2.reject(e)
-                        }
+            promise2 = new Promise()
+            self.callbacks.push({
+                onResolved: function (value) {
+                    try {
+                        resolvePromise(promise2, onResolved(value))
+                    } catch (e) {
+                        return promise2.reject(e)
                     }
-                })
+                },
+                onRejected: function (reason) {
+                    try {
+                        resolvePromise(promise2, onRejected(reason))
+                    } catch (e) {
+                        return promise2.reject(e)
+                    }
+                }
             })
         }
 
         return promise2
     };
-
-    try {
-        resolver(self.resolve, self.reject)
-    } catch (e) {
-        self.reject(e)
-    }
 }
 
 function resolvePromise(promise, x) {
