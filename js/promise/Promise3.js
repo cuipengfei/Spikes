@@ -4,32 +4,27 @@ function Promise() {
     self.status = 'pending';
 
     self.resolve = function (value) {
-        
-        setTimeout(function () {
-            if (self.status !== 'pending') {
-                return
-            }
-            self.status = 'resolved';
-            self.data = value;
+        if (self.status !== 'pending') {
+            return
+        }
+        self.status = 'resolved';
+        self.data = value;
 
-            for (var i = 0; i < self.callbacks.length; i++) {
-                self.callbacks[i].onResolved(value)
-            }
-        })
+        for (var i = 0; i < self.callbacks.length; i++) {
+            self.callbacks[i].onResolved(value)
+        }
     };
 
     self.reject = function (reason) {
-        setTimeout(function () {
-            if (self.status !== 'pending') {
-                return
-            }
-            self.status = 'rejected';
-            self.data = reason;
+        if (self.status !== 'pending') {
+            return
+        }
+        self.status = 'rejected';
+        self.data = reason;
 
-            for (var i = 0; i < self.callbacks.length; i++) {
-                self.callbacks[i].onRejected(reason);
-            }
-        })
+        for (var i = 0; i < self.callbacks.length; i++) {
+            self.callbacks[i].onRejected(reason);
+        }
     };
 
     self.then = function (onResolved, onRejected) {
@@ -44,18 +39,22 @@ function Promise() {
         if (self.status === 'pending') {
             self.callbacks.push({
                 onResolved: function (value) {
-                    try {
-                        resolutionProcedure(promise2, onResolved(value));
-                    } catch (e) {
-                        return promise2.reject(e);
-                    }
+                    setTimeout(function () {
+                        try {
+                            resolutionProcedure(promise2, onResolved(value));
+                        } catch (e) {
+                            return promise2.reject(e);
+                        }
+                    })
                 },
                 onRejected: function (reason) {
-                    try {
-                        resolutionProcedure(promise2, onRejected(reason));
-                    } catch (e) {
-                        return promise2.reject(e);
-                    }
+                    setTimeout(function () {
+                        try {
+                            resolutionProcedure(promise2, onRejected(reason));
+                        } catch (e) {
+                            return promise2.reject(e);
+                        }
+                    })
                 }
             })
         } else {
