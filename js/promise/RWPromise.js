@@ -25,14 +25,9 @@ function RWPromise() {
 
         function resolveSelf() {
 
-            function normalResolve() {
-                self.x = newX;
-                self.state = states.resolved;
-            }
-
-            function sameRefReject() {
-                self.x = new TypeError("Violation of 2.3.1.");
-                self.state = states.rejected;
+            function resolveWith(v, s) {
+                self.x = v;
+                self.state = s;
             }
 
             function potentialThenableResolve() {
@@ -43,12 +38,12 @@ function RWPromise() {
                     self.callBacks = undefined;
                     takeOverThen.call(newX, self.resolve, self.reject);
                 } else {
-                    normalResolve();
+                    resolveWith(newX, states.resolved);
                 }
             }
 
             if (self.callBacks === undefined) {
-                self.state = state;
+                resolveWith(x, state);
             }
             else {
                 var isResolved = self.state === states.resolved;
@@ -57,25 +52,24 @@ function RWPromise() {
 
                 if (typeof f === "function") {
                     try {
-                        var newX = f(self.x);
+                        var newX = f(x);
 
                         var isSameRef = newX === self;
-                        var isNewXPotentialThenable = (newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'));
+                        var isPotentialThenable = (newX !== null) && ((typeof newX === 'object') || (typeof newX === 'function'));
 
                         if (isSameRef) {
-                            sameRefReject();
-                        } else if (isNewXPotentialThenable) {
+                            resolveWith(new TypeError("Violation of 2.3.1."), states.rejected);
+                        } else if (isPotentialThenable) {
                             potentialThenableResolve();
                         }
                         else {
-                            normalResolve();
+                            resolveWith(newX, states.resolved);
                         }
                     } catch (err) {
-                        self.x = err;
-                        self.state = states.rejected;
+                        resolveWith(err, states.rejected);
                     }
                 } else if (self.state === states.pending) {
-                    self.state = state;
+                    resolveWith(x, state);
                 }
             }
         }
@@ -90,7 +84,6 @@ function RWPromise() {
 
         setTimeout(function () {
             if (!isSettled()) {
-                self.x = x;
                 resolveSelf();
                 resolveChildren();
             }
