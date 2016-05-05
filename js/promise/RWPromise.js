@@ -43,9 +43,9 @@ function RWPromise() {
         }
 
         if (self.state === states.pending) {
-            self.callbacks.push(schedulePromise2Resolution);
+            self.callbacks.push(schedulePromise2Resolution);//they will be scheduled when self is resolved/rejected
         } else {
-            schedulePromise2Resolution();
+            schedulePromise2Resolution();//it is being scheduled now, but ran later
         }
 
         return promise2;//2.2.7 then must return a promise. promise2 = promise1.then(onFulfilled, onRejected);
