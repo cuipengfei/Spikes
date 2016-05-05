@@ -38,19 +38,19 @@ function Promise() {
 
         if (self.status === 'pending') {
             self.callbacks.push({
-                onResolved: function (value) {
+                onResolved: function () {
                     setTimeout(function () {
                         try {
-                            resolutionProcedure(promise2, onResolved(value));
+                            resolutionProcedure(promise2, onResolved(self.data));
                         } catch (e) {
                             return promise2.reject(e);
                         }
                     })
                 },
-                onRejected: function (reason) {
+                onRejected: function () {
                     setTimeout(function () {
                         try {
-                            resolutionProcedure(promise2, onRejected(reason));
+                            resolutionProcedure(promise2, onRejected(self.data));
                         } catch (e) {
                             return promise2.reject(e);
                         }
