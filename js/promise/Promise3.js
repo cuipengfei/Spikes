@@ -29,10 +29,10 @@ function Promise() {
             setTimeout(function () {//2.2.4 onFulfilled or onRejected must not be called until the execution context stack contains only platform code.
                 try {
                     onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
-                        return v; //2.2.7.3 If onFulfilled is not a function and promise1 is fulfilled, promise2 must be fulfilled with the same value as promise1
+                        return v;//2.2.7.3 If onFulfilled is not a function and promise1 is fulfilled, promise2 must be fulfilled with the same value as promise1
                     };
                     onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
-                        throw r; //2.2.7.4 If onRejected is not a function and promise1 is rejected, promise2 must be rejected with the same reason as promise1
+                        throw r;//2.2.7.4 If onRejected is not a function and promise1 is rejected, promise2 must be rejected with the same reason as promise1
                     };
                     var x = self.state === states.resolved ? onResolved(self.x) : onRejected(self.x);
                     resolutionProcedure(promise2, x);//2.2.7.1 If either onFulfilled or onRejected returns a value x, run the Promise Resolution Procedure [[Resolve]](promise2, x).
@@ -52,11 +52,11 @@ function Promise() {
     };
 }
 
-function resolutionProcedure(promise, x) {
+function resolutionProcedure(promise, x) {//2.3
     var then;
     var thenCalledOrThrow = false;
-    if (promise === x) {
-        return promise.reject(new TypeError('Spec 2.3.1, promise and x should not be the same object'))
+    if (promise === x) {//2.3.1 If promise and x refer to the same object, reject promise with a TypeError as the reason.
+        promise.reject(new TypeError('Spec 2.3.1, promise and x should not be the same object'))
     }
 
     if ((x !== null) && ((typeof x === 'object') || (typeof x === 'function'))) {
@@ -66,22 +66,22 @@ function resolutionProcedure(promise, x) {
                 then.call(x, function (y) {
                     if (thenCalledOrThrow) return;
                     thenCalledOrThrow = true;
-                    return resolutionProcedure(promise, y);
+                    resolutionProcedure(promise, y);
                 }, function (r) {
                     if (thenCalledOrThrow) return;
                     thenCalledOrThrow = true;
-                    return promise.reject(r);
+                    promise.reject(r);
                 })
             } else {
-                return promise.resolve(x);
+                promise.resolve(x);
             }
         } catch (e) {
             if (thenCalledOrThrow) return;
             thenCalledOrThrow = true;
-            return promise.reject(e);
+            promise.reject(e);
         }
     } else {
-        return promise.resolve(x);
+        promise.resolve(x);
     }
 }
 
