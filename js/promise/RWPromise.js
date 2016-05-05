@@ -1,10 +1,10 @@
-function RWPromise() {
+function RWPromise() {//RW: reinvent the wheel
     var states = {pending: 1, resolved: 2, rejected: 3};
     var self = this;
     self.callbacks = [];
     self.state = states.pending;
 
-    function resolveWith(state, x) {
+    function transition(state, x) {
         if (self.state === states.pending) {//2.1.1.1 & 2.1.2.1 & 2.1.3.1
             self.state = state;//2.1.1.1
             self.x = x;//2.1.2.2 & 2.1.3.2
@@ -15,11 +15,11 @@ function RWPromise() {
     }
 
     self.resolve = function (value) {
-        resolveWith(states.resolved, value);
+        transition(states.resolved, value);
     };
 
     self.reject = function (reason) {
-        resolveWith(states.rejected, reason);
+        transition(states.rejected, reason);
     };
 
     self.then = function (onResolved, onRejected) {
