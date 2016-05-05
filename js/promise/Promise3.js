@@ -4,15 +4,15 @@ function Promise() {
     self.callbacks = [];
     self.state = states.pending;
 
-    function resolveWith(state, data) {
+    function resolveWith(state, x) {
         if (self.state !== states.pending) {
             return;
         }
         self.state = state;
-        self.data = data;
+        self.x = x;
         self.callbacks.forEach(function (callBack) {
-            callBack(data);//   2.2.6.1 If/when promise is fulfilled, all respective onFulfilled callbacks must execute in the order of their originating calls to then
-            //and also          2.2.6.2 If/when promise is rejected, all respective onRejected callbacks must execute in the order of their originating calls to then
+            callBack(x);//  2.2.6.1 If/when promise is fulfilled, all respective onFulfilled callbacks must execute in the order of their originating calls to then
+            //and also      2.2.6.2 If/when promise is rejected, all respective onRejected callbacks must execute in the order of their originating calls to then
         });
     }
 
@@ -25,24 +25,25 @@ function Promise() {
     };
 
     self.then = function (onResolved, onRejected) {
-        onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
-            return v; //2.2.7.3 If onFulfilled is not a function and promise1 is fulfilled, promise2 must be fulfilled with the same value as promise1
-        };
-        onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
-            throw r; //2.2.7.4 If onRejected is not a function and promise1 is rejected, promise2 must be rejected with the same reason as promise1
-        };
         var promise2 = new Promise();
 
         function resolvePromise2() {
             setTimeout(function () {
                 try {
-                    var x;
+                    onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
+                        return v; //2.2.7.3 If onFulfilled is not a function and promise1 is fulfilled, promise2 must be fulfilled with the same value as promise1
+                    };
+                    onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
+                        throw r; //2.2.7.4 If onRejected is not a function and promise1 is rejected, promise2 must be rejected with the same reason as promise1
+                    };
+
+                    var p2X;
                     if (self.state === states.resolved) {
-                        x = onResolved(self.data);
+                        p2X = onResolved(self.x);
                     } else if (self.state === states.rejected) {
-                        x = onRejected(self.data);
+                        p2X = onRejected(self.x);
                     }
-                    resolutionProcedure(promise2, x);//2.2.7.1 If either onFulfilled or onRejected returns a value x, run the Promise Resolution Procedure [[Resolve]](promise2, x).
+                    resolutionProcedure(promise2, p2X);//2.2.7.1 If either onFulfilled or onRejected returns a value x, run the Promise Resolution Procedure [[Resolve]](promise2, x).
                 } catch (e) {
                     return promise2.reject(e);//2.2.7.2 If either onFulfilled or onRejected throws an exception e, promise2 must be rejected with e as the reason
                 }
@@ -55,7 +56,7 @@ function Promise() {
             resolvePromise2();
         }
 
-        return promise2;
+        return promise2;//2.2.7 then must return a promise. promise2 = promise1.then(onFulfilled, onRejected);
     };
 }
 
