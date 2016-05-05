@@ -85,7 +85,7 @@ function resolutionProcedure(promise, x) {//2.3
     } else {
         promise.resolve(x);
     }
-}
+}//88th line ends here, the rest is just the adapter
 
 module.exports.deferred = function () {
     var promise = new RWPromise();
