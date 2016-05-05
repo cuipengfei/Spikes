@@ -1,19 +1,19 @@
-var p3 = require("./Promise3");
+var adapter = require("./RWPromise");
 var chalk = require("chalk");
 
 function sayHello() {
-    function getStringFromWeb(resolve, reject) {
-        setTimeout(function () {
-            var someString = "string from response";
-            if (Math.random() >= 0.5) { //50/50 fail success rate
-                resolve(someString);
-            } else {
-                reject("network failure");
-            }
-        }, 1000 + Math.random() * 2000); //each web request may take different time to finish
-    }
+    var rwPromise = adapter.deferred().promise;
 
-    return new p3(getStringFromWeb);
+    setTimeout(function () {
+        var someString = "string from response";
+        if (Math.random() >= 0.5) { //50/50 fail success rate
+            rwPromise.resolve(someString);
+        } else {
+            rwPromise.reject("network failure");
+        }
+    }, 1000 + Math.random() * 2000); //each web request may take different time to finish
+
+    return rwPromise;
 }
 
 (function stringFromWebExample() {
@@ -58,7 +58,7 @@ function sayHello() {
         sendAsyncWebRequestAndHandleResult(i + 1);
     }
 
-    var interleaveTimesMax = 400;
+    var interleaveTimesMax = 350;
 
     setTimeout(function () {
         (function tryToInterleave() {
@@ -78,7 +78,7 @@ function sayHello() {
     //1. 异步操作是被顺序触发的
     //2. 每个异步操作完成所需要的时间不等
     //3. 异步操作完成之后,多次then的调用所构成的onFulfilled或者onRejected链条并不是在同一个time slot里面执行的2.2.4
-});
+})();
 
 (function branchChainsExample() {
 
@@ -115,7 +115,7 @@ function sayHello() {
     for (var i = 0; i < 10; i++) {
         testBranches(i);
     }
-    
+
     //这个例子演示的是:
     //1. 每次调用then会形成一个新的支链
     //2. 支链之间是互不干扰的
