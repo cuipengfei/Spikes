@@ -1,30 +1,27 @@
 function Promise() {
+    var states = {pending: 1, resolved: 2, rejected: 3};
     var self = this;
     self.callbacks = [];
-    self.status = 'pending';
+    self.state = states.pending;
+
+    function resolveWith(state, data) {
+        if (self.state !== states.pending) {
+            return;
+        }
+        self.state = state;
+        self.data = data;
+        self.callbacks.forEach(function (callBack) {
+            callBack(data);//   2.2.6.1 If/when promise is fulfilled, all respective onFulfilled callbacks must execute in the order of their originating calls to then
+            //and also          2.2.6.2 If/when promise is rejected, all respective onRejected callbacks must execute in the order of their originating calls to then
+        });
+    }
 
     self.resolve = function (value) {
-        if (self.status !== 'pending') {
-            return
-        }
-        self.status = 'resolved';
-        self.data = value;
-
-        self.callbacks.forEach(function (callBack) {
-            callBack(value);//2.2.6.1 If/when promise is fulfilled, all respective onFulfilled callbacks must execute in the order of their originating calls to then
-        });
+        resolveWith(states.resolved, value);
     };
 
     self.reject = function (reason) {
-        if (self.status !== 'pending') {
-            return
-        }
-        self.status = 'rejected';
-        self.data = reason;
-
-        self.callbacks.forEach(function (callBack) {
-            callBack(reason);//2.2.6.2 If/when promise is rejected, all respective onRejected callbacks must execute in the order of their originating calls to then
-        });
+        resolveWith(states.rejected, reason);
     };
 
     self.then = function (onResolved, onRejected) {
@@ -40,9 +37,9 @@ function Promise() {
             setTimeout(function () {
                 try {
                     var x;
-                    if (self.status === 'resolved') {
+                    if (self.state === states.resolved) {
                         x = onResolved(self.data);
-                    } else if (self.status === 'rejected') {
+                    } else if (self.state === states.rejected) {
                         x = onRejected(self.data);
                     }
                     resolutionProcedure(promise2, x);//2.2.7.1 If either onFulfilled or onRejected returns a value x, run the Promise Resolution Procedure [[Resolve]](promise2, x).
@@ -52,7 +49,7 @@ function Promise() {
             });
         }
 
-        if (self.status === 'pending') {
+        if (self.state === states.pending) {
             self.callbacks.push(resolvePromise2);
         } else {
             resolvePromise2();
