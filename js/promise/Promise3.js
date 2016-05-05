@@ -11,7 +11,7 @@ function Promise() {
         self.data = value;
 
         self.callbacks.forEach(function (callBack) {
-            callBack.onResolved(value)
+            callBack(value);//2.2.6.1 If/when promise is fulfilled, all respective onFulfilled callbacks must execute in the order of their originating calls to then
         });
     };
 
@@ -23,41 +23,20 @@ function Promise() {
         self.data = reason;
 
         self.callbacks.forEach(function (callBack) {
-            callBack.onRejected(reason)
+            callBack(reason);//2.2.6.2 If/when promise is rejected, all respective onRejected callbacks must execute in the order of their originating calls to then
         });
     };
 
     self.then = function (onResolved, onRejected) {
         onResolved = typeof onResolved === 'function' ? onResolved : function (v) {
-            return v
+            return v; //2.2.7.3 If onFulfilled is not a function and promise1 is fulfilled, promise2 must be fulfilled with the same value as promise1
         };
         onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
-            throw r
+            throw r; //2.2.7.4 If onRejected is not a function and promise1 is rejected, promise2 must be rejected with the same reason as promise1
         };
         var promise2 = new Promise();
 
-        if (self.status === 'pending') {
-            self.callbacks.push({
-                onResolved: function () {
-                    setTimeout(function () {
-                        try {
-                            resolutionProcedure(promise2, onResolved(self.data));
-                        } catch (e) {
-                            return promise2.reject(e);
-                        }
-                    })
-                },
-                onRejected: function () {
-                    setTimeout(function () {
-                        try {
-                            resolutionProcedure(promise2, onRejected(self.data));
-                        } catch (e) {
-                            return promise2.reject(e);
-                        }
-                    })
-                }
-            })
-        } else {
+        function resolvePromise2() {
             setTimeout(function () {
                 try {
                     var x;
@@ -66,11 +45,17 @@ function Promise() {
                     } else if (self.status === 'rejected') {
                         x = onRejected(self.data);
                     }
-                    resolutionProcedure(promise2, x);
+                    resolutionProcedure(promise2, x);//2.2.7.1 If either onFulfilled or onRejected returns a value x, run the Promise Resolution Procedure [[Resolve]](promise2, x).
                 } catch (e) {
-                    return promise2.reject(e);
+                    return promise2.reject(e);//2.2.7.2 If either onFulfilled or onRejected throws an exception e, promise2 must be rejected with e as the reason
                 }
-            })
+            });
+        }
+
+        if (self.status === 'pending') {
+            self.callbacks.push(resolvePromise2);
+        } else {
+            resolvePromise2();
         }
 
         return promise2;
