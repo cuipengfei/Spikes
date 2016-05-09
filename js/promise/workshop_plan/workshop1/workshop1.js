@@ -3,50 +3,32 @@
     var Promise = require("bluebird");
 
     var getMyGithubRepos = function () {
-        return new Promise(function (resolve, reject) {
-            var responseBody = "";
-            https.get({
-                host: 'api.github.com',
-                path: '/users/cuipengfei/repos',
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
-                }
-            }, function (res) {
-                res.on('data', function (chunk) {
-                    responseBody += chunk;
-                });
-
-                if (res.statusCode === 200) {
-                    res.on('end', function () {
-                        resolve(JSON.parse(responseBody).map(function (repo) {
-                            return {name: repo.name, stars: repo.stargazers_count};
-                        }));
-                    });
-                } else {
-                    res.on('end', function () {
-                        reject(responseBody);
-                    });
-                }
-            }).on("error", function (err) {
-                reject(err);
+        var responseBody = "";
+        https.get({
+            host: 'api.github.com',
+            path: '/users/cuipengfei/repos',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
+            }
+        }, function (res) {
+            res.on('data', function (chunk) {
+                responseBody += chunk;
             });
+
+            if (res.statusCode === 200) {
+                res.on('end', function () {
+
+                });
+            } else {
+                res.on('end', function () {
+                });
+            }
+        }).on("error", function (err) {
         });
     };
 
     var getMyGithubReposAdvanced = function () {
-        return getMyGithubRepos().then(
-            function (repos) {
-                return repos.filter(function (repo) {
-                    return repo.stars > 0;
-                }).sort(function (x, y) {
-                    return y.stars - x.stars;
-                });
-            }, function (err) {
-                return [{
-                    name: 'We can not get your repos right now, but we are sure you must have a lot of great repos',
-                    stars: 100000
-                }];
-            });
+        // return getMyGithubRepos().then(???,???);
     };
 
     module.exports.getMyGithubRepos = getMyGithubRepos;
