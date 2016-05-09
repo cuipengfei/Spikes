@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "mocha": "*",
+    "npm i chai-as-promised": "*"
+  },
+  "scripts": {
+    "test": "mocha test"
+  }
+}
