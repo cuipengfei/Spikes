@@ -1,5 +1,7 @@
 {
   "devDependencies": {
+    "request": "*",
+    "bluebird": "*",
     "mocha": "*",
     "chai": "*",
     "chai-as-promised": "*"
