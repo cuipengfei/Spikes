@@ -1,0 +1,8 @@
+.idea
+node_modules
+test
+workshop_plan
+.gitignore
+PlayWithPromise.js
+readme.md
+adapter.js

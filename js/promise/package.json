@@ -1,4 +1,8 @@
 {
+  "name": "RWPromise",
+  "email": "cuipengfei2008@gmail.com",
+  "url": "https://github.com/cuipengfei/Spikes/tree/master/js/promise",
+  "version": "0.0.3",
   "devDependencies": {
     "promises-aplus-tests": "*",
     "mocha": "*",

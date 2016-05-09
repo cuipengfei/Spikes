@@ -1,8 +1,8 @@
-var adapter = require("./RWPromise");
+var RWPromise = require("./index");
 var chalk = require("chalk");
 
 function sayHello() {
-    var rwPromise = adapter.deferred().promise;
+    var rwPromise = new RWPromise();
 
     setTimeout(function () {
         var someString = "string from response";
