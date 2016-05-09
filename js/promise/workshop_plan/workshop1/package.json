@@ -7,6 +7,6 @@
     "chai-as-promised": "*"
   },
   "scripts": {
-    "test": "mocha test --timeout 5000"
+    "test": "mocha"
   }
 }
