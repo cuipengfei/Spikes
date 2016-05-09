@@ -14,8 +14,8 @@ describe('sanity check', function () {
     });
 });
 
-describe('get git hub repo', function () {
-    it('gets an array of github repo names under my account', function () {
+describe('get git hub repos', function () {
+    it('should pass an array of 23 repo names to onFullfilled', function () {
         return expect(workshop1.getMyGithubRepos()).to.eventually.have.length(23);//I have 23 repos
     });
 });
