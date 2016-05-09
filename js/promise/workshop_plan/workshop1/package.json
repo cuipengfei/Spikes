@@ -2,6 +2,7 @@
   "devDependencies": {
     "bluebird": "*",
     "mocha": "*",
+    "nock": "*",
     "chai": "*",
     "chai-as-promised": "*"
   },
