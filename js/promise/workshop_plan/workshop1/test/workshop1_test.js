@@ -1,7 +1,8 @@
+var assert = require('chai').assert;
 var workshop1 = require("../workshop1");
 
-describe('workshop 1', function () {
-    it('should be available', function () {
-        // assert.equal(1, 1);
+describe('sanity check', function () {
+    it('if you can see this test pass, it means your env is set up properly', function () {
+        assert.equal(workshop1.one, 1);
     });
 });
