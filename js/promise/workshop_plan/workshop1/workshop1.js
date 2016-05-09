@@ -3,7 +3,6 @@
     var Promise = require("RWPromise");
 
     var getMyGithubRepos = function () {
-        var p = new Promise();
         var responseBody = "";
         https.get({
             host: 'api.github.com',
@@ -18,35 +17,18 @@
 
             if (res.statusCode === 200) {
                 res.on('end', function () {
-                    p.resolve(JSON.parse(responseBody).map(function (repo) {
-                        return {name: repo.name, stars: repo.stargazers_count};
-                    }));
+
                 });
             } else {
                 res.on('end', function () {
-                    p.reject(responseBody);
                 });
             }
         }).on("error", function (err) {
-            p.reject(err);
         });
-        return p;
     };
 
     var getMyGithubReposAdvanced = function () {
-        return getMyGithubRepos().then(
-            function (repos) {
-                return repos.filter(function (repo) {
-                    return repo.stars > 0;
-                }).sort(function (x, y) {
-                    return y.stars - x.stars;
-                });
-            }, function (err) {
-                return [{
-                    name: 'We can not get your repos right now, but we are sure you must have a lot of great repos',
-                    stars: 100000
-                }];
-            });
+        // return getMyGithubRepos().then(???,???);
     };
 
     module.exports.getMyGithubRepos = getMyGithubRepos;
