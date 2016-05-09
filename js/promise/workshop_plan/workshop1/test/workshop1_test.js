@@ -60,13 +60,13 @@ describe('get git hub repos advanced', function () {
                 {name: 'b', stargazers_count: 12, shouldNotBeInFinalResult: 456}]);
 
         //when
-        var reposPromise = workshop1.getMyGithubRepos();
+        var reposPromise = workshop1.getMyGithubReposAdvanced();
 
         //then
         return expect(reposPromise).to.eventually.deep.equal(
             [
-                {name: 'a', stars: 10},
-                {name: 'b', stars: 12}
+                {name: 'b', stars: 12},
+                {name: 'a', stars: 10}
             ]);
     });
 
