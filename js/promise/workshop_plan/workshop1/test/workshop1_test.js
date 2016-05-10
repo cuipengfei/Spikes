@@ -1,13 +1,11 @@
-var workshop1 = require("../workshop1");
-
 var chai = require('chai');
-var assert = chai.assert;
-var expect = chai.expect;
-
-var chaiAsPromised = require("chai-as-promised");
-chai.use(chaiAsPromised);
-
 var nock = require('nock');
+var workshop1 = require("../workshop1");
+var chaiAsPromised = require("chai-as-promised");
+
+var expect = chai.expect;
+var assert = chai.assert;
+chai.use(chaiAsPromised);
 
 describe('sanity check', function () {
     it('if you can see this test pass, it means your env is set up properly', function () {
@@ -18,12 +16,12 @@ describe('sanity check', function () {
 
 describe('get git hub repos', function () {
     it('should eventually resolve to an array of repo names and stars', function () {
-        //given: mock http response
+        //given: mock http response to return 200
         nock('https://api.github.com')
             .get('/users/cuipengfei/repos')
             .reply(200, [
-                {name: 'a', stargazers_count: 10, iDonCare: 123},
-                {name: 'b', stargazers_count: 12, shouldNotBeInFinalResult: 456}]);
+                {name: 'a', stargazers_count: 10, IDontCare: 123},
+                {name: 'b', stargazers_count: 12, ShouldNotBeInFinalResult: "blah blah"}]);
 
         //when
         var reposPromise = workshop1.getMyGithubRepos();
@@ -37,7 +35,7 @@ describe('get git hub repos', function () {
     });
 
     it('should reject with error message', function () {
-        //given: mock http response to return 500 error
+        //given: mock http response to return 500
         nock('https://api.github.com')
             .get('/users/cuipengfei/repos')
             .reply(500, {error: "github is not working"});
@@ -50,17 +48,18 @@ describe('get git hub repos', function () {
     });
 });
 
-describe('get git hub repos advanced', function () {
+describe('get ranked git hub repos', function () {
     it('should eventually resolve to an array of repos ranked by stars', function () {
-        //given: mock http response
+        //given: mock http response to return 200
         nock('https://api.github.com')
             .get('/users/cuipengfei/repos')
             .reply(200, [
-                {name: 'a', stargazers_count: 10, iDonCare: 123},
-                {name: 'b', stargazers_count: 12, shouldNotBeInFinalResult: 456}]);
+                {name: 'c', stargazers_count: 0, WhatEver: 456},
+                {name: 'a', stargazers_count: 10, IDontCare: 123},
+                {name: 'b', stargazers_count: 12, ShouldNotBeInFinalResult: "blah blah"}]);
 
         //when
-        var reposPromise = workshop1.getMyGithubReposAdvanced();
+        var reposPromise = workshop1.getMyGithubReposRanked();
 
         //then
         return expect(reposPromise).to.eventually.deep.equal(
@@ -77,15 +76,13 @@ describe('get git hub repos advanced', function () {
             .reply(500, {error: "github is not working"});
 
         //when
-        var reposPromise = workshop1.getMyGithubReposAdvanced();
+        var defaultRepo = {
+            name: 'this is a default repo that will be shown when http fails',
+            stars: 99999
+        };
+        var reposPromise = workshop1.getMyGithubReposRanked(defaultRepo);
 
         //then
-        return expect(reposPromise).to.eventually.deep.equal(
-            [
-                {
-                    name: 'We can not get your repos right now, but we are sure you must have a lot of great repos',
-                    stars: 100000
-                }
-            ]);
+        return expect(reposPromise).to.eventually.deep.equal([defaultRepo]);
     });
 });

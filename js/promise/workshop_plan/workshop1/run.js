@@ -13,7 +13,7 @@ workshop1
     });
 
 workshop1
-    .getMyGithubReposAdvanced()
+    .getMyGithubReposRanked({name: "Sorry we can not get your repos now", stars: 99999})
     .then(function (repos) {
         console.log("I have " + repos.length + " repos that have stars");
         console.log("They are (high to low): \n ");
