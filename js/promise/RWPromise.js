@@ -9,7 +9,7 @@ function RWPromise() {//RW: reinvent the wheel
             self.state = state;//2.1.1.1
             self.x = x;//2.1.2.2 & 2.1.3.2
             self.callbacks.forEach(function (callBack) {
-                callBack(x);//2.2.6.1 & 2.2.6.2 If/when promise is fulfilled, all respective callbacks must execute in the order of their originating calls to then
+                callBack();//2.2.6.1 & 2.2.6.2 If/when promise is fulfilled, all respective callbacks must execute in the order of their originating calls to then
             });
         }
     }
