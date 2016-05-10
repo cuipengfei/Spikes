@@ -37,7 +37,7 @@ function RWPromise() {//RW: reinvent the wheel
                     var x = self.state === states.resolved ? onResolved(self.x) : onRejected(self.x);
                     resolutionProcedure(promise2, x);//2.2.7.1 If either onFulfilled or onRejected returns a value x, run the Promise Resolution Procedure [[Resolve]](promise2, x).
                 } catch (e) {
-                    return promise2.reject(e);//2.2.7.2 If either onFulfilled or onRejected throws an exception e, promise2 must be rejected with e as the reason
+                    promise2.reject(e);//2.2.7.2 If either onFulfilled or onRejected throws an exception e, promise2 must be rejected with e as the reason
                 }
             });
         }
@@ -87,4 +87,4 @@ function resolutionProcedure(promise, x) {//2.3
     }
 }//88th line ends here
 
-module.exports=RWPromise;
+module.exports = RWPromise;
