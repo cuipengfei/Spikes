@@ -29,26 +29,28 @@ function RWPromise() {
         var child = new RWPromise();
 
         function childResolution() {
-            try {
-                onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (v) {
-                    return v;
-                };
+            setTimeout(function () {
+                try {
+                    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (v) {
+                        return v;
+                    };
 
-                onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
-                    throw r;
-                };
+                    onRejected = typeof onRejected === 'function' ? onRejected : function (r) {
+                        throw r;
+                    };
 
-                var x;
-                if (self.state === 'resolved') {
-                    x = onFulfilled(self.x);
-                    child.resolve(x);
-                } else {
-                    x = onRejected(self.x);
+                    var x;
+                    if (self.state === 'resolved') {
+                        x = onFulfilled(self.x);
+                        child.resolve(x);
+                    } else {
+                        x = onRejected(self.x);
+                        child.reject(x);
+                    }
+                } catch (err) {
                     child.reject(x);
                 }
-            } catch (err) {
-                child.reject(x);
-            }
+            });
         }
 
         if (isSettled()) {
