@@ -6,8 +6,6 @@
     //but right now, it does not do anything with the response
     //you need to fill the gap according to how the mocha tests specify the behavior of this function
     var getMyGithubRepos = function () {
-        var p = new Promise();
-
         var responseBody = "";
         https.get({
             host: 'api.github.com',
@@ -22,36 +20,19 @@
 
             if (res.statusCode === 200) {
                 res.on('end', function () {
-                    p.resolve(JSON.parse(responseBody).map(function (repo) {
-                        return {name: repo.name, stars: repo.stargazers_count};
-                    }));
                 });
             } else {
                 res.on('end', function () {
-                    p.reject(responseBody);
                 });
             }
         }).on("error", function (err) {
-            p.reject(err);
         });
-
-        return p;
     };
 
     //this function is based on the above one
     //it adds additional behavior
     //you need to fill the gap according to how the mocha tests specify the behavior of this function
     var getMyGithubReposRanked = function (defaultRepo) {
-        return getMyGithubRepos().then(
-            function (repos) {
-                return repos.filter(function (repo) {
-                    return repo.stars > 0;
-                }).sort(function (x, y) {
-                    return y.stars - x.stars;
-                });
-            }, function (err) {
-                return [defaultRepo];
-            });
         // return getMyGithubRepos().then(???,???);
     };
 
