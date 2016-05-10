@@ -42,13 +42,12 @@ function RWPromise() {
                     var x;
                     if (self.state === 'resolved') {
                         x = onFulfilled(self.x);
-                        child.resolve(x);
                     } else {
                         x = onRejected(self.x);
-                        child.reject(x);
                     }
+                    child.resolve(x);
                 } catch (err) {
-                    child.reject(x);
+                    child.reject(err);
                 }
             });
         }
