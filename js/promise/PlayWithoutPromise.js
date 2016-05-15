@@ -30,20 +30,20 @@ function buy(productName, bought, payFailed, error) {
 
 //this is client code
 var wantedProduct = "bluetooth earphone";
-// getProductPriceFromTaoBao(wantedProduct, function (result) {
-//     console.log(chalk.green(result));
-//     buy(wantedProduct, function (boughtMessage) {
-//         console.log(chalk.green(boughtMessage));
-//     }, function (paymentFailMessage) {
-//         console.log(chalk.red(paymentFailMessage));
-//     }, function (err) {
-//         console.log(chalk.red(err));
-//     });
-// }, function (notFoundMessage) {
-//     console.log(chalk.red(notFoundMessage));
-// }, function (err) {
-//     console.log(chalk.red(err));
-// });
+getProductPriceFromTaoBao(wantedProduct, function (result) {
+    console.log(chalk.green(result));
+    buy(wantedProduct, function (boughtMessage) {
+        console.log(chalk.green(boughtMessage));
+    }, function (paymentFailMessage) {
+        console.log(chalk.red(paymentFailMessage));
+    }, function (err) {
+        console.log(chalk.red(err));
+    });
+}, function (notFoundMessage) {
+    console.log(chalk.red(notFoundMessage));
+}, function (err) {
+    console.log(chalk.red(err));
+});
 
 
 //if you want to make the client code cleaner, this might be what you do
@@ -61,7 +61,7 @@ var errorHandler = function (err) {
     console.log(chalk.red(err));
 };
 
-// getProductPriceFromTaoBao(wantedProduct, foundHandler, errorHandler, errorHandler);
+getProductPriceFromTaoBao(wantedProduct, foundHandler, errorHandler, errorHandler);
 
 
 //this is the async api written with promise
@@ -104,7 +104,6 @@ var errorHandlerP = function (err) {
     }
 };
 
-
 getProductPriceFromTaoBaoP(wantedProduct)
     .then(function (result) {
         console.log(chalk.green(result));
@@ -115,3 +114,8 @@ getProductPriceFromTaoBaoP(wantedProduct)
             console.log(chalk.green(boughtMessage));
         }
     }, errorHandlerP);
+
+//此示例演示的是:
+//Promise的作用在于
+//1. 给异步算法的编写者和使用者之间提供一种统一的交流手段
+//2. 给异步算法的使用者提供一种组织代码的手段,以便于将层层嵌套的业务主流程变成一次一次的对then的调用
