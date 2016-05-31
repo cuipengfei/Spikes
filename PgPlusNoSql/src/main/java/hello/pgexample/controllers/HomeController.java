@@ -1,12 +1,10 @@
 package hello.pgexample.controllers;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
 import hello.pgexample.domain.AppUser;
 import hello.pgexample.domain.Customer;
 import hello.pgexample.repository.CustomerRepository;
 import hello.pgexample.repository.UserRepository;
+import hello.pgexample.services.MongoExtensionService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,13 +19,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class HomeController {
-    MongoClient mongo = new MongoClient("localhost", 27017);
 
     @Inject
     UserRepository userRepository;
 
     @Inject
     CustomerRepository customerRepository;
+
+    @Inject
+    MongoExtensionService mongoExtensionService;
 
     public HomeController() throws UnknownHostException {
     }
@@ -39,10 +39,7 @@ public class HomeController {
 
     @RequestMapping(value = "/user", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public AppUser create(@RequestBody AppUser user) {
-        DBCollection collection = mongo.getDB("test").getCollection(user.getClass().getSimpleName() + "_extensions");
-        BasicDBObject document = new BasicDBObject();
-        document.put("a", "b");
-        collection.insert(document);
+        mongoExtensionService.saveExtension(user);
         return userRepository.save(user);
     }
 
