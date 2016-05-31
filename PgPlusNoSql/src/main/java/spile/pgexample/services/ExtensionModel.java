@@ -1,5 +1,7 @@
 package spile.pgexample.services;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -10,6 +12,7 @@ public class ExtensionModel {
     @Transient
     private Map<String, String> extensionFields;
 
+    @JsonIgnore
     @Column(name = "extensionId")
     private String extensionId;
 

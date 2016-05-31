@@ -17,20 +17,23 @@ public class MongoExtensionService {
     }
 
     public void saveExtensionOf(ExtensionModel model) {
-        DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
+        if (model.getExtensionFields() != null) {
+            DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
 
-        BasicDBObject basicDBObject = new BasicDBObject(model.getExtensionFields());
-        collection.insert(basicDBObject);
+            BasicDBObject basicDBObject = new BasicDBObject(model.getExtensionFields());
+            collection.insert(basicDBObject);
 
-        ObjectId id = basicDBObject.getObjectId("_id");
-        model.setExtensionId(id.toHexString());
+            ObjectId id = basicDBObject.getObjectId("_id");
+            model.setExtensionId(id.toHexString());
+        }
     }
 
     public void fillExtension(ExtensionModel model) {
-        DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
-        DBObject one = collection.findOne(new ObjectId(model.getExtensionId()));
-        one.removeField("_id");
-        System.out.print(one);
-        model.setExtensionFields(one.toMap());
+        if (model.getExtensionId() != null) {
+            DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
+            DBObject foundExtension = collection.findOne(new ObjectId(model.getExtensionId()));
+            foundExtension.removeField("_id");
+            model.setExtensionFields(foundExtension.toMap());
+        }
     }
 }
