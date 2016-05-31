@@ -1,6 +1,6 @@
-package hello.pgexample.domain;
+package spile.pgexample.domain;
 
-import hello.pgexample.services.ExtensionModel;
+import spile.pgexample.services.ExtensionModel;
 
 import javax.persistence.*;
 

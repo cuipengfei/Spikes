@@ -1,4 +1,4 @@
-package hello.pgexample.services;
+package spile.pgexample.services;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;

@@ -1,8 +1,8 @@
-package hello.pgexample.controllers;
+package spile.pgexample.controllers;
 
-import hello.pgexample.domain.AppUser;
-import hello.pgexample.repository.UserRepository;
-import hello.pgexample.services.MongoExtensionService;
+import spile.pgexample.domain.AppUser;
+import spile.pgexample.repository.UserRepository;
+import spile.pgexample.services.MongoExtensionService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

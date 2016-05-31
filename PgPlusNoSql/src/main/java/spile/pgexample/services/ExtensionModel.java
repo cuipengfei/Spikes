@@ -1,4 +1,4 @@
-package hello.pgexample.services;
+package spile.pgexample.services;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
