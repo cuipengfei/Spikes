@@ -5,6 +5,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Singleton;
 import java.net.UnknownHostException;
 
 @Service
@@ -14,7 +15,7 @@ public class MongoExtensionService {
     public MongoExtensionService() throws UnknownHostException {
     }
 
-    public void saveExtension(ExtensionModel model) {
+    public void saveExtensionOf(ExtensionModel model) {
         DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
         collection.insert(new BasicDBObject(model.getExtensionFields()));
     }

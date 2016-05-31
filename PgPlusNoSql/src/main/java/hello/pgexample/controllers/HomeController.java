@@ -39,7 +39,7 @@ public class HomeController {
 
     @RequestMapping(value = "/user", method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public AppUser create(@RequestBody AppUser user) {
-        mongoExtensionService.saveExtension(user);
+        mongoExtensionService.saveExtensionOf(user);
         return userRepository.save(user);
     }
 
