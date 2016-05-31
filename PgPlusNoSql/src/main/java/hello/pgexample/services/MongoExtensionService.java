@@ -2,10 +2,11 @@ package hello.pgexample.services;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Singleton;
 import java.net.UnknownHostException;
 
 @Service
@@ -17,6 +18,16 @@ public class MongoExtensionService {
 
     public void saveExtensionOf(ExtensionModel model) {
         DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
-        collection.insert(new BasicDBObject(model.getExtensionFields()));
+
+        BasicDBObject basicDBObject = new BasicDBObject(model.getExtensionFields());
+        collection.insert(basicDBObject);
+
+        ObjectId id = basicDBObject.getObjectId("_id");
+        model.setExtensionId(id.toHexString());
+    }
+
+    public void fillExtension(ExtensionModel model) {
+        DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
+        DBObject one = collection.findOne(model.getExtensionId());
     }
 }
