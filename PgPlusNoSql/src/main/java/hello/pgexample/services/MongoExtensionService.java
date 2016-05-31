@@ -14,8 +14,8 @@ public class MongoExtensionService {
     public MongoExtensionService() throws UnknownHostException {
     }
 
-    public void saveExtension(ExtendableModel model) {
+    public void saveExtension(ExtensionModel model) {
         DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
-        collection.insert(new BasicDBObject(model.getExtentionFields()));
+        collection.insert(new BasicDBObject(model.getExtensionFields()));
     }
 }

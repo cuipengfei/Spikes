@@ -1,11 +1,11 @@
 package hello.pgexample.domain;
 
-import hello.pgexample.services.ExtendableModel;
+import hello.pgexample.services.ExtensionModel;
 
 import javax.persistence.*;
 
 @Entity
-public class AppUser extends ExtendableModel {
+public class AppUser extends ExtensionModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
