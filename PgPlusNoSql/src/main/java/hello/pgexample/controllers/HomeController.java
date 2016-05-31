@@ -36,4 +36,7 @@ public class HomeController {
         return userRepository.findAll();
     }
 
+    //todo: reference to mongo extension service should be moved to the repository layer
+    //so the marriage between mongo and pgsql would seem transparent to controllers
+
 }
