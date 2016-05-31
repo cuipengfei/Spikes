@@ -16,9 +16,6 @@ public class MongoExtensionService {
 
     public void saveExtension(ExtendableModel model) {
         DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
-
-        BasicDBObject document = new BasicDBObject();
-        document.put("a", "b");
-        collection.insert(document);
+        collection.insert(new BasicDBObject(model.getExtentionFields()));
     }
 }
