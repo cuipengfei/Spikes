@@ -30,6 +30,9 @@ public class HomeController {
 
     @RequestMapping(value = "/user", method = GET, produces = APPLICATION_JSON_VALUE)
     public Iterable<AppUser> findAll() {
+        for (AppUser user : userRepository.findAll()) {
+            mongoExtensionService.fillExtension(user);
+        }
         return userRepository.findAll();
     }
 

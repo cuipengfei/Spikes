@@ -28,6 +28,9 @@ public class MongoExtensionService {
 
     public void fillExtension(ExtensionModel model) {
         DBCollection collection = mongo.getDB("test").getCollection(model.getClass().getSimpleName() + "_extensions");
-        DBObject one = collection.findOne(model.getExtensionId());
+        DBObject one = collection.findOne(new ObjectId(model.getExtensionId()));
+        one.removeField("_id");
+        System.out.print(one);
+        model.setExtensionFields(one.toMap());
     }
 }
