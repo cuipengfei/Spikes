@@ -1,22 +1,26 @@
 var _ = require("underscore");
-var rp = require('request-promise');
+var chalk = require("chalk");
+var util = require('util');
+var requestPromise = require('request-promise');
 var Promise = require("bluebird");
 
-var j = rp.jar();
-var cookie = rp.cookie("token=秘密");
-j.setCookie(cookie, "http://facehub.net");
+var cookie = requestPromise.cookie("token=xxx");
+var jar = requestPromise.jar();
+jar.setCookie(cookie, "http://facehub.net");
 
-var userIds = _.range(500);
+var userAmount = 500;
+var userIds = _.range(userAmount);//用0到500当做id去试
+
 var retrieveUserPromises = _.map(userIds, function (id) {
     var url = "http://facehub.net/api/users/" + id;
-    return Promise.delay(id * 10).then(function () {//异步请求一下子发太多会挂掉,间隔开10ｍｓ
-        return rp({uri: url, method: "GET", jar: j})
+    return Promise.delay(id * 10).then(function () {//异步请求一下子发太多会fail掉,间隔开10ｍｓ
+        return requestPromise({uri: url, method: "GET", jar: jar})
             .then(
                 function (user) {
-                    console.log("ok id: " + id);
+                    console.log(chalk.green.bgBlue.bold("成功获取到了id为 " + id + " 的用户信息"));
                     return JSON.parse(user);
                 }, function (f) {
-                    console.log("failed id: " + id + " http code: " + f.statusCode);
+                    console.log(chalk.red.bgWhite.bold("获取不到id为" + id + " 的用户　" + f.statusCode));
                     return {failedId: id, code: f.statusCode};
                 });
     });
@@ -67,10 +71,6 @@ function getZodiacSign(day, month) {
 
 function percentageBy(users, f, keyName) {
     var bdayAttributes = _.chain(users)
-        .pluck("birthday")
-        .filter(function (bday) {
-            return bday !== undefined;
-        })
         .map(f).value();
 
     var groups = _.chain(bdayAttributes)
@@ -79,7 +79,7 @@ function percentageBy(users, f, keyName) {
         })
         .value();
 
-    console.log(_.chain(_.keys(groups))
+    console.log(chalk.red.bgBlue.bold(util.inspect(_.chain(_.keys(groups))
         .map(function (key) {
             var groupMembers = groups[key];
             var percentageOfKey = {};
@@ -88,25 +88,25 @@ function percentageBy(users, f, keyName) {
             return percentageOfKey;
         })
         .sortBy("percentage")
-        .value().reverse());
+        .value().reverse())));
 }
 
-Promise.all(retrieveUserPromises).then(function (users) {
-    var nonUser = _.chain(users).filter(function (u) {
-        return u.failedId !== undefined;
+Promise.all(retrieveUserPromises).then(function (results) {
+    var users = _.chain(results).filter(function (u) {
+        return u.failedId === undefined;
     }).value();
-    console.log("获取到用户数量" + (500 - nonUser.length));
+    console.log("获取到用户数量 " + (users.length));
 
-    percentageBy(users, function (bday) {
-        return parseInt(bday.split("-")[0]);
-    }, "月份");
+    percentageBy(users, function (user) {
+        return parseInt(user.birthday.split("-")[0]);
+    }, "出生月份");
 
-    percentageBy(users, function (bday) {
-        var month_day = bday.split("-");
+    percentageBy(users, function (user) {
+        return parseInt(user.onboard.split("-")[1]);
+    }, "入职月份");
+
+    percentageBy(users, function (user) {
+        var month_day = user.birthday.split("-");
         return getZodiacSign(parseInt(month_day[1]), parseInt(month_day[0]));
     }, "星座");
-
-    percentageBy(users, function (bday) {
-        return bday;
-    }, "同日");
 });
