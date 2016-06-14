@@ -4,7 +4,7 @@ var util = require('util');
 var requestPromise = require('request-promise');
 var Promise = require("bluebird");
 
-var cookie = requestPromise.cookie("token=xxx");
+var cookie = requestPromise.cookie("token=");
 var jar = requestPromise.jar();
 jar.setCookie(cookie, "http://facehub.net");
 
@@ -79,7 +79,7 @@ function percentageBy(users, f, keyName) {
         })
         .value();
 
-    console.log(chalk.red.bgBlue.bold(util.inspect(_.chain(_.keys(groups))
+    console.log(chalk.red.bgBlue.bold(JSON.stringify(_.chain(_.keys(groups))
         .map(function (key) {
             var groupMembers = groups[key];
             var percentageOfKey = {};
@@ -88,7 +88,7 @@ function percentageBy(users, f, keyName) {
             return percentageOfKey;
         })
         .sortBy("percentage")
-        .value().reverse())));
+        .value().reverse(), undefined, 2)));
 }
 
 Promise.all(retrieveUserPromises).then(function (results) {
@@ -98,11 +98,11 @@ Promise.all(retrieveUserPromises).then(function (results) {
     console.log("获取到用户数量 " + (users.length));
 
     percentageBy(users, function (user) {
-        return parseInt(user.birthday.split("-")[0]);
+        return parseInt(user.birthday.split("-")[0]) + "月";
     }, "出生月份");
 
     percentageBy(users, function (user) {
-        return parseInt(user.onboard.split("-")[1]);
+        return parseInt(user.onboard.split("-")[1]) + "月";
     }, "入职月份");
 
     percentageBy(users, function (user) {
