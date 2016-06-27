@@ -4,7 +4,7 @@ var util = require('util');
 var requestPromise = require('request-promise');
 var Promise = require("bluebird");
 
-var cookie = requestPromise.cookie("token=");
+var cookie = requestPromise.cookie("token=xxx");
 var jar = requestPromise.jar();
 jar.setCookie(cookie, "http://facehub.net");
 
@@ -84,7 +84,7 @@ function percentageBy(users, f, keyName) {
             var groupMembers = groups[key];
             var percentageOfKey = {};
             percentageOfKey[keyName] = key;
-            percentageOfKey.percentage = (groupMembers.length / bdayAttributes.length) * 100;
+            percentageOfKey.percentage = Math.round(groupMembers.length / bdayAttributes.length * 10000) / 100;
             return percentageOfKey;
         })
         .sortBy("percentage")
