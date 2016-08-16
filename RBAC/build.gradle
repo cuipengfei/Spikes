@@ -1,12 +1,11 @@
-buildscript {
-    repositories {
-        maven {
-            url 'http://dl.bintray.com/cjstehno/public'
-        }
-    }
-    dependencies {
-        classpath 'gradle-templates:gradle-templates:1.5'
-    }
+apply plugin: 'java'
+
+group = 'org.openlmis'
+
+repositories {
+    mavenCentral()
 }
 
-apply plugin:'templates'
+dependencies {
+    compile 'junit:junit:4.12'
+}
