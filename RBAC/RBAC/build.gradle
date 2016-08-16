@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+group = 'org.openlmis'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'junit:junit:4.12'
+}
