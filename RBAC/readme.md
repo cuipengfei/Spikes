@@ -1,15 +1,15 @@
 RIGHT:
 Smallest entity is the right
 
-A right could have attached rights, which follows the right into the same role.
+A right could have attached rights, which follows the right into the same role.(√)
 
-Rights have types, including: supervision, order fulfillment, general admin, reports.
+Rights have types, including: supervision, order fulfillment, general admin, reports.(√)
 
 ROLE:
 A group of rights is called a role.
 
 The grouping of the rights need to respect the type of the right, only rights of the same type 
-are allowed to be grouped together. No mixing. 
+are allowed to be grouped together. No mixing. (√)
 This implies that a right can only have attached rights of the same type. (√)
 
 USER:
