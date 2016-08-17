@@ -22,6 +22,8 @@ b) through a program + supervisory supervisoryNode.
 (Case A implies that the user has supervision role for its own home facility.
 Case B means that the user has supervision role for any facility user that supervisory supervisoryNode.)
 
+(√)
+
 For order fulfillment role, the user is associated with it:
 through one or more facilities which have the warehouse type.
 

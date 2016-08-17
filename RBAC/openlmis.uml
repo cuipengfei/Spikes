@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.openlmis</OriginalElement>
+  <nodes>
+    <node x="697.0" y="731.0">org.openlmis.User</node>
+    <node x="289.0" y="720.0">org.openlmis.SupervisionRoleAssignment</node>
+    <node x="378.0" y="573.0">org.openlmis.SupervisoryNode</node>
+    <node x="1039.0" y="731.0">org.openlmis.DirectRoleAssignment</node>
+    <node x="867.8690476190476" y="212.5">org.openlmis.RightTypeException</node>
+    <node x="0.0" y="698.0">org.openlmis.RightQuery</node>
+    <node x="281.625" y="0.0">org.openlmis.RightType</node>
+    <node x="266.125" y="168.0">org.openlmis.Right</node>
+    <node x="716.3690476190476" y="337.0">org.openlmis.Role</node>
+    <node x="113.0" y="573.0">org.openlmis.Program</node>
+    <node x="801.6190476190476" y="528.0">org.openlmis.RoleAssignment</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.openlmis.SupervisionRoleAssignment" target="org.openlmis.RoleAssignment">
+      <point x="129.33333333333337" y="-59.5" />
+      <point x="612.3333333333334" y="678.0" />
+      <point x="829.7857142857142" y="678.0" />
+      <point x="-56.33333333333337" y="60.0" />
+    </edge>
+    <edge source="org.openlmis.Role" target="org.openlmis.Right">
+      <point x="-63.75" y="-70.5" />
+      <point x="780.1190476190476" y="312.0" />
+      <point x="464.875" y="312.0" />
+      <point x="66.25" y="59.5" />
+    </edge>
+    <edge source="org.openlmis.User" target="org.openlmis.RoleAssignment">
+      <point x="0.0" y="-48.5" />
+      <point x="858.0" y="678.0" />
+      <point x="886.1190476190476" y="678.0" />
+      <point x="0.0" y="60.0" />
+    </edge>
+    <edge source="org.openlmis.RoleAssignment" target="org.openlmis.RightTypeException">
+      <point x="42.25" y="-60.0" />
+      <point x="928.3690476190476" y="503.0" />
+      <point x="981.8690476190476" y="503.0" />
+      <point x="981.8690476190476" y="312.0" />
+      <point x="987.1190476190476" y="312.0" />
+      <point x="39.75" y="15.0" />
+    </edge>
+    <edge source="org.openlmis.SupervisionRoleAssignment" target="org.openlmis.Program">
+      <point x="-129.33333333333337" y="-59.5" />
+      <point x="353.66666666666663" y="668.0" />
+      <point x="177.5" y="668.0" />
+      <point x="21.5" y="15.0" />
+    </edge>
+    <edge source="org.openlmis.RightQuery" target="org.openlmis.Program">
+      <point x="0.0" y="-81.5" />
+      <point x="-21.5" y="15.0" />
+    </edge>
+    <edge source="org.openlmis.RightQuery" target="org.openlmis.Right">
+      <point x="-89.66666666666669" y="-81.5" />
+      <point x="44.833333333333314" y="678.0" />
+      <point x="74.99999999999994" y="678.0" />
+      <point x="74.99999999999994" y="312.0" />
+      <point x="332.375" y="312.0" />
+      <point x="-66.25" y="59.5" />
+    </edge>
+    <edge source="org.openlmis.Right" target="org.openlmis.RightType">
+      <point x="0.0" y="-59.5" />
+      <point x="0.0" y="59.0" />
+    </edge>
+    <edge source="org.openlmis.RoleAssignment" target="org.openlmis.Role">
+      <point x="-42.25" y="-60.0" />
+      <point x="0.0" y="70.5" />
+    </edge>
+    <edge source="org.openlmis.Role" target="org.openlmis.RightTypeException">
+      <point x="63.75" y="-70.5" />
+      <point x="-39.75" y="15.0" />
+    </edge>
+    <edge source="org.openlmis.DirectRoleAssignment" target="org.openlmis.RoleAssignment">
+      <point x="0.0" y="-48.5" />
+      <point x="1175.5" y="678.0" />
+      <point x="942.452380952381" y="678.0" />
+      <point x="56.33333333333337" y="60.0" />
+    </edge>
+    <edge source="org.openlmis.RightQuery" target="org.openlmis.SupervisoryNode">
+      <point x="89.66666666666669" y="-81.5" />
+      <point x="224.16666666666669" y="678.0" />
+      <point x="413.0" y="678.0" />
+      <point x="-35.0" y="15.0" />
+    </edge>
+    <edge source="org.openlmis.SupervisionRoleAssignment" target="org.openlmis.SupervisoryNode">
+      <point x="0.0" y="-59.5" />
+      <point x="35.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8240635641316686" x="656.0" y="430.5" />
+  <SelectedNodes>
+    <node>org.openlmis.User</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>Production</SCOPE>
+  <VISIBILITY>protected</VISIBILITY>
+</Diagram>
+
