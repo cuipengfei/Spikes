@@ -15,7 +15,7 @@ public class DirectRoleAssignment extends RoleAssignment {
     }
 
     @Override
-    public boolean contains(Right right) {
-        return role.contains(right);
+    public boolean hasRight(RightQuery rightQuery) {
+        return role.contains(rightQuery.getRight());
     }
 }

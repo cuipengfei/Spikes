@@ -17,5 +17,5 @@ public abstract class RoleAssignment {
 
     protected abstract List<RightType> getAcceptableRightTypes();
 
-    public abstract boolean contains(Right right);
+    public abstract boolean hasRight(RightQuery rightQuery);
 }

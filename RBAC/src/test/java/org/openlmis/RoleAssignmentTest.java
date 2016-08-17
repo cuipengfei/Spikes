@@ -23,7 +23,7 @@ public class RoleAssignmentTest {
         }
 
         @Override
-        public boolean contains(Right right) {
+        public boolean hasRight(RightQuery rightQuery) {
             return false;
         }
     }
