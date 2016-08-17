@@ -6,8 +6,8 @@ import java.util.List;
 public class Right {
 
     private RightType rightType;
-    private List<Right> attachments = new ArrayList<Right>();
 
+    private List<Right> attachments = new ArrayList<Right>();
     private Right(RightType rightType) {
         this.rightType = rightType;
     }
@@ -20,6 +20,10 @@ public class Right {
         if (attachment.rightType == rightType) {
             attachments.add(attachment);
         }
+    }
+
+    public RightType getRightType() {
+        return rightType;
     }
 
     public List<Right> getAttachments() {
