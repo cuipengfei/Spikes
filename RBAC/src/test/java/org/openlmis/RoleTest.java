@@ -6,6 +6,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class RoleTest {
     @Test
@@ -57,5 +58,23 @@ public class RoleTest {
         //when
         Right rightOfDifferentType = Right.ofType(RightType.ORDER_FULFILLMENT);
         role.add(rightOfDifferentType);
+    }
+
+    @Test
+    public void shouldIndicateIfItContainsARight() throws Exception, RightTypeException {
+        //given
+        Right right1 = Right.ofType(RightType.SUPERVISION);
+        Right right2 = Right.ofType(RightType.SUPERVISION);
+        right1.attach(right2);
+
+        Role role = Role.group(right1);
+
+        //when
+        boolean containsRight1 = role.contains(right1);
+        boolean containsRight2 = role.contains(right2);
+
+        //then
+        assertTrue(containsRight1);
+        assertTrue(containsRight2);
     }
 }

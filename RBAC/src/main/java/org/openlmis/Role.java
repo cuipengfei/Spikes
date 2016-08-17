@@ -51,4 +51,10 @@ public class Role {
             throw new RightTypeException();
         }
     }
+
+    public boolean contains(Right right) {
+        //assumption: attachments are going to be single-layered and uni-directional
+        List<Right> attachments = rights.stream().flatMap(r -> r.getAttachments().stream()).collect(toList());
+        return rights.contains(right) || attachments.contains(right);
+    }
 }

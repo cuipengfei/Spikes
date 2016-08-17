@@ -20,12 +20,12 @@ a) through a program, or
 b) through a program + supervisory node. 
 
 (Case A implies that the user has supervision role for its own home facility.
-Case B means that the user has supervision role for any facility unser that supervisory node.)
+Case B means that the user has supervision role for any facility user that supervisory node.)
 
 For order fulfillment role, the user is associated with it:
 through one or more facilities which have the warehouse type.
 
-For general admin and reports roles, they can be assigned to any user.
+For general admin and reports roles, they can be assigned to any user. (√)
 
 FACILITY: has types, warehouse and others
 
