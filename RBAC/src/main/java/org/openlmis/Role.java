@@ -29,13 +29,17 @@ public class Role {
         return rights;
     }
 
+    public RightType getRightType() {
+        return rights.get(0).getRightType();
+    }
+
     private static boolean checkRightTypesMatch(List<Right> rightsList) throws RightTypeException {
         if (rightsList.size() > 0) {
             RightType rightType = rightsList.get(0).getRightType();
             return rightsList.stream().allMatch(right -> right.getRightType() == rightType);
         }
 
-        return true;
+        return false;
     }
 
     public void add(Right... additionalRights) throws RightTypeException {
