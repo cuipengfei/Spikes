@@ -1,8 +1,12 @@
 package org.openlmis;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 
 public class Role {
     private List<Right> rights;
@@ -12,7 +16,7 @@ public class Role {
     }
 
     public static Role group(Right... rights) throws RightTypeException {
-        List<Right> rightsList = asList(rights);
+        List<Right> rightsList = new ArrayList<>(asList(rights));
         if (checkRightTypesMatch(rightsList)) {
             return new Role(rightsList);
         } else {
@@ -32,5 +36,15 @@ public class Role {
         }
 
         return true;
+    }
+
+    public void add(Right... additionalRights) throws RightTypeException {
+        List<Right> allRights = concat(rights.stream(), asList(additionalRights).stream()).collect(toList());
+
+        if (checkRightTypesMatch(allRights)) {
+            rights.addAll(Arrays.asList(additionalRights));
+        } else {
+            throw new RightTypeException();
+        }
     }
 }
