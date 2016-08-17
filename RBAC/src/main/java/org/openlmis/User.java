@@ -14,4 +14,8 @@ public class User {
     public List<RoleAssignment> getRoleAssignments() {
         return roleAssignments;
     }
+
+    public boolean hasRight(RightQuery rightQuery) {
+        return roleAssignments.stream().anyMatch(roleAssignment -> roleAssignment.hasRight(rightQuery));
+    }
 }
