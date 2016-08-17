@@ -10,7 +10,7 @@ A group of rights is called a role.
 
 The grouping of the rights need to respect the type of the right, only rights of the same type 
 are allowed to be grouped together. No mixing. 
-This implies that a right can only have attached rights of the same type.
+This implies that a right can only have attached rights of the same type. (√)
 
 USER:
 A user can be associated with any number of roles. 
