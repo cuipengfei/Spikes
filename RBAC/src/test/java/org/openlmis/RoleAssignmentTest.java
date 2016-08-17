@@ -21,6 +21,11 @@ public class RoleAssignmentTest {
             acceptableRightTypes.add(GENERAL_ADMIN);
             return acceptableRightTypes;
         }
+
+        @Override
+        public boolean contains(Right right) {
+            return false;
+        }
     }
 
     @Test

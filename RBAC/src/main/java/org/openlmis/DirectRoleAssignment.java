@@ -13,4 +13,9 @@ public class DirectRoleAssignment extends RoleAssignment {
     protected List<RightType> getAcceptableRightTypes() {
         return asList(RightType.GENERAL_ADMIN, RightType.REPORTS);
     }
+
+    @Override
+    public boolean contains(Right right) {
+        return role.contains(right);
+    }
 }
