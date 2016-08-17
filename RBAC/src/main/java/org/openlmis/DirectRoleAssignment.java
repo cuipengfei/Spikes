@@ -2,6 +2,8 @@ package org.openlmis;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class DirectRoleAssignment extends RoleAssignment {
     public DirectRoleAssignment(Role role) throws RightTypeException {
         super(role);
@@ -9,10 +11,6 @@ public class DirectRoleAssignment extends RoleAssignment {
 
     @Override
     protected List<RightType> getAcceptableRightTypes() {
-        return null;
-    }
-
-    public static RoleAssignment create(Role role) throws RightTypeException {
-        return new DirectRoleAssignment(role);
+        return asList(RightType.GENERAL_ADMIN, RightType.REPORTS);
     }
 }

@@ -12,7 +12,7 @@ public class UserTest {
         User user = new User();
 
         //when
-        user.assignRoles(DirectRoleAssignment.create(Role.group(Right.ofType(RightType.REPORTS))));
+        user.assignRoles(new DirectRoleAssignment(Role.group(Right.ofType(RightType.REPORTS))));
 
         //then
         assertThat(user.getRoleAssignments().size(), is(1));
