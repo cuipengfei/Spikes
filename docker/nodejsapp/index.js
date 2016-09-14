@@ -39,5 +39,5 @@ app.get('/', function(req, res) {
 });
 
 app.listen(8888, function() {
-    console.log('Example app listening on port 8888, this file has been changed!');
+    console.log('haha, again!! Example app listening on port 8888, this file has been changed!');
 });
