@@ -9,23 +9,23 @@ var config = {
     host: 'db', // Server hosting the postgres database
     port: 5432, //env var: PGPORT
     max: 10, // max number of clients in the pool
-    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+    idleTimeoutMillis: 30000 // how long a client is allowed to remain idle before being closed
 };
 
 var pool = new pg.Pool(config);
 
-pool.on('error', function(err, client) {
+pool.on('error', function (err, client) {
     console.error('idle client error', err.message, err.stack)
-})
+});
 
-app.get('/', function(req, res) {
-    pool.connect(function(err, client, done) {
+app.get('/', function (req, res) {
+    pool.connect(function (err, client, done) {
         if (err) {
             return console.error('error fetching client from pool', err);
         }
         client.query('CREATE TABLE IF NOT EXISTS hello_table(a INT, b VARCHAR(123))');
         client.query("INSERT  INTO hello_table VALUES (1,'a')");
-        client.query('select * from hello_table', function(err, result) {
+        client.query('select * from hello_table', function (err, result) {
             //call `done()` to release the client back to the pool
             done();
             res.send(result.rows);
@@ -38,6 +38,6 @@ app.get('/', function(req, res) {
     });
 });
 
-app.listen(8888, function() {
+app.listen(8888, function () {
     console.log('haha, again!! Example app listening on port 8888, this file has been changed!');
 });
