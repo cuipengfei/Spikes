@@ -6,10 +6,12 @@ public class DivisibleReplacer extends Replacer {
         super(dividend, word);
     }
 
+    @Override
     public String tryReplace(int number) {
         if (number % patternNumber == 0) {
             return word;
         }
         return null;
     }
+
 }

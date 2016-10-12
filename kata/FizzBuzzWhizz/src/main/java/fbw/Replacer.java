@@ -9,4 +9,6 @@ public abstract class Replacer {
         this.patternNumber = patternNumber;
         this.word = word;
     }
+
+    public abstract String tryReplace(int number);
 }
