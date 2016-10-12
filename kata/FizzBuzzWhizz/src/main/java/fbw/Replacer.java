@@ -25,7 +25,7 @@ public abstract class Replacer {
         return replace(number, "");
     }
 
-    public String replace(int number, String appendableResult) {
+    private String replace(int number, String appendableResult) {
         String replaceResult = tryReplace(number, appendableResult);
         if (this.next != null) {
             return this.next.replace(number, replaceResult);
