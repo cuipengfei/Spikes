@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.rangeClosed;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.Assert.assertThat;
 
@@ -13,19 +14,19 @@ public class IntegrationTests {
     @Test
     public void integration_test() throws Exception {
 
-        Replacer replacer = new DivisibleReplacer(3, "Fizz")
-                .chain(new DivisibleReplacer(5, "Buzz"))
-                .chain(new DivisibleReplacer(7, "Whizz"))
+        Replacer replacer = new ReplacerBuilder()
+                .whenDivisibleBy(3).replaceWith("Fizz")
+                .whenDivisibleBy(5).replaceWith("Buzz")
+                .whenDivisibleBy(7).replaceWith("Whizz")
 
-                .chain(new InclusionReplacer(3, "Fizz"))
-                .chain(new InclusionReplacer(5, "Buzz"))
-                .chain(new InclusionReplacer(7, "Whizz"))
+                .whenIncludes(3).replaceWith("Fizz")
+                .whenIncludes(5).replaceWith("Buzz")
+                .whenIncludes(7).replaceWith("Whizz")
 
-                .chain(new DefaultReplacer());
+                .build();
 
-        List<String> replacedWords = IntStream
-                .rangeClosed(1, 20).boxed()
-                .collect(toList()).stream()
+        List<String> replacedWords = rangeClosed(1, 20)
+                .boxed().collect(toList()).stream()
                 .map(replacer::replace).collect(toList());
 
         assertThat(replacedWords, contains(
