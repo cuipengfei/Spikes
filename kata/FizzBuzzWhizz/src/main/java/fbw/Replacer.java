@@ -4,8 +4,6 @@ import java.util.Objects;
 
 public abstract class Replacer {
 
-    public static final String NOT_REPLACED = "this replacer can not replace the number";
-
     protected final int patternNumber;
     protected final String word;
 
@@ -26,13 +24,17 @@ public abstract class Replacer {
     }
 
     public String replace(int number) {
-        String replaceResult = this.tryReplace(number);
-        if (Objects.equals(replaceResult, NOT_REPLACED)) {
-            return this.next.replace(number);
+        return replace(number, "");
+    }
+
+    public String replace(int number, String appendableResult) {
+        String replaceResult = tryReplace(number, appendableResult);
+        if (this.next != null) {
+            return this.next.replace(number, replaceResult);
         } else {
             return replaceResult;
         }
     }
 
-    protected abstract String tryReplace(int number);
+    protected abstract String tryReplace(int number, String appendableResult);
 }

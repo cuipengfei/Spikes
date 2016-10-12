@@ -6,10 +6,14 @@ public class InclusionReplacer extends Replacer {
     }
 
     @Override
-    protected String tryReplace(int number) {
-        if (Integer.toString(number).contains(Integer.toString(patternNumber))) {
+    protected String tryReplace(int number, String appendableResult) {
+        boolean notReplacedYet = appendableResult.length() == 0;
+        boolean isMatched = Integer.toString(number).contains(Integer.toString(patternNumber));
+
+        if (notReplacedYet && isMatched) {
             return word;
         }
-        return NOT_REPLACED;
+
+        return appendableResult;
     }
 }

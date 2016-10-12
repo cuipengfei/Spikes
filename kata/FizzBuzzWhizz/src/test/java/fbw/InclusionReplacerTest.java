@@ -10,10 +10,10 @@ public class InclusionReplacerTest {
     public void should_replace_when_number_includes_pattern_number() throws Exception {
         InclusionReplacer replacer = new InclusionReplacer(3, "Fizz");
 
-        String word = replacer.tryReplace(3);
+        String word = replacer.replace(3);
         assertThat(word, is("Fizz"));
 
-        word = replacer.tryReplace(13);
+        word = replacer.replace(13);
         assertThat(word, is("Fizz"));
     }
 }

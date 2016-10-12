@@ -7,11 +7,10 @@ public class DivisibleReplacer extends Replacer {
     }
 
     @Override
-    protected String tryReplace(int number) {
+    protected String tryReplace(int number, String appendableResult) {
         if (number % patternNumber == 0) {
-            return word;
+            return appendableResult + word;
         }
-        return NOT_REPLACED;
+        return appendableResult;
     }
-
 }

@@ -10,10 +10,10 @@ public class DivisibleReplacerTest {
     public void should_replace_number_with_word_when_divisible() throws Exception {
         DivisibleReplacer divisibleReplacer = new DivisibleReplacer(3, "Fizz");
 
-        String word = divisibleReplacer.tryReplace(3);
+        String word = divisibleReplacer.replace(3);
         assertThat(word, is("Fizz"));
 
-        word = divisibleReplacer.tryReplace(6);
+        word = divisibleReplacer.replace(6);
         assertThat(word, is("Fizz"));
     }
 }
