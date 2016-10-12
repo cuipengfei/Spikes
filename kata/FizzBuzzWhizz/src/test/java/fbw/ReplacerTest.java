@@ -19,7 +19,7 @@ public class ReplacerTest {
 
         @Override
         protected String tryReplace(int number, String appendableResult) {
-            return "whatever";
+            return "whatever " + appendableResult;
         }
     }
 
@@ -35,9 +35,9 @@ public class ReplacerTest {
         String word = replacer1.replace(123);
 
         //then
-        assertThat(word, is("whatever"));
+        assertThat(word, is("whatever whatever whatever "));
         Mockito.verify(replacer1).tryReplace(123, "");
-        Mockito.verify(replacer2).tryReplace(123, "whatever");
-        Mockito.verify(replacer3).tryReplace(123, "whatever");
+        Mockito.verify(replacer2).tryReplace(123, "whatever ");
+        Mockito.verify(replacer3).tryReplace(123, "whatever whatever ");
     }
 }
