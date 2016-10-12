@@ -3,7 +3,6 @@ package fbw;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.rangeClosed;
