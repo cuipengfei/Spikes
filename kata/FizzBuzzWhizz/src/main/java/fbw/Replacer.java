@@ -1,7 +1,5 @@
 package fbw;
 
-import java.util.Objects;
-
 public abstract class Replacer {
 
     protected final int patternNumber;
