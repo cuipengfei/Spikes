@@ -5,6 +5,7 @@ import org.mockito.Mockito;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.spy;
 
 public class ReplacerTest {
 
@@ -26,9 +27,9 @@ public class ReplacerTest {
     @Test
     public void should_call_replacers_in_a_chain_in_order() throws Exception {
         //given
-        Replacer replacer1 = Mockito.spy(StubReplacer.class);
-        Replacer replacer2 = Mockito.spy(StubReplacer.class);
-        Replacer replacer3 = Mockito.spy(StubReplacer.class);
+        Replacer replacer1 = spy(StubReplacer.class);
+        Replacer replacer2 = spy(StubReplacer.class);
+        Replacer replacer3 = spy(StubReplacer.class);
 
         //when
         replacer1.chain(replacer2).chain(replacer3);
