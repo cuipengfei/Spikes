@@ -34,5 +34,5 @@ public abstract class Replacer {
         }
     }
 
-    public abstract String tryReplace(int number);
+    protected abstract String tryReplace(int number);
 }

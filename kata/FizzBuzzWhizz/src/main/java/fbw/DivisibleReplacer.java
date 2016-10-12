@@ -7,7 +7,7 @@ public class DivisibleReplacer extends Replacer {
     }
 
     @Override
-    public String tryReplace(int number) {
+    protected String tryReplace(int number) {
         if (number % patternNumber == 0) {
             return word;
         }

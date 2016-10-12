@@ -10,7 +10,7 @@ public class DoNothingReplacer extends Replacer {
     }
 
     @Override
-    public String tryReplace(int number) {
+    protected String tryReplace(int number) {
         return Integer.toString(number);
     }
 }

@@ -6,7 +6,7 @@ public class InclusionReplacer extends Replacer {
     }
 
     @Override
-    public String tryReplace(int number) {
+    protected String tryReplace(int number) {
         if (Integer.toString(number).contains(Integer.toString(patternNumber))) {
             return word;
         }
