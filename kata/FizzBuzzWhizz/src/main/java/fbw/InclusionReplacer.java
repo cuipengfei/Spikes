@@ -10,6 +10,6 @@ public class InclusionReplacer extends Replacer {
         if (Integer.toString(number).contains(Integer.toString(patternNumber))) {
             return word;
         }
-        return null;
+        return NOT_REPLACED;
     }
 }

@@ -11,7 +11,7 @@ public class DivisibleReplacer extends Replacer {
         if (number % patternNumber == 0) {
             return word;
         }
-        return null;
+        return NOT_REPLACED;
     }
 
 }
