@@ -1,17 +1,13 @@
 package fbw;
 
-public class DivisibleReplacer {
-
-    private final int dividend;
-    private final String word;
+public class DivisibleReplacer extends Replacer {
 
     public DivisibleReplacer(int dividend, String word) {
-        this.dividend = dividend;
-        this.word = word;
+        super(dividend, word);
     }
 
     public String tryReplace(int number) {
-        if (number % dividend == 0) {
+        if (number % patternNumber == 0) {
             return word;
         }
         return null;
