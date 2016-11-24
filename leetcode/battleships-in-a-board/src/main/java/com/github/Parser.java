@@ -19,14 +19,8 @@ public class Parser {
         } else {
             Cell cell = new Cell(board[row][column]);
 
-            cell.setLeft(createCellAndNeighbors(row, column - 1, board));
-            cell.getLeft().setRight(cell);
-
             cell.setRight(createCellAndNeighbors(row, column + 1, board));
             cell.getRight().setLeft(cell);
-
-            cell.setUp(createCellAndNeighbors(row - 1, column, board));
-            cell.getUp().setDown(cell);
 
             cell.setDown(createCellAndNeighbors(row + 1, column, board));
             cell.getDown().setUp(cell);
