@@ -1,11 +1,9 @@
 package com.github;
 
-import static com.github.Parser.boardToRootCell;
-
 public class Solution {
     public int countBattleships(char[][] board) {
         try {
-            return countFrom(boardToRootCell(board));
+            return countFrom(Parser.boardToRootCell(board));
         } catch (NoGapBetweenShipsException e) {
             return 0;
         }
