@@ -7,7 +7,9 @@ import static org.junit.Assert.assertThat;
 
 public class SolutionTest {
     @Test
-    public void sanity() throws Exception {
-        assertThat(1, is(1));
+    public void emptyBoardHasNoShip() throws Exception {
+        char[][] board = new char[][]{{}};
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(0));
     }
 }
