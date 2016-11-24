@@ -48,9 +48,13 @@ public class Cell {
         this.down = down;
     }
 
+    public boolean isValidCell() {
+        return true;
+    }
+
     public boolean isAdjacentToBattleShip() {
         return Stream.of(left, right, up, down)
-                .filter(cell -> !(cell instanceof NotACell))
+                .filter(Cell::isValidCell)
                 .anyMatch(neighbor -> neighbor.isPartOfShip);
     }
 

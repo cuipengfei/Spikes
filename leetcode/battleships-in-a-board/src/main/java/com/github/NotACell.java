@@ -12,4 +12,19 @@ public class NotACell extends Cell {
     public static Cell instance() {
         return notACell;
     }
+
+    @Override
+    public boolean isValidCell() {
+        return false;
+    }
+
+    @Override
+    public boolean couldBePartOfShip() {
+        return false;
+    }
+
+    @Override
+    public boolean isAdjacentToBattleShip() {
+        return false;
+    }
 }
