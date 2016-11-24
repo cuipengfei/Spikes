@@ -30,4 +30,15 @@ public class SolutionTest {
         int count = new Solution().countBattleships(board);
         assertThat(count, is(1));
     }
+
+    @Test
+    public void cornerShip() throws Exception {
+        char[][] board = new char[][]{
+                {'X', '.'},
+                {'.', 'X'}
+        };
+
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(2));
+    }
 }

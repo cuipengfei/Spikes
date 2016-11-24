@@ -14,13 +14,16 @@ public class Solution {
     private int countFrom(Cell cell) throws NoGapBetweenShipsException {
         int count = 0;
 
-        if (cell.isValidShipPart()) {
-            cell.setIsPartOfShip(true);
-            if (!cell.isAdjacentToBattleShip()) {
-                count++;
-                count += countFrom(cell.getRight());
-                count += countFrom(cell.getDown());
+        if (cell.isValidCell()) {
+            if (cell.couldBePartOfShip()) {
+                if (!cell.isAdjacentToBattleShip() && !cell.isPartOfShip()) {
+                    cell.setIsPartOfShip(true);
+                    count++;
+                }
             }
+
+            count += countFrom(cell.getRight());
+            count += countFrom(cell.getDown());
         }
 
         return count;

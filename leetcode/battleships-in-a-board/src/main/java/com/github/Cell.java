@@ -12,10 +12,14 @@ public class Cell {
     private Cell down;
 
     private boolean isPartOfShip;
-    private char symbol;
 
+    private char symbol;
     public Cell(char symbol) {
         this.symbol = symbol;
+    }
+
+    public boolean isPartOfShip() {
+        return isPartOfShip;
     }
 
     public Cell getLeft() {
@@ -56,7 +60,7 @@ public class Cell {
 
     public boolean isAdjacentToBattleShip() throws NoGapBetweenShipsException {
         List<Cell> neighbors = Stream.of(left, right, up, down)
-                .filter(Cell::isValidShipPart).collect(Collectors.toList());
+                .filter(cell -> cell.isPartOfShip).collect(Collectors.toList());
 
         if (neighbors.size() > 1) {
             throw new NoGapBetweenShipsException();
