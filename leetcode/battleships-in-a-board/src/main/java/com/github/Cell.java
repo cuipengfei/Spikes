@@ -1,5 +1,7 @@
 package com.github;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Cell {
@@ -53,13 +55,13 @@ public class Cell {
     }
 
     public boolean isAdjacentToBattleShip() throws NoGapBetweenShipsException {
-        Stream<Cell> neighbors = Stream.of(left, right, up, down)
-                .filter(Cell::isValidShipPart);
+        List<Cell> neighbors = Stream.of(left, right, up, down)
+                .filter(Cell::isValidShipPart).collect(Collectors.toList());
 
-        if (neighbors.count() > 1) {
+        if (neighbors.size() > 1) {
             throw new NoGapBetweenShipsException();
         }
-        return neighbors.count() == 1;
+        return neighbors.size() == 1;
     }
 
     public boolean couldBePartOfShip() {

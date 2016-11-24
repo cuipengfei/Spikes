@@ -21,4 +21,13 @@ public class SolutionTest {
         int count = new Solution().countBattleships(board);
         assertThat(count, is(0));
     }
+
+    @Test
+    public void oneXIsOneShip() throws Exception {
+        char[][] board = new char[][]{
+                {'X'}
+        };
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(1));
+    }
 }
