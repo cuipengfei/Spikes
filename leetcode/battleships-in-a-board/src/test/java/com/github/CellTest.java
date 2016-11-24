@@ -1,6 +1,7 @@
 package com.github;
 
 import org.junit.Test;
+import org.junit.internal.runners.statements.ExpectException;
 
 import static org.junit.Assert.*;
 
@@ -32,5 +33,24 @@ public class CellTest {
 
         //then: the other cell should know it is adjacent to a ship
         assertTrue(isAdjacent);
+    }
+
+    @Test(expected = NoGapBetweenShipsException.class)
+    public void shouldThrowExceptionIfAdjacentTo2ShipCellsNotInAStraightLine() throws Exception, NoGapBetweenShipsException {
+        //given: a cell is adjacent to two cells that are already in a ship
+        //and they are not in the same straight line
+        Cell up = new Cell('X', 1, 0);
+        up.setIsPartOfShip(true);
+        Cell left = new Cell('X', 0, 1);
+        left.setIsPartOfShip(true);
+
+        Cell cell = new Cell('X', 1, 1);
+        cell.setUp(up);
+        cell.setDown(NotACell.instance());
+        cell.setLeft(left);
+        cell.setRight(NotACell.instance());
+
+        //when: checking adjacent cells, should throw exception
+        cell.isAdjacentToShip();
     }
 }

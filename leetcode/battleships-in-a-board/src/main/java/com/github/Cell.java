@@ -6,6 +6,10 @@ import java.util.stream.Stream;
 
 public class Cell {
 
+    private char symbol;
+    private final int row;
+    private final int column;
+
     private Cell left;
     private Cell right;
     private Cell up;
@@ -13,9 +17,6 @@ public class Cell {
 
     private boolean isPartOfShip;
 
-    private char symbol;
-    private final int row;
-    private final int column;
 
     public Cell(char symbol, int row, int column) {
         this.symbol = symbol;
