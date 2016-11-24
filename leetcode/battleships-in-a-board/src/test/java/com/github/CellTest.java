@@ -15,7 +15,7 @@ public class CellTest {
     }
 
     @Test
-    public void a_cell_should_know_if_it_is_adjacent_to_a_battleship() throws Exception {
+    public void a_cell_should_know_if_it_is_adjacent_to_a_battleship() throws Exception, NoGapBetweenShipsException {
         //given: there is a cell that is in a ship
         Cell left = new Cell('X');
         left.setIsPartOfShip(true);

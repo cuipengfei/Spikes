@@ -1,12 +1,29 @@
 package com.github;
 
+import static com.github.Parser.boardToRootCell;
+
 public class Solution {
     public int countBattleships(char[][] board) {
-        Cell rootCell = Parser.boardToRootCell(board);
-        if (!rootCell.isValidCell()) {
+        try {
+            return countFrom(boardToRootCell(board));
+        } catch (NoGapBetweenShipsException e) {
             return 0;
-        } else {
-            return 1;
         }
     }
+
+    private int countFrom(Cell cell) throws NoGapBetweenShipsException {
+        int count = 0;
+
+        if (cell.isValidShipPart()) {
+            cell.setIsPartOfShip(true);
+            if (!cell.isAdjacentToBattleShip()) {
+                count++;
+                count += countFrom(cell.getRight());
+                count += countFrom(cell.getDown());
+            }
+        }
+
+        return count;
+    }
+
 }

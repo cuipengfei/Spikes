@@ -12,4 +12,13 @@ public class SolutionTest {
         int count = new Solution().countBattleships(board);
         assertThat(count, is(0));
     }
+
+    @Test
+    public void oneDotIsNoShip() throws Exception {
+        char[][] board = new char[][]{
+                {'.'}
+        };
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(0));
+    }
 }

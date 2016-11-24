@@ -52,10 +52,14 @@ public class Cell {
         return true;
     }
 
-    public boolean isAdjacentToBattleShip() {
-        return Stream.of(left, right, up, down)
-                .filter(Cell::isValidCell)
-                .anyMatch(neighbor -> neighbor.isPartOfShip);
+    public boolean isAdjacentToBattleShip() throws NoGapBetweenShipsException {
+        Stream<Cell> neighbors = Stream.of(left, right, up, down)
+                .filter(Cell::isValidShipPart);
+
+        if (neighbors.count() > 1) {
+            throw new NoGapBetweenShipsException();
+        }
+        return neighbors.count() == 1;
     }
 
     public boolean couldBePartOfShip() {
@@ -64,5 +68,9 @@ public class Cell {
 
     public void setIsPartOfShip(boolean isPartOfShip) {
         this.isPartOfShip = isPartOfShip;
+    }
+
+    public boolean isValidShipPart() {
+        return isValidCell() && couldBePartOfShip();
     }
 }
