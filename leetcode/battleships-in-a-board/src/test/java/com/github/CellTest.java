@@ -1,9 +1,9 @@
 package com.github;
 
 import org.junit.Test;
-import org.junit.internal.runners.statements.ExpectException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CellTest {
     @Test

@@ -1,15 +1,13 @@
 package com.github;
 
 public class NotACell extends Cell {
-
-    private static NotACell notACell = new NotACell();
-
+    
     private NotACell() {
         super('.', Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
 
     public static Cell instance() {
-        return notACell;
+        return new NotACell();
     }
 
     @Override

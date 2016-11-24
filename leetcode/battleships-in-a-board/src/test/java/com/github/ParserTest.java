@@ -2,17 +2,16 @@ package com.github;
 
 import org.junit.Test;
 
-import java.util.List;
-
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class ParserTest {
 
     @Test
     public void shouldNotParseEmptyBoard() throws Exception {
         char[][] board = new char[][]{{}};
-        assertThat(Parser.boardToRootCell(board), is(NotACell.instance()));
+        assertThat(Parser.boardToRootCell(board), instanceOf(NotACell.class));
     }
 
     @Test
@@ -23,10 +22,10 @@ public class ParserTest {
 
         Cell rootCell = Parser.boardToRootCell(board);
 
-        assertThat(rootCell.getLeft(), is(NotACell.instance()));
-        assertThat(rootCell.getRight(), is(NotACell.instance()));
-        assertThat(rootCell.getUp(), is(NotACell.instance()));
-        assertThat(rootCell.getDown(), is(NotACell.instance()));
+        assertThat(rootCell.getLeft(), instanceOf(NotACell.class));
+        assertThat(rootCell.getRight(), instanceOf(NotACell.class));
+        assertThat(rootCell.getUp(), instanceOf(NotACell.class));
+        assertThat(rootCell.getDown(), instanceOf(NotACell.class));
     }
 
     @Test
