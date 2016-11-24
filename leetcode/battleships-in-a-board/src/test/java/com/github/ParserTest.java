@@ -23,7 +23,9 @@ public class ParserTest {
 
         Cell rootCell = Parser.boardToRootCell(board);
 
+        assertThat(rootCell.getLeft(), is(NotACell.instance()));
         assertThat(rootCell.getRight(), is(NotACell.instance()));
+        assertThat(rootCell.getUp(), is(NotACell.instance()));
         assertThat(rootCell.getDown(), is(NotACell.instance()));
     }
 
@@ -50,5 +52,20 @@ public class ParserTest {
 
         assertThat(rootCell.couldBePartOfShip(), is(true));
         assertThat(rootCell.getDown().couldBePartOfShip(), is(false));
+    }
+
+    @Test
+    public void shouldParseMultiRowsMultiColumnsBoard() throws Exception {
+        char[][] board = new char[][]{
+                {'X', '.'},
+                {'.', 'X'}
+        };
+
+        Cell rootCell = Parser.boardToRootCell(board);
+
+        assertThat(rootCell.couldBePartOfShip(), is(true));
+        assertThat(rootCell.getRight().couldBePartOfShip(), is(false));
+        assertThat(rootCell.getDown().couldBePartOfShip(), is(false));
+        assertThat(rootCell.getDown().getRight().couldBePartOfShip(), is(true));
     }
 }
