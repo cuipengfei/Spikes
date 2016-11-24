@@ -16,6 +16,7 @@ public class Cell {
     private Cell down;
 
     private boolean isPartOfShip;
+    private boolean visited;
 
     public Cell(char symbol, int row, int column) {
         this.symbol = symbol;
@@ -36,19 +37,19 @@ public class Cell {
     }
 
     public Cell getLeft() {
-        return left;
+        return orNotACell(left);
     }
 
     public Cell getRight() {
-        return right;
+        return orNotACell(right);
     }
 
     public Cell getUp() {
-        return up;
+        return orNotACell(up);
     }
 
     public Cell getDown() {
-        return down;
+        return orNotACell(down);
     }
 
     public void setLeft(Cell left) {
@@ -68,7 +69,7 @@ public class Cell {
     }
 
     public boolean isAdjacentToShip() throws NoGapBetweenShipsException {
-        List<Cell> neighbors = Stream.of(left, right, up, down)
+        List<Cell> neighbors = Stream.of(getLeft(), getRight(), getUp(), getDown())
                 .filter(Cell::isPartOfShip)
                 .collect(Collectors.toList());
 
@@ -86,5 +87,20 @@ public class Cell {
 
     public boolean couldBePartOfShip() {
         return symbol == 'X';
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    private Cell orNotACell(Cell cell) {
+        if (cell == null) {
+            return NotACell.instance();
+        }
+        return cell;
     }
 }

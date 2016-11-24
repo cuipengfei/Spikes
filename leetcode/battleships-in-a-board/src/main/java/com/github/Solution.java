@@ -12,10 +12,11 @@ public class Solution {
     private int countFrom(Cell cell) throws NoGapBetweenShipsException {
         int count = 0;
 
-        if (cell.isValidCell()) {
+        if (cell.isValidCell() && !cell.isVisited()) {
             count += countCell(cell);
             count += countFrom(cell.getRight());
             count += countFrom(cell.getDown());
+            cell.setVisited(true);
         }
 
         return count;
