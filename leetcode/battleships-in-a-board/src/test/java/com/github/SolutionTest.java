@@ -32,7 +32,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void cornerShip() throws Exception {
+    public void cornerShips() throws Exception {
         char[][] board = new char[][]{
                 {'X', '.'},
                 {'.', 'X'}
@@ -40,5 +40,45 @@ public class SolutionTest {
 
         int count = new Solution().countBattleships(board);
         assertThat(count, is(2));
+    }
+
+    @Test
+    public void twoRowShips() throws Exception {
+        char[][] board = new char[][]{
+                {'X', 'X', '.'},
+                {'.', '.', '.'},
+                {'.', 'X', 'X'}
+        };
+
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(2));
+    }
+
+    @Test
+    public void twoColumnShips() throws Exception {
+        char[][] board = new char[][]{
+                {'X', '.', '.'},
+                {'X', '.', 'X'},
+                {'.', '.', 'X'}
+        };
+
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(2));
+    }
+
+    @Test
+    public void bigBoard() throws Exception {
+        char[][] board = new char[][]{
+                {'X', '.', 'X', 'X'},
+                {'X', '.', '.', '.'},
+                {'X', '.', '.', 'X'},
+                {'X', '.', '.', 'X'},
+                {'X', '.', '.', '.'},
+                {'.', 'X', 'X', 'X'}
+
+        };
+
+        int count = new Solution().countBattleships(board);
+        assertThat(count, is(4));
     }
 }

@@ -14,8 +14,13 @@ public class Cell {
     private boolean isPartOfShip;
 
     private char symbol;
-    public Cell(char symbol) {
+    private final int row;
+    private final int column;
+
+    public Cell(char symbol, int row, int column) {
         this.symbol = symbol;
+        this.row = row;
+        this.column = column;
     }
 
     public boolean isPartOfShip() {
@@ -58,14 +63,20 @@ public class Cell {
         return true;
     }
 
-    public boolean isAdjacentToBattleShip() throws NoGapBetweenShipsException {
+    public boolean isAdjacentToShip() throws NoGapBetweenShipsException {
         List<Cell> neighbors = Stream.of(left, right, up, down)
-                .filter(cell -> cell.isPartOfShip).collect(Collectors.toList());
+                .filter(Cell::isPartOfShip)
+                .collect(Collectors.toList());
 
-        if (neighbors.size() > 1) {
+        if (!isStraightLine(neighbors)) {
             throw new NoGapBetweenShipsException();
         }
-        return neighbors.size() == 1;
+        return neighbors.size() > 0;
+    }
+
+    private boolean isStraightLine(List<Cell> neighbors) {
+        return neighbors.stream().allMatch(neighbor -> neighbor.row == row) ||
+                neighbors.stream().allMatch(neighbor -> neighbor.column == column);
     }
 
     public boolean couldBePartOfShip() {
@@ -76,7 +87,4 @@ public class Cell {
         this.isPartOfShip = isPartOfShip;
     }
 
-    public boolean isValidShipPart() {
-        return isValidCell() && couldBePartOfShip();
-    }
 }

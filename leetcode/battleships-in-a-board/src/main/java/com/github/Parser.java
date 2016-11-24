@@ -30,7 +30,7 @@ public class Parser {
     }
 
     private static Cell newCell(int row, int column, char[][] board, Cell[][] cells) {
-        Cell cell = new Cell(board[row][column]);
+        Cell cell = new Cell(board[row][column], row, column);
         cells[row][column] = cell;
 
         cell.setLeft(createCellAndNeighbors(row, column - 1, board, cells));

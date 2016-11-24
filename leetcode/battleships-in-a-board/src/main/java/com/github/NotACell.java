@@ -5,8 +5,7 @@ public class NotACell extends Cell {
     private static NotACell notACell = new NotACell();
 
     private NotACell() {
-        super('.');
-        setIsPartOfShip(false);
+        super('.', Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
 
     public static Cell instance() {
@@ -24,7 +23,12 @@ public class NotACell extends Cell {
     }
 
     @Override
-    public boolean isAdjacentToBattleShip() {
+    public boolean isAdjacentToShip() {
+        return false;
+    }
+
+    @Override
+    public boolean isPartOfShip() {
         return false;
     }
 }

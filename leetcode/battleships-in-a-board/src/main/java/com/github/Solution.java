@@ -15,17 +15,23 @@ public class Solution {
         int count = 0;
 
         if (cell.isValidCell()) {
-            if (cell.couldBePartOfShip()) {
-                if (!cell.isAdjacentToBattleShip() && !cell.isPartOfShip()) {
-                    cell.setIsPartOfShip(true);
-                    count++;
-                }
-            }
-
+            count += countCell(cell);
             count += countFrom(cell.getRight());
             count += countFrom(cell.getDown());
         }
 
+        return count;
+    }
+
+    private int countCell(Cell cell) throws NoGapBetweenShipsException {
+        int count = 0;
+
+        if (cell.couldBePartOfShip()) {
+            if (!cell.isAdjacentToShip() && !cell.isPartOfShip()) {
+                count = 1;
+            }
+            cell.setIsPartOfShip(true);
+        }
         return count;
     }
 
