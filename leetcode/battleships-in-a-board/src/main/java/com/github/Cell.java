@@ -16,6 +16,22 @@ public class Cell {
         this.symbol = symbol;
     }
 
+    public Cell getLeft() {
+        return left;
+    }
+
+    public Cell getRight() {
+        return right;
+    }
+
+    public Cell getUp() {
+        return up;
+    }
+
+    public Cell getDown() {
+        return down;
+    }
+
     public void setLeft(Cell left) {
         this.left = left;
     }
