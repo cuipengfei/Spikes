@@ -11,8 +11,6 @@ class Point {
     int x;
     int y;
 
-    private List<Angle> angleHistory = new ArrayList<>();
-
     Point() {
         x = 0;
         y = 0;
@@ -21,39 +19,6 @@ class Point {
     Point(int a, int b) {
         x = a;
         y = b;
-    }
-
-    public boolean hasSameHistoryWith(Point anotherPoint) {
-        for (int i = 0; i < angleHistory.size(); i++) {
-            if (angleHistory.get(i).equals(anotherPoint.angleHistory.get(i))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void addAngleHistory(Angle angle) {
-        angleHistory.add(angle);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Point point = (Point) o;
-
-        if (x != point.x) return false;
-        return y == point.y;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = x;
-        result = 31 * result + y;
-        return result;
     }
 
     @Override
@@ -164,7 +129,6 @@ class Segment {
             int gcd = GCD(xDelta, yDelta);
             angle = new Angle(yDelta / gcd, xDelta / gcd);
         }
-        b.addAngleHistory(angle);
     }
 
     private int GCD(int a, int b) {
@@ -188,9 +152,7 @@ public class Solution {
             for (int j = i + 1; j < points.length; j++) {
                 Point b = points[j];
                 Segment seg = new Segment(a, b);
-                if (a.equals(b) || !a.hasSameHistoryWith(b)) {
-                    segmentsStartWithA.add(seg);
-                }
+                segmentsStartWithA.add(seg);
             }
 
             Map<Angle, List<Segment>> sameAngleSegGroups = segmentsStartWithA.stream()
