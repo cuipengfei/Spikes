@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 class Point {
     int x;
@@ -34,6 +35,25 @@ class Point {
 
     public void addAngleHistory(Angle angle) {
         angleHistory.add(angle);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Point point = (Point) o;
+
+        if (x != point.x) return false;
+        return y == point.y;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 
     @Override
@@ -146,13 +166,13 @@ public class Solution {
             for (int j = i + 1; j < points.length; j++) {
                 Point b = points[j];
                 Segment seg = new Segment(a, b);
-                if (!a.hasSameHistoryWith(b)) {
+                if (a.equals(b) || !a.hasSameHistoryWith(b)) {
                     segmentsStartWithA.add(seg);
                 }
             }
 
             Map<Angle, List<Segment>> sameAngleSegGroups = segmentsStartWithA.stream()
-                    .collect(Collectors.groupingBy(Segment::getAngle));
+                    .collect(groupingBy(Segment::getAngle));
 
             final int samePointSegCount;
             if (sameAngleSegGroups.containsKey(new Same())) {
