@@ -93,21 +93,43 @@ class Angle {
 
 class Vertical extends Angle {
 
-    public Vertical() {
+    private static Vertical vertical;
+
+    private Vertical() {
         super(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+
+    public static Vertical instance() {
+        vertical = new Vertical();
+        return vertical;
     }
 }
 
 class Horizontal extends Angle {
 
-    public Horizontal() {
+    private static Horizontal horizontal;
+
+    private Horizontal() {
         super(Integer.MIN_VALUE, Integer.MIN_VALUE);
+    }
+
+    public static Horizontal instance() {
+        horizontal = new Horizontal();
+        return horizontal;
     }
 }
 
 class Same extends Angle {
-    public Same() {
+
+    private static Same same;
+
+    private Same() {
         super(0, 0);
+    }
+
+    public static Same instance() {
+        same = new Same();
+        return same;
     }
 }
 
@@ -133,11 +155,11 @@ class Segment {
         int yDelta = a.y - b.y;
 
         if (xDelta == 0 && yDelta == 0) {
-            angle = new Same();
+            angle = Same.instance();
         } else if (xDelta == 0) {
-            angle = new Vertical();
+            angle = Vertical.instance();
         } else if (yDelta == 0) {
-            angle = new Horizontal();
+            angle = Horizontal.instance();
         } else {
             int gcd = GCD(xDelta, yDelta);
             angle = new Angle(yDelta / gcd, xDelta / gcd);
@@ -175,8 +197,8 @@ public class Solution {
                     .collect(groupingBy(Segment::getAngle));
 
             final int samePointSegCount;
-            if (sameAngleSegGroups.containsKey(new Same())) {
-                samePointSegCount = sameAngleSegGroups.get(new Same()).size();
+            if (sameAngleSegGroups.containsKey(Same.instance())) {
+                samePointSegCount = sameAngleSegGroups.get(Same.instance()).size();
             } else {
                 samePointSegCount = 0;
             }
