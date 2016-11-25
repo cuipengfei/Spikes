@@ -1,4 +1,4 @@
-package com.github.planloop;
+package com.github.battleship.planloop;
 
 public class Solution {
     public static final char X = 'X';

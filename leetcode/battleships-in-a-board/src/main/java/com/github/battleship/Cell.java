@@ -1,4 +1,4 @@
-package com.github;
+package com.github.battleship;
 
 import java.util.List;
 import java.util.stream.Collectors;

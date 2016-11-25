@@ -1,4 +1,4 @@
-package com.github;
+package com.github.battleship;
 
 public class NoGapBetweenShipsException extends Throwable {
 }

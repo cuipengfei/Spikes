@@ -1,6 +1,6 @@
 package planloop;
 
-import com.github.planloop.Solution;
+import com.github.battleship.planloop.Solution;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
