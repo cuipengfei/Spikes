@@ -35,6 +35,11 @@ class Point {
     public void addAngleHistory(Angle angle) {
         angleHistory.add(angle);
     }
+
+    @Override
+    public String toString() {
+        return x + " " + y;
+    }
 }
 
 class Angle {
@@ -66,15 +71,23 @@ class Angle {
     }
 }
 
-class InvalidAngle extends Angle {
+class Vertical extends Angle {
 
-    public InvalidAngle() {
+    public Vertical() {
+        super(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+}
+
+class Horizontal extends Angle {
+
+    public Horizontal() {
         super(Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
+}
 
-    @Override
-    public boolean equals(Object o) {
-        return false;
+class Same extends Angle {
+    public Same() {
+        super(0, 0);
     }
 }
 
@@ -95,22 +108,20 @@ class Segment {
         return angle;
     }
 
-    public boolean isSameAngleWith(Segment anotherSeg) {
-        return angle.equals(anotherSeg.angle);
-    }
-
     private void initAngle() {
         int xDelta = a.x - b.x;
         int yDelta = a.y - b.y;
 
-        int gcd = GCD(xDelta, yDelta);
-
-        if (gcd == 0) {
-            angle = new InvalidAngle();
+        if (xDelta == 0 && yDelta == 0) {
+            angle = new Same();
+        } else if (xDelta == 0) {
+            angle = new Vertical();
+        } else if (yDelta == 0) {
+            angle = new Horizontal();
         } else {
+            int gcd = GCD(xDelta, yDelta);
             angle = new Angle(yDelta / gcd, xDelta / gcd);
         }
-
         b.addAngleHistory(angle);
     }
 
@@ -122,7 +133,11 @@ class Segment {
 
 public class Solution {
     public int maxPoints(Point[] points) {
-        int max = 0;
+        if (points.length == 0) {
+            return 0;
+        }
+
+        int max = 1;
 
         for (int i = 0; i < points.length; i++) {
             Point a = points[i];
@@ -130,23 +145,34 @@ public class Solution {
 
             for (int j = i + 1; j < points.length; j++) {
                 Point b = points[j];
-
+                Segment seg = new Segment(a, b);
                 if (!a.hasSameHistoryWith(b)) {
-                    segmentsStartWithA.add(new Segment(a, b));
+                    segmentsStartWithA.add(seg);
                 }
             }
 
             Map<Angle, List<Segment>> sameAngleSegGroups = segmentsStartWithA.stream()
                     .collect(Collectors.groupingBy(Segment::getAngle));
 
-            Optional<List<Segment>> maxSegGroup = sameAngleSegGroups.values()
-                    .stream()
-                    .max((g1, g2) -> g1.size() - g2.size());
+            final int samePointSegCount;
+            if (sameAngleSegGroups.containsKey(new Same())) {
+                samePointSegCount = sameAngleSegGroups.get(new Same()).size();
+            } else {
+                samePointSegCount = 0;
+            }
 
-            if (maxSegGroup.isPresent()) {
-                int numberOfPointInMaxSegGroup = maxSegGroup.get().size() + 1;
-                if (numberOfPointInMaxSegGroup > max) {
-                    max = numberOfPointInMaxSegGroup;
+            Optional<Integer> maxNumOptional = sameAngleSegGroups.values().stream().map(group -> {
+                if (group.get(0).getAngle() instanceof Same) {
+                    return samePointSegCount + 1;
+                }
+                return group.size() + 1 + samePointSegCount;
+            }).max((i1, i2) -> i1 - i2);
+
+            if (maxNumOptional.isPresent()) {
+                int maxNum = maxNumOptional.get();
+
+                if (maxNum > max) {
+                    max = maxNum;
                 }
             }
         }

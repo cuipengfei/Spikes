@@ -3,8 +3,6 @@ package com.github.maxpointonline;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
-import java.util.regex.Matcher;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -14,13 +12,13 @@ public class SolutionTest {
         Segment segment = new Segment(new Point(0, 0), new Point(3, 5));
         Segment anotherSegment = new Segment(new Point(0, 0), new Point(6, 10));
 
-        assertTrue(segment.isSameAngleWith(anotherSegment));
+        assertTrue(segment.getAngle().equals(anotherSegment.getAngle()));
 
 
         segment = new Segment(new Point(0, 0), new Point(3, 5));
         anotherSegment = new Segment(new Point(0, 0), new Point(7, 10));
 
-        assertFalse(segment.isSameAngleWith(anotherSegment));
+        assertFalse(segment.getAngle().equals(anotherSegment.getAngle()));
     }
 
     @Test
@@ -75,8 +73,40 @@ public class SolutionTest {
     }
 
     @Test
-    public void divideByZero() throws Exception {
-        Segment segment = new Segment(new Point(0, 0), new Point(0, 0));
-        assertThat(segment.getAngle(), CoreMatchers.instanceOf(Angle.class));
+    public void shouldHaveInvalidAngle() throws Exception {
+        Segment segment = new Segment(new Point(0, 0), new Point(0, 1));
+        assertThat(segment.getAngle(), CoreMatchers.instanceOf(Vertical.class));
+    }
+
+    @Test
+    public void onePointIsOneLine() throws Exception {
+        Solution solution = new Solution();
+
+        int maxPoints = solution.maxPoints(new Point[]{
+                new Point(5, 5)
+        });
+
+        assertThat(maxPoints, is(1));
+    }
+
+    @Test
+    public void noPointIsNoLine() throws Exception {
+        Solution solution = new Solution();
+
+        int maxPoints = solution.maxPoints(new Point[]{});
+
+        assertThat(maxPoints, is(0));
+    }
+
+    @Test
+    public void samePointShouldBeCounted() throws Exception {
+        Solution solution = new Solution();
+
+        int maxPoints = solution.maxPoints(new Point[]{
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(0, 0)});
+
+        assertThat(maxPoints, is(3));
     }
 }
