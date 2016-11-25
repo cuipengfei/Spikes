@@ -41,7 +41,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void oneStraightLine() throws Exception {
+    public void shouldCountOneStraightLine() throws Exception {
         Solution solution = new Solution();
 
         int maxPoints = solution.maxPoints(new Point[]{
@@ -51,5 +51,23 @@ public class SolutionTest {
         });
 
         assertThat(maxPoints, is(3));
+    }
+
+
+    @Test
+    public void shouldCountTwoStraightLines() throws Exception {
+        Solution solution = new Solution();
+
+        int maxPoints = solution.maxPoints(new Point[]{
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2),
+
+                new Point(2, 3),
+                new Point(3, 5),
+                new Point(4, 7)
+        });
+
+        assertThat(maxPoints, is(4));
     }
 }
