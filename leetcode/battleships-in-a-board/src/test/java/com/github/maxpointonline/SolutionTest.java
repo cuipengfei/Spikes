@@ -18,4 +18,24 @@ public class SolutionTest {
 
         assertFalse(segment.isSameAngleWith(anotherSegment));
     }
+
+    @Test
+    public void shouldCompareSamePointContactAngleHistory() throws Exception {
+        Point startPoint = new Point(0, 0);
+        Point point1 = new Point(3, 5);
+        Point point2 = new Point(6, 10);
+
+        new Segment(startPoint, point1);
+        new Segment(startPoint, point2);
+
+        assertTrue(point1.hasSameHistoryWith(point2));
+
+        point1 = new Point(3, 5);
+        point2 = new Point(7, 10);
+
+        new Segment(startPoint, point1);
+        new Segment(startPoint, point2);
+
+        assertFalse(point1.hasSameHistoryWith(point2));
+    }
 }

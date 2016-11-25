@@ -1,8 +1,13 @@
 package com.github.maxpointonline;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Point {
     int x;
     int y;
+
+    private List<Angle> angleHistory = new ArrayList<>();
 
     Point() {
         x = 0;
@@ -12,6 +17,20 @@ class Point {
     Point(int a, int b) {
         x = a;
         y = b;
+    }
+
+    public boolean hasSameHistoryWith(Point anotherPoint) {
+        for (int i = 0; i < angleHistory.size(); i++) {
+            if (angleHistory.get(i).isSameWith(anotherPoint.angleHistory.get(i))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void addAngleHistory(Angle angle) {
+        angleHistory.add(angle);
     }
 }
 
@@ -53,6 +72,8 @@ class Segment {
         int gcd = GCD(xDelta, yDelta);
 
         angle = new Angle(yDelta / gcd, xDelta / gcd);
+
+        b.addAngleHistory(angle);
     }
 
     private int GCD(int a, int b) {
