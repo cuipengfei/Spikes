@@ -66,6 +66,18 @@ class Angle {
     }
 }
 
+class InvalidAngle extends Angle {
+
+    public InvalidAngle() {
+        super(Integer.MIN_VALUE, Integer.MIN_VALUE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return false;
+    }
+}
+
 class Segment {
     private final Point a;
     private final Point b;
@@ -93,7 +105,11 @@ class Segment {
 
         int gcd = GCD(xDelta, yDelta);
 
-        angle = new Angle(yDelta / gcd, xDelta / gcd);
+        if (gcd == 0) {
+            angle = new InvalidAngle();
+        } else {
+            angle = new Angle(yDelta / gcd, xDelta / gcd);
+        }
 
         b.addAngleHistory(angle);
     }

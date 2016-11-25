@@ -1,6 +1,9 @@
 package com.github.maxpointonline;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
+
+import java.util.regex.Matcher;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -69,5 +72,11 @@ public class SolutionTest {
         });
 
         assertThat(maxPoints, is(4));
+    }
+
+    @Test
+    public void divideByZero() throws Exception {
+        Segment segment = new Segment(new Point(0, 0), new Point(0, 0));
+        assertThat(segment.getAngle(), CoreMatchers.instanceOf(Angle.class));
     }
 }
