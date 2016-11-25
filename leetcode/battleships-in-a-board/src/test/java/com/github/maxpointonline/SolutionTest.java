@@ -2,6 +2,7 @@ package com.github.maxpointonline;
 
 import org.junit.Test;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class SolutionTest {
@@ -37,5 +38,18 @@ public class SolutionTest {
         new Segment(startPoint, point2);
 
         assertFalse(point1.hasSameHistoryWith(point2));
+    }
+
+    @Test
+    public void oneStraightLine() throws Exception {
+        Solution solution = new Solution();
+
+        int maxPoints = solution.maxPoints(new Point[]{
+                new Point(0, 0),
+                new Point(1, 1),
+                new Point(2, 2)
+        });
+
+        assertThat(maxPoints, is(3));
     }
 }
