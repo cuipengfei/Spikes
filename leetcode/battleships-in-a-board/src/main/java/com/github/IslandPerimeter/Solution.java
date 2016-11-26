@@ -3,6 +3,7 @@ package com.github.IslandPerimeter;
 public class Solution {
     public int islandPerimeter(int[][] grid) {
         int totalRows = grid.length;
+
         if (totalRows == 0) {
             return 0;
         } else {
@@ -22,12 +23,10 @@ public class Solution {
     }
 
     private int neighborLands(int i, int j, int[][] grid, int totalRows, int totalColumns) {
-        boolean isLeftLand = isLand(i, j - 1, grid, totalRows, totalColumns);
-        boolean isRightLand = isLand(i, j + 1, grid, totalRows, totalColumns);
-        boolean isUpLand = isLand(i - 1, j, grid, totalRows, totalColumns);
-        boolean isDownLand = isLand(i + 1, j, grid, totalRows, totalColumns);
-
-        return boolToInt(isLeftLand) + boolToInt(isRightLand) + boolToInt(isUpLand) + boolToInt(isDownLand);
+        return boolToInt(isLand(i, j - 1, grid, totalRows, totalColumns)) +
+                boolToInt(isLand(i, j + 1, grid, totalRows, totalColumns)) +
+                boolToInt(isLand(i - 1, j, grid, totalRows, totalColumns)) +
+                boolToInt(isLand(i + 1, j, grid, totalRows, totalColumns));
     }
 
     private int boolToInt(boolean b) {
