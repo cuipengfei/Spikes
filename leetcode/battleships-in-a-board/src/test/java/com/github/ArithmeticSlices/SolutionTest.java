@@ -21,16 +21,23 @@ public class SolutionTest {
     }
 
     @Test
-    public void FiveContinuousIs7() throws Exception {
+    public void FiveContinuousIs6() throws Exception {
         Solution solution = new Solution();
         int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 5});
-        assertThat(slices, is(7));
+        assertThat(slices, is(6));
+    }
+
+    @Test
+    public void sixContinuousIs10() throws Exception {
+        Solution solution = new Solution();
+        int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 5, 6});
+        assertThat(slices, is(10));
     }
 
     @Test
     public void shouldHandleSeparation() throws Exception {
         Solution solution = new Solution();
         int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 5, 100, 1, 2, 3, 4, 5});
-        assertThat(slices, is(14));
+        assertThat(slices, is(12));
     }
 }

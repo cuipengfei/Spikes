@@ -36,14 +36,7 @@ public class Solution {
         if (continuous < 3) {
             return 0;
         } else {
-            int slices = 1;
-            int times = continuous - 3;
-
-            for (int i = 0; i < times; i++) {
-                slices = slices * 2 + 1;
-            }
-
-            return slices;
+            return (continuous - 1) * (continuous - 2) / 2;
         }
     }
 }
