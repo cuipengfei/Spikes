@@ -26,4 +26,11 @@ public class SolutionTest {
         int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 5});
         assertThat(slices, is(7));
     }
+
+    @Test
+    public void shouldHandleSeparation() throws Exception {
+        Solution solution = new Solution();
+        int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 5, 100, 1, 2, 3, 4, 5});
+        assertThat(slices, is(14));
+    }
 }
