@@ -19,4 +19,11 @@ public class SolutionTest {
         int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4});
         assertThat(slices, is(3));
     }
+
+    @Test
+    public void FiveContinuousIs7() throws Exception {
+        Solution solution = new Solution();
+        int slices = solution.numberOfArithmeticSlices(new int[]{1, 2, 3, 4, 5});
+        assertThat(slices, is(7));
+    }
 }
