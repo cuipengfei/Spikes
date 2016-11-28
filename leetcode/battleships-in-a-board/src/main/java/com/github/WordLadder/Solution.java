@@ -3,120 +3,98 @@ package com.github.WordLadder;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
+
 class Node<T> {
-    private T data;
-    private Node<T> parent;
-    private List<Node<T>> children = new ArrayList<>();
+    T data;
+    Node<T> parent;
 
     public Node(T data, Node<T> parent) {
         this.data = data;
         this.parent = parent;
-        if (parent != null) {
-            this.parent.addChild(this);
-        }
-    }
-
-    public void addChild(Node<T> node) {
-        children.add(node);
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public Node<T> getParent() {
-        return parent;
     }
 }
 
 class NewLevelResult {
     boolean isFound;
-    List<Node<String>> nodes;
+    List<Node<String>> leaves;
 
     public NewLevelResult(boolean isFound, List<Node<String>> node) {
         this.isFound = isFound;
-        this.nodes = node;
+        this.leaves = node;
     }
 }
 
 public class Solution {
-
     boolean isFound = false;
 
     public List<List<String>> findLadders(String beginWord, String endWord, Set<String> wordList) {
         wordList.remove(endWord);
 
         if (isOneLetterDiff(beginWord, endWord)) {
-            return Collections.singletonList(Arrays.asList(beginWord, endWord));
+            return singletonList(Arrays.asList(beginWord, endWord));
         } else {
-            Node<String> root = new Node<>(beginWord, null);
-            List<Node<String>> leaves = Arrays.asList(root);
+            Node<String> root = new Node<>(endWord, null);
+            List<Node<String>> leaves = singletonList(root);
+
             while (!isFound) {
+                leaves = goOneLevelDeeperForEach(leaves, beginWord, wordList);
                 if (leaves.size() == 0) {
                     break;
                 }
-                leaves = goOneLevelDeeperForEach(leaves, endWord, wordList);
             }
 
             return leaves.stream()
-                    .map(step -> allWords(step, endWord))
+                    .map(step -> allWords(step, beginWord))
                     .collect(Collectors.toList());
         }
     }
 
+    int i = 0;
+
     private List<Node<String>> goOneLevelDeeperForEach(List<Node<String>> nodes, String endWord, Set<String> wordList) {
         for (Node<String> node : nodes) {
-            wordList.remove(node.getData());//avoid re-counting siblings
+            wordList.remove(node.data);//avoid re-counting siblings
         }
 
-        List<Node<String>> foundNodes = new ArrayList<>();
-        List<Node<String>> noneFoundNodes = new ArrayList<>();
+        List<NewLevelResult> results = nodes.parallelStream()
+                .map(node -> goOneLevelDeeper(node, endWord, wordList))
+                .collect(Collectors.toList());
 
-        for (Node<String> node : nodes) {
-            NewLevelResult newLevelResult = goOneLevelDeeper(node, endWord, wordList);
-            if (newLevelResult.isFound) {
-                isFound = true;
-                foundNodes.addAll(newLevelResult.nodes);
-            }
-            noneFoundNodes.addAll(newLevelResult.nodes);
-        }
-
-        if (isFound) {
-            return foundNodes;
+        if (results.stream().anyMatch(res -> res.isFound)) {
+            isFound = true;
+            return results.stream()
+                    .filter(res -> res.isFound)
+                    .flatMap(res -> res.leaves.stream())
+                    .collect(Collectors.toList());
         } else {
-            return noneFoundNodes;
+            return results.stream()
+                    .flatMap(res -> res.leaves.stream())
+                    .collect(Collectors.toList());
         }
     }
 
-    private NewLevelResult goOneLevelDeeper(Node<String> node, String endWord, Set<String> wordList) {
-        List<Node<String>> nextSteps = new ArrayList<>();
-        List<Node<String>> lastSteps = new ArrayList<>();
-
-        for (String word : wordList) {
-            if (isOneLetterDiff(node.getData(), word)) {
-                Node<String> newNode = new Node<>(word, node);
-                nextSteps.add(newNode);
-                if (isOneLetterDiff(endWord, word)) {
-                    lastSteps.add(newNode);
-                }
-            }
-        }
-
-        if (lastSteps.size() > 0) {
-            return new NewLevelResult(true, lastSteps);
+    private static NewLevelResult goOneLevelDeeper(Node<String> node, String endWord, Set<String> wordList) {
+        if (isOneLetterDiff(node.data, endWord)) {
+            Node<String> end = new Node<>(endWord, node);
+            return new NewLevelResult(true, singletonList(end));
         } else {
+            List<Node<String>> nextSteps = wordList.stream()
+                    .filter(w -> isOneLetterDiff(w, node.data))
+                    .map(w -> new Node<>(w, node))
+                    .collect(Collectors.toList());
             return new NewLevelResult(false, nextSteps);
         }
     }
 
-    private List<String> allWords(Node<String> step, String endWord) {
+    private static List<String> allWords(Node<String> step, String endWord) {
         List<String> strs = new ArrayList<>();
-        while (step.getParent() != null) {
-            strs.add(0, step.getData());
-            step = step.getParent();
+        while (step.parent != null) {
+            strs.add(step.data);
+            step = step.parent;
         }
-        strs.add(0, step.getData());//add root
-        strs.add(strs.size(), endWord);
+        strs.add(step.data);//add root
+        strs.add(0, endWord);
         return strs;
     }
 
