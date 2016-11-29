@@ -19,4 +19,18 @@ public class SolutionTest {
         int i = solution.maxDepth(new TreeNode(1));
         assertThat(i, is(1));
     }
+
+    @Test
+    public void shouldFindOneChildLonger() throws Exception {
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.left.left = new TreeNode(3);
+
+        root.right = new TreeNode(4);
+
+        Solution solution = new Solution();
+        int i = solution.maxDepth(root);
+
+        assertThat(i, is(3));
+    }
 }
