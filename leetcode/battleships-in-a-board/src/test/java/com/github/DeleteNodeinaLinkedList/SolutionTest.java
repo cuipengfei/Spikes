@@ -34,4 +34,16 @@ public class SolutionTest {
         assertThat(root.next.next.val, is(3));
         assertThat(root.next.next.next.val, is(4));
     }
+
+    @Test
+    public void shouldDeleteSecondToLast() throws Exception {
+        ListNode secondToLast = root.next.next;
+
+        Solution solution = new Solution();
+        solution.deleteNode(secondToLast);
+
+        assertThat(root.val, is(1));
+        assertThat(root.next.val, is(2));
+        assertThat(root.next.next.val, is(4));
+    }
 }
