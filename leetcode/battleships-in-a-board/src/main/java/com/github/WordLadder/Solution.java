@@ -45,7 +45,7 @@ public class Solution {
             }
 
             return leaves.stream()
-                    .map(step -> allWords(step, beginWord))
+                    .map(step -> allWords(step))
                     .collect(Collectors.toList());
         }
     }
@@ -87,7 +87,7 @@ public class Solution {
         }
     }
 
-    private static List<String> allWords(Node<String> step, String endWord) {
+    private static List<String> allWords(Node<String> step) {
         List<String> strs = new ArrayList<>();
         while (step.parent != null) {
             strs.add(step.data);
