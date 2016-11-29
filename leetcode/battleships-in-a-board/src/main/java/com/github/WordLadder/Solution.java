@@ -94,7 +94,6 @@ public class Solution {
             step = step.parent;
         }
         strs.add(step.data);//add root
-//        strs.add(0, endWord);
         return strs;
     }
 
