@@ -1,6 +1,9 @@
 package com.github.WordLadder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -45,12 +48,10 @@ public class Solution {
             }
 
             return leaves.stream()
-                    .map(step -> allWords(step))
+                    .map(Solution::allWords)
                     .collect(Collectors.toList());
         }
     }
-
-    int i = 0;
 
     private List<Node<String>> goOneLevelDeeperForEach(List<Node<String>> nodes, String endWord, Set<String> wordList) {
         for (Node<String> node : nodes) {
@@ -114,9 +115,11 @@ public class Solution {
         List<String> diffs = new ArrayList<>();
         for (int i = 0; i < word.length(); i++) {
             for (char c = 'a'; c <= 'z'; c++) {
-                StringBuilder sb = new StringBuilder(word);
-                sb.setCharAt(i, c);
-                diffs.add(sb.toString());
+                if (c != word.charAt(i)) {
+                    StringBuilder sb = new StringBuilder(word);
+                    sb.setCharAt(i, c);
+                    diffs.add(sb.toString());
+                }
             }
         }
         return diffs;
