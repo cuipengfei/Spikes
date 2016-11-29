@@ -79,8 +79,8 @@ public class Solution {
             Node<String> end = new Node<>(endWord, node);
             return new NewLevelResult(true, singletonList(end));
         } else {
-            List<Node<String>> nextSteps = wordList.stream()
-                    .filter(w -> isOneLetterDiff(w, node.data))
+            List<Node<String>> nextSteps = oneLetterDiffsOf(node.data).stream()
+                    .filter(wordList::contains)
                     .map(w -> new Node<>(w, node))
                     .collect(Collectors.toList());
             return new NewLevelResult(false, nextSteps);
@@ -94,7 +94,7 @@ public class Solution {
             step = step.parent;
         }
         strs.add(step.data);//add root
-        strs.add(0, endWord);
+//        strs.add(0, endWord);
         return strs;
     }
 
@@ -109,5 +109,17 @@ public class Solution {
             }
         }
         return diffs == 1;
+    }
+
+    private static List<String> oneLetterDiffsOf(String word) {
+        List<String> diffs = new ArrayList<>();
+        for (int i = 0; i < word.length(); i++) {
+            for (char c = 'a'; c <= 'z'; c++) {
+                StringBuilder sb = new StringBuilder(word);
+                sb.setCharAt(i, c);
+                diffs.add(sb.toString());
+            }
+        }
+        return diffs;
     }
 }

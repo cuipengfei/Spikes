@@ -29,8 +29,8 @@ public class SolutionTest {
         List<List<String>> ladders = solution.findLadders("hit", "cog",
                 new HashSet<>(Arrays.asList("hot", "cog", "dot", "dog", "hit", "lot", "log")));
 
-        assertThat(ladders.get(0), hasItems("hit", "hot", "lot", "log", "cog"));
-        assertThat(ladders.get(1), hasItems("hit", "hot", "dot", "dog", "cog"));
+        assertThat(ladders.get(0), hasItems("hit", "hot", "dot", "dog", "cog"));
+        assertThat(ladders.get(1), hasItems("hit", "hot", "lot", "log", "cog"));
     }
 
     @Test
@@ -40,8 +40,8 @@ public class SolutionTest {
         List<List<String>> ladders = solution.findLadders("git", "php",
                 new HashSet<>(Arrays.asList("gip", "pip", "pit")));
 
-        assertThat(ladders.get(0), hasItems("git", "pit", "pip", "php"));
-        assertThat(ladders.get(1), hasItems("git", "gip", "pip", "php"));
+        assertThat(ladders.get(0), hasItems("git", "gip", "pip", "php"));
+        assertThat(ladders.get(1), hasItems("git", "pit", "pip", "php"));
     }
 
     @Test
@@ -71,8 +71,8 @@ public class SolutionTest {
         List<List<String>> ladders = solution.findLadders("kiss", "tusk",
                 new HashSet<>(Arrays.asList("kiss", "diss", "disk", "dusk", "tusk", "miss", "muss", "musk")));
 
-        assertThat(ladders.get(0), hasItems("kiss", "miss", "muss", "musk", "tusk"));
-        assertThat(ladders.get(1), hasItems("kiss", "diss", "disk", "dusk", "tusk"));
+        assertThat(ladders.get(0), hasItems("kiss", "diss", "disk", "dusk", "tusk"));
+        assertThat(ladders.get(1), hasItems("kiss", "miss", "muss", "musk", "tusk"));
     }
 
     @Test
@@ -82,9 +82,9 @@ public class SolutionTest {
         List<List<String>> ladders = solution.findLadders("cat", "fin",
                 new HashSet<>(Arrays.asList("cat", "fat", "fit", "fin", "fan", "can", "mat", "mit")));
 
-        assertThat(ladders.get(0), hasItems("cat", "fat", "fit", "fin"));
-        assertThat(ladders.get(1), hasItems("cat", "can", "fan", "fin"));
-        assertThat(ladders.get(2), hasItems("cat", "fat", "fan", "fin"));
+        assertThat(ladders.get(0), hasItems("cat", "can", "fan", "fin"));
+        assertThat(ladders.get(1), hasItems("cat", "fat", "fan", "fin"));
+        assertThat(ladders.get(2), hasItems("cat", "fat", "fit", "fin"));
     }
 
     @Test
