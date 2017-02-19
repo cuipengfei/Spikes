@@ -22,12 +22,20 @@ public class Frame {
 
   public int countScore() {
     if (isStrike) {
-      return ownScore + nextFrame.roll1 + nextFrame.roll2;
+      return ownScore + nextFrame.roll1 + nextNextRoll();
     }
     if (isSpare) {
       return ownScore + nextFrame.roll1;
     } else {
       return ownScore;
+    }
+  }
+
+  private int nextNextRoll() {
+    if (nextFrame.isStrike) {
+      return nextFrame.nextFrame.roll1;
+    } else {
+      return nextFrame.roll2;
     }
   }
 
