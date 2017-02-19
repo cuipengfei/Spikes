@@ -22,24 +22,28 @@ public class Frame {
 
   public int countScore() {
     if (isStrike) {
-      return ownScore + nextFrame.roll1 + nextNextRoll();
+      return ownScore + nextRoll() + nextNextRoll();
     }
     if (isSpare) {
-      return ownScore + nextFrame.roll1;
+      return ownScore + nextRoll();
     } else {
       return ownScore;
     }
   }
 
+  public void setNext(Frame nextFrame) {
+    this.nextFrame = nextFrame;
+  }
+
+  private int nextRoll() {
+    return nextFrame.roll1;
+  }
+
   private int nextNextRoll() {
     if (nextFrame.isStrike) {
-      return nextFrame.nextFrame.roll1;
+      return nextFrame.nextRoll();
     } else {
       return nextFrame.roll2;
     }
-  }
-
-  public void setNext(Frame nextFrame) {
-    this.nextFrame = nextFrame;
   }
 }
