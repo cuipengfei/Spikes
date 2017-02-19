@@ -40,10 +40,14 @@ public class Frame {
   }
 
   private int nextNextRoll() {
-    if (nextFrame.isStrike) {
+    if (nextFrame.isStrike && nextFrame.hasNextFrame()) {
       return nextFrame.nextRoll();
     } else {
       return nextFrame.roll2;
     }
+  }
+
+  private boolean hasNextFrame() {
+    return nextFrame != null;
   }
 }
