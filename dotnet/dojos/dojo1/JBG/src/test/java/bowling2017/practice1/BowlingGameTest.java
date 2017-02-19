@@ -19,12 +19,34 @@ public class BowlingGameTest {
     bowlingGame.play(1, 2);//3
     bowlingGame.play(10, 0);//21
     bowlingGame.play(10, 0);//13
-    bowlingGame.play(1, 2);//3
+    bowlingGame.play(1, 2, 0);//3
 
     //when
     int score = bowlingGame.countScore();
 
     //then
     assertThat(score, is(100));
+  }
+
+  @Test
+  public void shouldCountScoreOfPerfectGame() throws Exception {
+    //given
+    BowlingGame bowlingGame = new BowlingGame();
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 0);
+    bowlingGame.play(10, 10, 10);
+
+    //when
+    int score = bowlingGame.countScore();
+
+    //then
+    assertThat(score, is(300));
   }
 }
