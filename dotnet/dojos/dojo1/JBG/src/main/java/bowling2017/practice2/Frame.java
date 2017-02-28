@@ -3,9 +3,11 @@ package bowling2017.practice2;
 public class Frame {
   private final int roll1;
   private final int roll2;
+
   private final boolean isStrike;
-  protected int ownScore;
   private final boolean isSpare;
+
+  protected int ownScore;
 
   private Frame next;
 
@@ -14,8 +16,9 @@ public class Frame {
     this.roll2 = roll2;
 
     ownScore = roll1 + roll2;
+
     isStrike = roll1 == 10;
-    isSpare = !isStrike && roll1 + roll2 == 10;
+    isSpare = !isStrike && ownScore == 10;
   }
 
   public void setNext(Frame next) {
@@ -27,13 +30,12 @@ public class Frame {
   }
 
   private int countBonus() {
-    int bonus = 0;
     if (isSpare) {
-      bonus = next.roll1;
+      return next.roll1;
     } else if (isStrike) {
-      bonus = next.roll1 + getNextNextRoll();
+      return next.roll1 + getNextNextRoll();
     }
-    return bonus;
+    return 0;
   }
 
   private int getNextNextRoll() {
