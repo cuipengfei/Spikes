@@ -37,7 +37,7 @@ public class Frame {
   }
 
   private int getNextNextRoll() {
-    if (next.isStrike) {
+    if (next.isStrike && next.next != null) {
       return next.next.roll1;
     } else {
       return next.roll2;

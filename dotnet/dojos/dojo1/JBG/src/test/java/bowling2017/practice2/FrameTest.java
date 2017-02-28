@@ -47,4 +47,17 @@ public class FrameTest {
 
     assertThat(score, is(24));
   }
+
+  @Test
+  public void frameShouldCountBonusScoreForStrikeWhen2ContinuousStrikesAndSecondStrikeIsLastFrame()
+      throws Exception {
+    Frame frame = new Frame(10, 0);
+    Frame frame2 = new Frame(10, 1);
+    frame.setNext(frame2);
+
+    int score = frame.countScore();
+
+    assertThat(score, is(21));
+  }
+
 }
