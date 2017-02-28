@@ -4,7 +4,7 @@ public class Frame {
   private final int roll1;
   private final int roll2;
   private final boolean isStrike;
-  private int ownScore;
+  protected int ownScore;
   private final boolean isSpare;
 
   private Frame next;
