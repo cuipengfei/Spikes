@@ -21,13 +21,17 @@ public class Frame {
   }
 
   public int countScore() {
+    return ownScore + calculateBonus();
+  }
+
+  private int calculateBonus() {
+    int bonus = 0;
     if (isSpare) {
-      return ownScore + next.roll1;
+      bonus = next.roll1;
     } else if (isStrike) {
-      return ownScore + next.roll1 + next.roll2;
-    } else {
-      return ownScore;
+      bonus = next.roll1 + next.roll2;
     }
+    return bonus;
   }
 
   public void setNext(Frame next) {
