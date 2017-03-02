@@ -3,12 +3,13 @@ package bowling2017.livedemo;
 public class Frame {
   private final int roll1;
   private final int roll2;
-  private final int ownScore;
 
-  private Frame next;
+  private final int ownScore;
 
   private final boolean isStrike;
   private final boolean isSpare;
+
+  private Frame next;
 
   public Frame(int roll1, int roll2) {
     this.roll1 = roll1;
