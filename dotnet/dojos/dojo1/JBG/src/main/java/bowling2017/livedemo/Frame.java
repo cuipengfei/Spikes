@@ -3,6 +3,7 @@ package bowling2017.livedemo;
 public class Frame {
   private final int roll1;
   private final int roll2;
+  private final int ownScore;
 
   private Frame next;
 
@@ -12,14 +13,16 @@ public class Frame {
     this.roll1 = roll1;
     this.roll2 = roll2;
 
-    isSpare = roll1 + roll2 == 10;
+    ownScore = roll1 + roll2;
+
+    isSpare = ownScore == 10;
   }
 
   public int countScore() {
     if (isSpare) {
-      return roll1 + roll2 + next.roll1;
+      return ownScore + next.roll1;
     } else {
-      return roll1 + roll2;
+      return ownScore;
     }
   }
 
