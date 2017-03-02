@@ -29,7 +29,11 @@ public class Frame {
     if (isSpare) {
       bonus = next.roll1;
     } else if (isStrike) {
-      bonus = next.roll1 + next.roll2;
+      if (next.isStrike) {
+        bonus = next.roll1 + next.next.roll1;
+      } else {
+        bonus = next.roll1 + next.roll2;
+      }
     }
     return bonus;
   }
