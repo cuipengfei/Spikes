@@ -7,6 +7,7 @@ public class Frame {
 
   private Frame next;
 
+  private final boolean isStrike;
   private final boolean isSpare;
 
   public Frame(int roll1, int roll2) {
@@ -15,12 +16,15 @@ public class Frame {
 
     ownScore = roll1 + roll2;
 
-    isSpare = ownScore == 10;
+    isStrike = roll1 == 10;
+    isSpare = !isStrike && ownScore == 10;
   }
 
   public int countScore() {
     if (isSpare) {
       return ownScore + next.roll1;
+    } else if (isStrike) {
+      return ownScore + next.roll1 + next.roll2;
     } else {
       return ownScore;
     }
