@@ -29,13 +29,17 @@ public class Frame {
     if (isSpare) {
       bonus = next.roll1;
     } else if (isStrike) {
-      if (next.isStrike) {
-        bonus = next.roll1 + next.next.roll1;
-      } else {
-        bonus = next.roll1 + next.roll2;
-      }
+      bonus = next.roll1 + nextNextRoll();
     }
     return bonus;
+  }
+
+  private int nextNextRoll() {
+    if (next.isStrike) {
+      return next.next.roll1;
+    } else {
+      return next.roll2;
+    }
   }
 
   public void setNext(Frame next) {
