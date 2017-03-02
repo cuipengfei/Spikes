@@ -35,12 +35,8 @@ public class Frame {
   }
 
   private int nextNextRoll() {
-    if (next.isStrike) {
-      if (next.next == null) {
-        return next.roll2;
-      } else {
-        return next.next.roll1;
-      }
+    if (next.isStrike && next.next != null) {
+      return next.next.roll1;
     } else {
       return next.roll2;
     }
