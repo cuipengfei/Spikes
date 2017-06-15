@@ -21,26 +21,26 @@ class QuickCheckSuite extends FunSuite with Checkers {
   }
 
   test("Binomial heap satisfies properties.") {
-    check(new QuickCheckHeap with quickcheck.test.BinomialHeap)
+    check(new QuickCheckHeap with quickcheck.BinomialHeap)
   }
 
   test("Bogus (1) binomial heap does not satisfy properties.") {
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus1BinomialHeap)
+    checkBogus(new QuickCheckHeap with quickcheck.Bogus1BinomialHeap)
   }
 
   test("Bogus (2) binomial heap does not satisfy properties.") {
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus2BinomialHeap)
+    checkBogus(new QuickCheckHeap with quickcheck.Bogus2BinomialHeap)
   }
 
   test("Bogus (3) binomial heap does not satisfy properties.") {
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus3BinomialHeap)
+    checkBogus(new QuickCheckHeap with quickcheck.Bogus3BinomialHeap)
   }
 
   test("Bogus (4) binomial heap does not satisfy properties.") {
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus4BinomialHeap)
+    checkBogus(new QuickCheckHeap with quickcheck.Bogus4BinomialHeap)
   }
 
   test("Bogus (5) binomial heap does not satisfy properties.") {
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus5BinomialHeap)
+    checkBogus(new QuickCheckHeap with quickcheck.Bogus5BinomialHeap)
   }
 }
