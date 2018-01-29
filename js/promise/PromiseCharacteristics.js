@@ -93,10 +93,12 @@ function sayHello() {
             throw reason + " the first chain rethrows the error";
         });
 
-        var chain2 = promiseOfHello.then(function (value) {
+        var chain2 = promiseOfHello.then(
+        function (value) {
             console.log(chalk.green(index + " this is the second chain"));
             return value + " (this is from the second chain)";
-        }, function (reason) {
+        },
+        function (reason) {
             console.log(chalk.red(index + " this is the second chain"));
             return reason + " the second chain returns the error";
         });
@@ -120,4 +122,4 @@ function sayHello() {
     //1. 每次调用then会形成一个新的支链
     //2. 支链之间是互不干扰的
     //3. onRejected如果返回一个值,会导致它的下一个onFulfilled被调用
-})();
+});
