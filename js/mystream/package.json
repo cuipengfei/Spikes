@@ -1,0 +1,15 @@
+{
+  "name": "mystream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "list.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "4.17.4",
+    "most": "1.7.2"
+  }
+}
