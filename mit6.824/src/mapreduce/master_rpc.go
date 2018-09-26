@@ -38,11 +38,11 @@ func (master *Master) startRPCServer() {
 				break loop
 			default:
 			}
-			conn, err := master.listener.Accept()
+			connection, err := master.listener.Accept()
 			if err == nil {
 				go func() {
-					rpcs.ServeConn(conn)
-					conn.Close()
+					rpcs.ServeConn(connection)
+					connection.Close()
 				}()
 			} else {
 				debug("RegistrationServer: accept err", err)
