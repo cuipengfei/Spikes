@@ -12,7 +12,7 @@ import (
 func (master *Master) Shutdown(_, _ *struct{}) error {
 	debug("Shutdown: registration server\n")
 	close(master.shutdown)
-	master.l.Close() // causes the Accept to fail
+	master.listener.Close() // causes the Accept to fail
 	return nil
 }
 
@@ -22,11 +22,11 @@ func (master *Master) startRPCServer() {
 	rpcs := rpc.NewServer()
 	rpcs.Register(master)
 	os.Remove(master.address) // only needed for "unix"
-	l, e := net.Listen("unix", master.address)
-	if e != nil {
-		log.Fatal("RegstrationServer", master.address, " error: ", e)
+	listener, error := net.Listen("unix", master.address)
+	if error != nil {
+		log.Fatal("RegstrationServer", master.address, " error: ", error)
 	}
-	master.l = l
+	master.listener = listener
 
 	// now that we are listening on the master address, can fork off
 	// accepting connections to another thread.
@@ -38,7 +38,7 @@ func (master *Master) startRPCServer() {
 				break loop
 			default:
 			}
-			conn, err := master.l.Accept()
+			conn, err := master.listener.Accept()
 			if err == nil {
 				go func() {
 					rpcs.ServeConn(conn)

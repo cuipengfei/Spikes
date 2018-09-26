@@ -27,7 +27,7 @@ type Master struct {
 	nReduce int      // Number of reduce partitions
 
 	shutdown chan struct{}
-	l        net.Listener
+	listener net.Listener
 	stats    []int
 }
 
