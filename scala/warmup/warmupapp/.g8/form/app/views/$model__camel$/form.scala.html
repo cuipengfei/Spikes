@@ -5,8 +5,8 @@
 @request.flash.get("success").getOrElse("")
 
 @helper.form(action = routes.$model;format="Camel"$Controller.$model;format="camel"$Post()) {
-  @helper.CSRF.formField
-  @helper.inputText($model;format="camel"$Form("name"))
-  @helper.inputText($model;format="camel"$Form("age"))
-  <input type="submit" value="submit"/>
+@helper.CSRF.formField
+@helper.inputText($model;format="camel"$Form("name"))
+@helper.inputText($model;format="camel"$Form("age"))
+<input type="submit" value="submit"/>
 }
