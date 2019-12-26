@@ -36,9 +36,9 @@ object Async extends AsyncInterface {
     * second asynchronous computations, paired together.
     */
   def sequenceComputations[A, B](
-    makeAsyncComputation1: () => Future[A],
-    makeAsyncComputation2: () => Future[B]
-  ): Future[(A, B)] =
+                                  makeAsyncComputation1: () => Future[A],
+                                  makeAsyncComputation2: () => Future[B]
+                                ): Future[(A, B)] =
     ???
 
   /**
@@ -48,9 +48,9 @@ object Async extends AsyncInterface {
     * If one of them fails, this method should return the failure.
     */
   def concurrentComputations[A, B](
-    makeAsyncComputation1: () => Future[A],
-    makeAsyncComputation2: () => Future[B]
-  ): Future[(A, B)] =
+                                    makeAsyncComputation1: () => Future[A],
+                                    makeAsyncComputation2: () => Future[B]
+                                  ): Future[(A, B)] =
     ???
 
   /**
@@ -64,10 +64,11 @@ object Async extends AsyncInterface {
 
   /**
     * Turns a callback-based API into a Future-based API
+    *
     * @return A `FutureBasedApi` that forwards calls to `computeIntAsync` to the `callbackBasedApi`
     *         and returns its result in a `Future` value
     *
-    * Hint: Use a `Promise`
+    *         Hint: Use a `Promise`
     */
   def futurize(callbackBasedApi: CallbackBasedApi): FutureBasedApi =
     ???

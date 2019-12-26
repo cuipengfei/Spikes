@@ -83,7 +83,9 @@ class AsyncSuite {
     val eventuallyResult =
       sequenceComputations(
         () => Future.failed(new Exception),
-        () => Future.successful { counter.incrementAndGet(); () }
+        () => Future.successful {
+          counter.incrementAndGet(); ()
+        }
       )
     Await.ready(eventuallyResult, 100.milliseconds)
     assertEquals(0, counter.get())
@@ -104,7 +106,9 @@ class AsyncSuite {
   @Test def `insist should not retry successful computations (3pts)`(): Unit = {
     val counter = new AtomicInteger(0)
     val eventuallyResult =
-      insist(() => Future { counter.incrementAndGet() }, maxAttempts = 3)
+      insist(() => Future {
+        counter.incrementAndGet()
+      }, maxAttempts = 3)
     Await.ready(eventuallyResult, 100.milliseconds).value.get
     assertEquals(1, counter.get())
   }
@@ -113,7 +117,9 @@ class AsyncSuite {
     val counter = new AtomicInteger(0)
     val eventuallyResult =
       insist(
-        () => Future { counter.incrementAndGet(); throw new Exception },
+        () => Future {
+          counter.incrementAndGet(); throw new Exception
+        },
         maxAttempts = 3
       )
     Await.ready(eventuallyResult, 200.milliseconds).value.get
