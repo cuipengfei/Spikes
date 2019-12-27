@@ -1,9 +1,8 @@
 package async
 
-import scala.concurrent.{Future, Promise}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
 import scala.util.Try
-import scala.util.control.NonFatal
 
 object Async extends AsyncInterface {
 
@@ -13,8 +12,9 @@ object Async extends AsyncInterface {
     * In case the given `Future` value failed, this method
     * should return a failed `Future` with the same error.
     */
-  def transformSuccess(eventuallyX: Future[Int]): Future[Boolean] =
-    ???
+  def transformSuccess(eventuallyX: Future[Int]): Future[Boolean] = {
+    eventuallyX.map(x => x % 2 == 0)
+  }
 
   /**
     * Transforms a failed asynchronous `Int` computation into a
@@ -23,8 +23,10 @@ object Async extends AsyncInterface {
     * In case the given `Future` value was successful, this method
     * should return a successful `Future` with the same value.
     */
-  def recoverFailure(eventuallyX: Future[Int]): Future[Int] =
-    ???
+  def recoverFailure(eventuallyX: Future[Int]): Future[Int] = {
+    eventuallyX.fallbackTo(Future.successful(-1))
+  }
+
 
   /**
     * Perform two asynchronous computation, one after the other. `makeAsyncComputation2`
@@ -35,11 +37,9 @@ object Async extends AsyncInterface {
     * The returned `Future` value should contain the successful result of the first and
     * second asynchronous computations, paired together.
     */
-  def sequenceComputations[A, B](
-                                  makeAsyncComputation1: () => Future[A],
-                                  makeAsyncComputation2: () => Future[B]
-                                ): Future[(A, B)] =
-    ???
+  def sequenceComputations[A, B](f1: () => Future[A], f2: () => Future[B]): Future[(A, B)] = {
+    f1().flatMap(a => f2().map(b => (a, b)))
+  }
 
   /**
     * Concurrently perform two asynchronous computations and pair their successful

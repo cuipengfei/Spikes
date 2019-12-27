@@ -35,33 +35,27 @@ class AsyncSuite {
 
   @Test def `transformSuccess should transform successful computations`(): Unit = {
     val x = Random.nextInt()
-    val eventuallyResult =
-      transformSuccess(Future.successful(x))
-    val result =
-      Await.ready(eventuallyResult, 100.milliseconds).value.get
+    val eventuallyResult = transformSuccess(Future.successful(x))
+    val result = Await.ready(eventuallyResult, 100.milliseconds).value.get
     assertEquals(Success(x % 2 == 0), result)
   }
 
   @Test def `transformSuccess should propagate the failure of a failed computation`(): Unit = {
     val failure = new Exception("Failed asynchronous computation")
-    val eventuallyResult =
-      transformSuccess(Future.failed(failure))
-    val result =
-      Await.ready(eventuallyResult, 100.milliseconds).value.get
+    val eventuallyResult = transformSuccess(Future.failed(failure))
+    val result = Await.ready(eventuallyResult, 100.milliseconds).value.get
     assertEquals(Failure(failure), result)
   }
 
   @Test def `recoverFailure should recover from failed computations`(): Unit = {
-    val eventuallyResult =
-      recoverFailure(Future.failed(new Exception))
+    val eventuallyResult = recoverFailure(Future.failed(new Exception))
     val result = Await.ready(eventuallyResult, 100.milliseconds).value.get
     assertEquals(Success(-1), result)
   }
 
   @Test def `recoverFailure should propagate successful computations`(): Unit = {
     val x = Random.nextInt()
-    val eventuallyResult =
-      recoverFailure(Future.successful(x))
+    val eventuallyResult = recoverFailure(Future.successful(x))
     val result = Await.ready(eventuallyResult, 100.milliseconds).value.get
     assertEquals(Success(x), result)
   }
@@ -118,7 +112,8 @@ class AsyncSuite {
     val eventuallyResult =
       insist(
         () => Future {
-          counter.incrementAndGet(); throw new Exception
+          counter.incrementAndGet();
+          throw new Exception
         },
         maxAttempts = 3
       )
