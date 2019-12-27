@@ -1,7 +1,7 @@
 package async
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.util.Try
 
 object Async extends AsyncInterface {
@@ -38,7 +38,10 @@ object Async extends AsyncInterface {
     * second asynchronous computations, paired together.
     */
   def sequenceComputations[A, B](f1: () => Future[A], f2: () => Future[B]): Future[(A, B)] = {
-    f1().flatMap(a => f2().map(b => (a, b)))
+    for {
+      a <- f1()
+      b <- f2()
+    } yield (a, b)
   }
 
   /**
@@ -48,10 +51,11 @@ object Async extends AsyncInterface {
     * If one of them fails, this method should return the failure.
     */
   def concurrentComputations[A, B](
-                                    makeAsyncComputation1: () => Future[A],
-                                    makeAsyncComputation2: () => Future[B]
-                                  ): Future[(A, B)] =
-    ???
+                                    f1: () => Future[A],
+                                    f2: () => Future[B]
+                                  ): Future[(A, B)] = {
+    f1().zip(f2())
+  }
 
   /**
     * Attempt to perform an asynchronous computation.
@@ -59,8 +63,15 @@ object Async extends AsyncInterface {
     * the asynchronous computation so that at most `maxAttempts`
     * are eventually performed.
     */
-  def insist[A](makeAsyncComputation: () => Future[A], maxAttempts: Int): Future[A] =
-    ???
+  def insist[A](f: () => Future[A], maxAttempts: Int): Future[A] = {
+    if (maxAttempts == 1) { //last time
+      f()
+    } else {
+      f().recoverWith {
+        case _ => insist(f, maxAttempts - 1)
+      }
+    }
+  }
 
   /**
     * Turns a callback-based API into a Future-based API

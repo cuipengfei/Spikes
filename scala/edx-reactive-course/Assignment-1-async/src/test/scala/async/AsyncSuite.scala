@@ -1,8 +1,9 @@
 package async
 
+import java.util.Date
+
 import org.junit.Assert._
 import org.junit.Test
-
 import java.util.concurrent.atomic.AtomicInteger
 
 import scala.concurrent.duration.DurationInt
@@ -62,9 +63,12 @@ class AsyncSuite {
 
   @Test def `sequenceComputations should start the second computation after the first has completed (2pts)`(): Unit = {
     try {
-      val eventuallyResult =
-        sequenceComputations(delay(Success(1)), delay(Success(2)))
+      val eventuallyResult = sequenceComputations(delay(Success(1)), delay(Success(2)))
+
+      val beforeCallReady=System.currentTimeMillis()
       Await.ready(eventuallyResult, 250.milliseconds)
+      println("ready took: " + (System.currentTimeMillis()-beforeCallReady))
+
       fail("Asynchronous computations finished too early")
     } catch {
       case _: TimeoutException =>
@@ -78,7 +82,8 @@ class AsyncSuite {
       sequenceComputations(
         () => Future.failed(new Exception),
         () => Future.successful {
-          counter.incrementAndGet(); ()
+          counter.incrementAndGet();
+          ()
         }
       )
     Await.ready(eventuallyResult, 100.milliseconds)
