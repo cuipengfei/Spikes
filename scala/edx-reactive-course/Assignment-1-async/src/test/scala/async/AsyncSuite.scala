@@ -1,14 +1,13 @@
 package async
 
-import java.util.Date
+import java.util.concurrent.atomic.AtomicInteger
 
 import org.junit.Assert._
 import org.junit.Test
-import java.util.concurrent.atomic.AtomicInteger
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future, Promise, TimeoutException}
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Random, Success, Try}
 
 class AsyncSuite {
@@ -65,9 +64,9 @@ class AsyncSuite {
     try {
       val eventuallyResult = sequenceComputations(delay(Success(1)), delay(Success(2)))
 
-      val beforeCallReady=System.currentTimeMillis()
+      val beforeCallReady = System.currentTimeMillis()
       Await.ready(eventuallyResult, 250.milliseconds)
-      println("ready took: " + (System.currentTimeMillis()-beforeCallReady))
+      println("ready took: " + (System.currentTimeMillis() - beforeCallReady))
 
       fail("Asynchronous computations finished too early")
     } catch {
