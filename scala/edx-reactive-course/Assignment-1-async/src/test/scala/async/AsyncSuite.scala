@@ -102,6 +102,7 @@ class AsyncSuite {
   }
 
   @Test def `insist should not retry successful computations (3pts)`(): Unit = {
+
     val counter = new AtomicInteger(0)
     val eventuallyResult =
       insist(() => Future {
