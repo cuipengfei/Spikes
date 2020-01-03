@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009-2015 Typesafe Inc. <http://www.typesafe.com>
- */
+  * Copyright (C) 2009-2015 Typesafe Inc. <http://www.typesafe.com>
+  */
 package actorbintree
 
 import akka.actor.{ActorRef, ActorSystem, Props}
@@ -21,7 +21,7 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
         requester.expectMsgType[OperationReply]
       } catch {
         case ex: Throwable if ops.size > 10 => sys.error(s"failure to receive confirmation $i/${ops.size}\n$ex")
-        case ex: Throwable                  => sys.error(s"failure to receive confirmation $i/${ops.size}\nRequests:" + ops.mkString("\n    ", "\n     ", "") + s"\n$ex")
+        case ex: Throwable => sys.error(s"failure to receive confirmation $i/${ops.size}\nRequests:" + ops.mkString("\n    ", "\n     ", "") + s"\n$ex")
       }
       val replies = repliesUnsorted.sortBy(_.id)
       if (replies != expectedReplies) {
@@ -49,7 +49,6 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
 
     topNode ! Insert(testActor, id = 2, 1)
     topNode ! Contains(testActor, id = 3, 1)
-
     expectMsg(OperationFinished(2))
     expectMsg(ContainsResult(3, true))
     ()
@@ -59,21 +58,21 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
     val requester = TestProbe()
     val requesterRef = requester.ref
     val ops = List(
-      Insert(requesterRef, id=100, 1),
-      Contains(requesterRef, id=50, 2),
-      Remove(requesterRef, id=10, 1),
-      Insert(requesterRef, id=20, 2),
-      Contains(requesterRef, id=80, 1),
-      Contains(requesterRef, id=70, 2)
+      Insert(requesterRef, id = 100, 1),
+      Contains(requesterRef, id = 50, 2),
+      Remove(requesterRef, id = 10, 1),
+      Insert(requesterRef, id = 20, 2),
+      Contains(requesterRef, id = 80, 1),
+      Contains(requesterRef, id = 70, 2)
     )
 
     val expectedReplies = List(
-      OperationFinished(id=10),
-      OperationFinished(id=20),
-      ContainsResult(id=50, false),
-      ContainsResult(id=70, true),
-      ContainsResult(id=80, false),
-      OperationFinished(id=100)
+      OperationFinished(id = 10),
+      OperationFinished(id = 20),
+      ContainsResult(id = 50, false),
+      ContainsResult(id = 70, true),
+      ContainsResult(id = 80, false),
+      OperationFinished(id = 100)
     )
 
     verify(requester, ops, expectedReplies)
@@ -82,8 +81,10 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
 
   @Test def `behave identically to built-in set (includes GC) (40pts)`(): Unit = {
     val rnd = new Random()
+
     def randomOperations(requester: ActorRef, count: Int): Seq[Operation] = {
       def randomElement: Int = rnd.nextInt(100)
+
       def randomOperation(requester: ActorRef, id: Int): Operation = rnd.nextInt(4) match {
         case 0 => Insert(requester, id, randomElement)
         case 1 => Insert(requester, id, randomElement)
@@ -96,6 +97,7 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
 
     def referenceReplies(operations: Seq[Operation]): Seq[OperationReply] = {
       var referenceSet = Set.empty[Int]
+
       def replyFor(op: Operation): OperationReply = op match {
         case Insert(_, seq, elem) =>
           referenceSet = referenceSet + elem
