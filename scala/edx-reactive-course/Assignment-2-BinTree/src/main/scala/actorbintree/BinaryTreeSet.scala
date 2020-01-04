@@ -8,7 +8,7 @@ import akka.actor._
 
 import scala.collection.immutable.Queue
 
-class BinaryTreeSet extends Actor {
+class BinaryTreeSet extends Actor with Stash {
 
   import BinaryTreeSet._
 
@@ -35,10 +35,9 @@ class BinaryTreeSet extends Actor {
   def garbageCollecting(newRoot: ActorRef): Receive = {
     case CopyFinished =>
       this.root = newRoot
-      replayQueue(pendingQueue)
+      unstashAll()
       context.become(normal)
-
-    case op: Operation => pendingQueue = pendingQueue.enqueue(op) //queue all regular ops
+    case _ => stash() //queue all regular ops
   }
 
   def replayQueue(queue: Queue[Operation]): Unit = {

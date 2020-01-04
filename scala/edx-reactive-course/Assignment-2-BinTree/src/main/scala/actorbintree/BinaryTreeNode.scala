@@ -36,19 +36,19 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
       else if (rm.elem > this.elem) remove(Right, rm)
       else remove(Left, rm)
 
-    case CopyTo(tree) =>
+    case cp: CopyTo =>
       if (this.removed) {
         if (subtrees.values.isEmpty) {
           context.parent ! CopyFinished
           self ! PoisonPill
         } else {
-          context.become(copying(Set.from(subtrees.values), true))
-          subtrees.values.foreach(child => child ! CopyTo(tree))
+          context.become(copying(subtrees.values.toSet, true))
+          subtrees.values.foreach(child => child ! cp)
         }
       } else {
-        context.become(copying(Set.from(subtrees.values), false))
-        subtrees.values.foreach(child => child ! CopyTo(tree))
-        tree ! Insert(self, 0, elem)
+        context.become(copying(subtrees.values.toSet, false))
+        subtrees.values.foreach(child => child ! cp)
+        cp.treeNode ! Insert(self, 0, elem)
       }
   }
 
