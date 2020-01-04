@@ -12,29 +12,31 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
 
   def receive: Receive = normal
 
+  def getPosition(elem: Int): Position = {
+    if (elem > this.elem) Right
+    else Left
+  }
+
   /** Handles `Operation` messages and `CopyTo` requests. */
   val normal: Receive = {
 
     case ins: Insert =>
-      if (ins.elem > elem) addTo(Right, ins)
-      else if (ins.elem < elem) addTo(Left, ins)
-      else {
+      if (ins.elem == this.elem) {
         this.removed = false //it could be removed then added back
         ins.requester ! OperationFinished(ins.id)
       }
+      else addTo(getPosition(ins.elem), ins)
 
     case cts: Contains =>
       if (cts.elem == this.elem) cts.requester ! ContainsResult(cts.id, !removed)
-      else if (cts.elem > this.elem) contains(Right, cts)
-      else contains(Left, cts)
+      else contains(getPosition(cts.elem), cts)
 
     case rm: Remove =>
       if (rm.elem == this.elem) {
         this.removed = true
         rm.requester ! OperationFinished(rm.id)
       }
-      else if (rm.elem > this.elem) remove(Right, rm)
-      else remove(Left, rm)
+      else remove(getPosition(rm.elem), rm)
 
     case cp: CopyTo =>
       if (this.removed) {
