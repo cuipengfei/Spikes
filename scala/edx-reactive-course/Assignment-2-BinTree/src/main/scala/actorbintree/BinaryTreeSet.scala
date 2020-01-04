@@ -6,8 +6,6 @@ package actorbintree
 import actorbintree.BinaryTreeNode.{CopyFinished, CopyTo}
 import akka.actor._
 
-import scala.collection.immutable.Queue
-
 class BinaryTreeSet extends Actor with Stash {
 
   import BinaryTreeSet._
@@ -15,8 +13,6 @@ class BinaryTreeSet extends Actor with Stash {
   def createRoot() = context.actorOf(BinaryTreeNode.props(0, initiallyRemoved = false))
 
   var root: ActorRef = createRoot()
-
-  var pendingQueue: Queue[Operation] = Queue.empty[Operation]
 
   def receive: Receive = normal
 
@@ -37,17 +33,8 @@ class BinaryTreeSet extends Actor with Stash {
       this.root = newRoot
       unstashAll()
       context.become(normal)
-    case _ => stash() //queue all regular ops
-  }
 
-  def replayQueue(queue: Queue[Operation]): Unit = {
-    if (queue.isEmpty) {
-      this.pendingQueue = queue //stop, exit
-    } else {
-      val (head, tail) = queue.dequeue
-      root ! head
-      replayQueue(tail)
-    }
+    case op: Operation => stash() //queue all regular ops
   }
 
 }
