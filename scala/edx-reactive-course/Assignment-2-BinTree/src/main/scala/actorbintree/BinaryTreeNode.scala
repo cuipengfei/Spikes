@@ -15,28 +15,26 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
   /** Handles `Operation` messages and `CopyTo` requests. */
   val normal: Receive = {
 
-    case Insert(req, id, newElem) =>
-      if (newElem > elem) insert(req, id, newElem, Right)
-      else if (newElem < elem) insert(req, id, newElem, Left)
+    case ins: Insert =>
+      if (ins.elem > elem) addTo(Right, ins)
+      else if (ins.elem < elem) addTo(Left, ins)
       else {
-        this.removed = false
-        //important to set this to false
-        //it could be removed earlier than added back
-        req ! OperationFinished(id)
+        this.removed = false //it could be removed then added back
+        ins.requester ! OperationFinished(ins.id)
       }
 
-    case Contains(req, id, elem) =>
-      if (elem == this.elem) req ! ContainsResult(id, !removed)
-      else if (elem > this.elem) contains(req, id, elem, Right)
-      else contains(req, id, elem, Left)
+    case cts: Contains =>
+      if (cts.elem == this.elem) cts.requester ! ContainsResult(cts.id, !removed)
+      else if (cts.elem > this.elem) contains(Right, cts)
+      else contains(Left, cts)
 
-    case Remove(req, id, elem) =>
-      if (elem == this.elem) {
+    case rm: Remove =>
+      if (rm.elem == this.elem) {
         this.removed = true
-        req ! OperationFinished(id)
+        rm.requester ! OperationFinished(rm.id)
       }
-      else if (elem > this.elem) remove(req, id, elem, Right)
-      else remove(req, id, elem, Left)
+      else if (rm.elem > this.elem) remove(Right, rm)
+      else remove(Left, rm)
 
     case CopyTo(tree) =>
       if (this.removed) {
@@ -54,26 +52,26 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
       }
   }
 
-  def remove(req: ActorRef, id: Int, elem: Int, pos: Position) = {
+  private def remove(pos: Position, rm: Remove): Unit = {
     subtrees.get(pos) match {
-      case Some(subTree) => subTree ! Remove(req, id, elem)
-      case None => req ! OperationFinished(id)
+      case Some(subTree) => subTree ! rm
+      case None => rm.requester ! OperationFinished(rm.id)
     }
   }
 
-  private def contains(req: ActorRef, id: Int, elem: Int, pos: Position) = {
+  private def contains(pos: Position, cts: Contains): Unit = {
     subtrees.get(pos) match {
-      case Some(subTree) => subTree ! Contains(req, id, elem)
-      case None => req ! ContainsResult(id, false)
+      case Some(subTree) => subTree ! cts
+      case None => cts.requester ! ContainsResult(cts.id, false)
     }
   }
 
-  private def insert(req: ActorRef, id: Int, newElem: Int, pos: Position): Unit = {
+  private def addTo(pos: Position, ins: Insert): Unit = {
     subtrees.get(pos) match {
-      case Some(subTree) => subTree ! Insert(req, id, newElem)
+      case Some(subTree) => subTree ! ins
       case None =>
-        subtrees = subtrees + (pos -> createNode(newElem))
-        req ! OperationFinished(id)
+        subtrees = subtrees + (pos -> createNode(ins.elem))
+        ins.requester ! OperationFinished(ins.id)
     }
   }
 
