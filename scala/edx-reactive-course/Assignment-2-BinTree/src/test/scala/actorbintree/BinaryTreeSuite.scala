@@ -84,45 +84,45 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
     val rnd = new Random()
 
     def randomOperations(requester: ActorRef, count: Int): Seq[Operation] = {
-      def randomElement: Int = rnd.nextInt(100)
+      def randomElem: Int = rnd.nextInt(100)
 
       def randomOperation(requester: ActorRef, id: Int): Operation = rnd.nextInt(4) match {
-        case 0 => Insert(requester, id, randomElement)
-        case 1 => Insert(requester, id, randomElement)
-        case 2 => Contains(requester, id, randomElement)
-        case 3 => Remove(requester, id, randomElement)
+        case 0 => Insert(requester, id, randomElem)
+        case 1 => Insert(requester, id, randomElem)
+        case 2 => Contains(requester, id, randomElem)
+        case 3 => Remove(requester, id, randomElem)
       }
 
-      for (seq <- 0 until count) yield randomOperation(requester, seq)
+      for (id <- 0 until count) yield randomOperation(requester, id)
     }
 
     def referenceReplies(operations: Seq[Operation]): Seq[OperationReply] = {
       var referenceSet = Set.empty[Int]
 
       def replyFor(op: Operation): OperationReply = op match {
-        case Insert(_, seq, elem) =>
+        case Insert(_, id, elem) =>
           referenceSet = referenceSet + elem
-          OperationFinished(seq)
-        case Remove(_, seq, elem) =>
+          OperationFinished(id)
+        case Remove(_, id, elem) =>
           referenceSet = referenceSet - elem
-          OperationFinished(seq)
-        case Contains(_, seq, elem) =>
-          ContainsResult(seq, referenceSet(elem))
+          OperationFinished(id)
+        case Contains(_, id, elem) =>
+          ContainsResult(id, referenceSet(elem))
       }
 
       for (op <- operations) yield replyFor(op)
     }
 
     val requester = TestProbe()
-    val topNode = system.actorOf(Props[BinaryTreeSet])
+    val binTreeSet = system.actorOf(Props[BinaryTreeSet])
     val count = 1000
 
     val ops = randomOperations(requester.ref, count)
     val expectedReplies = referenceReplies(ops)
 
     ops foreach { op =>
-      topNode ! op
-      if (rnd.nextDouble() < 0.1) topNode ! GC
+      binTreeSet ! op
+      if (rnd.nextDouble() < 0.1) binTreeSet ! GC
     }
     receiveN(requester, ops, expectedReplies)
   }
