@@ -12,20 +12,18 @@ class BinaryTreeSet extends Actor {
 
   import BinaryTreeSet._
 
-  def createRoot: ActorRef = context.actorOf(BinaryTreeNode.props(0, initiallyRemoved = false))
+  def createRoot() = context.actorOf(BinaryTreeNode.props(0, initiallyRemoved = false))
 
-  var root: ActorRef = createRoot
+  var root: ActorRef = createRoot()
 
   var pendingQueue: Queue[Operation] = Queue.empty[Operation]
 
   def receive: Receive = normal
 
   val normal: Receive = {
-    case Insert(req, id, elem) => root ! Insert(req, id, elem)
-    case Contains(req, id, elem) => root ! Contains(req, id, elem)
-    case Remove(req, id, elem) => root ! Remove(req, id, elem)
+    case op: Operation => root ! op //regular operations, just need to forward to root
     case GC =>
-      val newRoot = createRoot
+      val newRoot = createRoot()
       root ! CopyTo(newRoot)
       context.become(garbageCollecting(newRoot))
   }
@@ -39,18 +37,17 @@ class BinaryTreeSet extends Actor {
       this.root = newRoot
       replayQueue(pendingQueue)
       context.become(normal)
-    case Insert(req, id, elem) => pendingQueue = pendingQueue.enqueue(Insert(req, id, elem))
-    case Contains(req, id, elem) => pendingQueue = pendingQueue.enqueue(Contains(req, id, elem))
-    case Remove(req, id, elem) => pendingQueue = pendingQueue.enqueue(Remove(req, id, elem))
+
+    case op: Operation => pendingQueue = pendingQueue.enqueue(op) //queue all regular ops
   }
 
   def replayQueue(queue: Queue[Operation]): Unit = {
-    if (queue.nonEmpty) {
+    if (queue.isEmpty) {
+      this.pendingQueue = queue //stop, exit
+    } else {
       val (head, tail) = queue.dequeue
       root ! head
       replayQueue(tail)
-    } else {
-      this.pendingQueue = queue
     }
   }
 
