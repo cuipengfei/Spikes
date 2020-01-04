@@ -8,21 +8,17 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
   import BinaryTreeSet._
 
   var subtrees: Map[Position, ActorRef] = Map[Position, ActorRef]()
+
   var removed: Boolean = initiallyRemoved
 
   def receive: Receive = normal
-
-  def getPosition(elem: Int): Position = {
-    if (elem > this.elem) Right
-    else Left
-  }
 
   /** Handles `Operation` messages and `CopyTo` requests. */
   val normal: Receive = {
 
     case ins: Insert =>
       if (ins.elem == this.elem) {
-        this.removed = false //it could be removed then added back
+        this.removed = false //it could be removed and then added back
         ins.requester ! OperationFinished(ins.id)
       }
       else addTo(getPosition(ins.elem), ins)
@@ -52,6 +48,11 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
         subtrees.values.foreach(child => child ! cp)
         cp.treeNode ! Insert(self, 0, elem)
       }
+  }
+
+  private def getPosition(elem: Int): Position = {
+    if (elem > this.elem) Right
+    else Left
   }
 
   private def remove(pos: Position, rm: Remove): Unit = {

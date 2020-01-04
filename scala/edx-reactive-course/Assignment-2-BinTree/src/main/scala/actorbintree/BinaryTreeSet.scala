@@ -20,25 +20,20 @@ class BinaryTreeSet extends Actor with Stash {
     case op: Operation => root ! op //regular operations, just need to forward to root
     case GC =>
       val newRoot = createRoot()
-      root ! CopyTo(newRoot)
       context.become(garbageCollecting(newRoot))
+      root ! CopyTo(newRoot)
   }
 
-  /** Handles messages while garbage collection is performed.
-    * `newRoot` is the root of the new binary tree where we want to copy
-    * all non-removed elements into.
-    */
   def garbageCollecting(newRoot: ActorRef): Receive = {
     case CopyFinished =>
       this.root = newRoot
-      unstashAll()
       context.become(normal)
+      unstashAll()
 
-    case op: Operation => stash() //queue all regular ops
+    case _ => stash() //queue all regular ops
   }
 
 }
-
 
 object BinaryTreeSet {
 
