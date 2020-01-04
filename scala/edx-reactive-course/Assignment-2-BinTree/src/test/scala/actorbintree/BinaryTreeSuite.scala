@@ -55,8 +55,9 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
   }
 
   @Test def `instruction example (5pts)`(): Unit = {
-    val requester = TestProbe()
-    val requesterRef = requester.ref
+    val requester: TestProbe = TestProbe()
+    val requesterRef: ActorRef = requester.ref
+
     val ops = List(
       Insert(requesterRef, id = 100, 1),
       Contains(requesterRef, id = 50, 2),
