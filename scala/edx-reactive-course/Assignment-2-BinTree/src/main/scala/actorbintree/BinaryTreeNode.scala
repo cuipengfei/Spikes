@@ -56,25 +56,20 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
   }
 
   private def remove(pos: Position, rm: Remove): Unit = {
-    subtrees.get(pos) match {
-      case Some(subTree) => subTree ! rm
-      case None => rm.requester ! OperationFinished(rm.id)
-    }
+    if (subtrees.isDefinedAt(pos)) subtrees(pos) ! rm
+    else rm.requester ! OperationFinished(rm.id)
   }
 
   private def contains(pos: Position, cts: Contains): Unit = {
-    subtrees.get(pos) match {
-      case Some(subTree) => subTree ! cts
-      case None => cts.requester ! ContainsResult(cts.id, false)
-    }
+    if (subtrees.isDefinedAt(pos)) subtrees(pos) ! cts
+    else cts.requester ! ContainsResult(cts.id, false)
   }
 
   private def addTo(pos: Position, ins: Insert): Unit = {
-    subtrees.get(pos) match {
-      case Some(subTree) => subTree ! ins
-      case None =>
-        subtrees = subtrees + (pos -> createNode(ins.elem))
-        ins.requester ! OperationFinished(ins.id)
+    if (subtrees.isDefinedAt(pos)) subtrees(pos) ! ins
+    else {
+      subtrees += (pos -> createNode(ins.elem))
+      ins.requester ! OperationFinished(ins.id)
     }
   }
 

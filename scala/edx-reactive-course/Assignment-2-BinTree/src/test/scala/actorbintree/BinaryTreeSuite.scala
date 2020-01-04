@@ -121,13 +121,13 @@ class BinaryTreeSuite extends TestKit(ActorSystem("BinaryTreeSuite")) with Impli
 
     ops foreach { op =>
       binTreeSet ! op
-      //      if (rnd.nextDouble() < 0.1) binTreeSet ! GC
+      if (rnd.nextDouble() < 0.1) binTreeSet ! GC
     }
     receiveN(requester, ops, expectedReplies)
   }
 
   @Test def `behave identically to built-in set (includes GC) (40pts)`(): Unit = {
-    (1 to 10).foreach(idx => {
+    (1 to 100).foreach(idx => {
       println(s"====== $idx ======")
       runOneTime()
       println(s"============")

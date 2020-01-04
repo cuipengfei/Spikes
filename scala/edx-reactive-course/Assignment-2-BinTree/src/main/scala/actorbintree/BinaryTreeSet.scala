@@ -10,7 +10,9 @@ class BinaryTreeSet extends Actor with Stash {
 
   import BinaryTreeSet._
 
-  def createRoot() = context.actorOf(BinaryTreeNode.props(0, initiallyRemoved = false))
+  def createRoot() = context.actorOf(BinaryTreeNode.props(0, initiallyRemoved = true))
+
+  // why is root always initially removed?
 
   var root: ActorRef = createRoot()
 
