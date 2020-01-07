@@ -5,11 +5,11 @@ trait User {
 }
 
 trait Tweeter {
-  self: User => // reassign this
+  self: User =>
   def tweet(tweetText: String) = println(s"$username: $tweetText")
 }
 
-class VerifiedTweeter(val username_ : String)  {
+class VerifiedTweeter(val username_ : String) {
   def username = s"real $username_"
 }
 
