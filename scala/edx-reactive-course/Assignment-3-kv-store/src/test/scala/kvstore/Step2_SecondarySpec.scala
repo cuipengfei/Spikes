@@ -10,12 +10,13 @@ import org.junit.Test
 import scala.util.Random
 import scala.util.control.NonFatal
 
-trait Step2_SecondarySpec { this: KVStoreSuite =>
+trait Step2_SecondarySpec {
+  this: KVStoreSuite =>
 
   @Test def `Step2-case1: Secondary (in isolation) should properly register itself to the provided Arbiter`(): Unit = {
     val arbiter = TestProbe()
-        system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case1-secondary")
-    
+    system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case1-secondary")
+
     arbiter.expectMsg(Join)
     ()
   }
@@ -25,8 +26,8 @@ trait Step2_SecondarySpec { this: KVStoreSuite =>
 
     val arbiter = TestProbe()
     val replicator = TestProbe()
-        val secondary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case2-secondary")
-        val client = session(secondary)
+    val secondary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case2-secondary")
+    val client = session(secondary)
 
     arbiter.expectMsg(Join)
     arbiter.send(secondary, JoinedSecondary)
@@ -51,8 +52,8 @@ trait Step2_SecondarySpec { this: KVStoreSuite =>
 
     val arbiter = TestProbe()
     val replicator = TestProbe()
-        val secondary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case3-secondary")
-        val client = session(secondary)
+    val secondary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case3-secondary")
+    val client = session(secondary)
 
     arbiter.expectMsg(Join)
     arbiter.send(secondary, JoinedSecondary)
@@ -81,8 +82,8 @@ trait Step2_SecondarySpec { this: KVStoreSuite =>
 
     val arbiter = TestProbe()
     val replicator = TestProbe()
-        val secondary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case4-secondary")
-        val client = session(secondary)
+    val secondary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step2-case4-secondary")
+    val client = session(secondary)
 
     arbiter.expectMsg(Join)
     arbiter.send(secondary, JoinedSecondary)
@@ -98,5 +99,5 @@ trait Step2_SecondarySpec { this: KVStoreSuite =>
     assertEquals(Some("v2"), client.get("k1"))
   }
 
-  
+
 }

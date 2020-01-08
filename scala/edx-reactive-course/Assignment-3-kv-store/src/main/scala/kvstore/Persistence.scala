@@ -4,7 +4,9 @@ import akka.actor.{Props, Actor}
 import scala.util.Random
 
 object Persistence {
+
   case class Persist(key: String, valueOption: Option[String], id: Long)
+
   case class Persisted(key: String, id: Long)
 
   class PersistenceException extends Exception("Persistence failure")
@@ -13,6 +15,7 @@ object Persistence {
 }
 
 class Persistence(flaky: Boolean) extends Actor {
+
   import Persistence._
 
   def receive = {

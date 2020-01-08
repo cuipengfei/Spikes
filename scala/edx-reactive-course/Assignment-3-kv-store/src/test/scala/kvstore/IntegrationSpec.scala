@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2013-2015 Typesafe Inc. <http://www.typesafe.com>
- */
+  * Copyright (C) 2013-2015 Typesafe Inc. <http://www.typesafe.com>
+  */
 package kvstore
 
 import akka.actor.Props
@@ -8,7 +8,8 @@ import akka.testkit.TestProbe
 import org.junit.Assert._
 import org.junit.Test
 
-trait IntegrationSpec { this: KVStoreSuite =>
+trait IntegrationSpec {
+  this: KVStoreSuite =>
 
   import Arbiter._
 

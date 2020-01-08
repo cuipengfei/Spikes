@@ -9,16 +9,20 @@ import akka.actor.Props
 import kvstore.Replicator.{Snapshot, SnapshotAck}
 
 object Tools {
+
   class TestRefWrappingActor(val probe: TestProbe) extends Actor {
-    def receive = { case msg => probe.ref forward msg }
+    def receive = {
+      case msg => probe.ref forward msg
+    }
   }
+
 }
 
 /**
- * This is a utility to mix into your tests which provides convenient access
- * to a given replica. It will keep track of requested updates and allow
- * simple verification. See e.g. Step 1 for how it can be used.
- */
+  * This is a utility to mix into your tests which provides convenient access
+  * to a given replica. It will keep track of requested updates and allow
+  * simple verification. See e.g. Step 1 for how it can be used.
+  */
 trait Tools {
 
   import Tools._
@@ -26,9 +30,11 @@ trait Tools {
   def probeProps(probe: TestProbe): Props = Props(classOf[TestRefWrappingActor], probe)
 
   class Session(val probe: TestProbe, val replica: ActorRef) {
+
     import Replica._
 
     @volatile private var seq = 0L
+
     private def nextSeq: Long = {
       val next = seq
       seq += 1

@@ -6,22 +6,23 @@ import org.junit.Test
 import scala.util.Random
 import scala.util.control.NonFatal
 
-trait Step1_PrimarySpec { this: KVStoreSuite =>
+trait Step1_PrimarySpec {
+  this: KVStoreSuite =>
 
   import Arbiter._
 
   @Test def `Step1-case1: Primary (in isolation) should properly register itself to the provided Arbiter`(): Unit = {
     val arbiter = TestProbe()
-        system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step1-case1-primary")
-    
+    system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step1-case1-primary")
+
     arbiter.expectMsg(Join)
     ()
   }
 
   @Test def `Step1-case2: Primary (in isolation) should react properly to Insert, Remove, Get`(): Unit = {
     val arbiter = TestProbe()
-        val primary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step1-case2-primary")
-        val client = session(primary)
+    val primary = system.actorOf(Replica.props(arbiter.ref, Persistence.props(flaky = false)), "step1-case2-primary")
+    val client = session(primary)
 
     arbiter.expectMsg(Join)
     arbiter.send(primary, JoinedPrimary)
@@ -36,5 +37,5 @@ trait Step1_PrimarySpec { this: KVStoreSuite =>
     client.getAndVerify("k1")
   }
 
-  
+
 }

@@ -8,7 +8,8 @@ import Persistence._
 import org.junit.Assert._
 import org.junit.Test
 
-trait Step4_SecondaryPersistenceSpec { this: KVStoreSuite =>
+trait Step4_SecondaryPersistenceSpec {
+  this: KVStoreSuite =>
 
   @Test def `Step4-case1: Secondary should not acknowledge snapshots until persisted`(): Unit = {
     import Replicator._

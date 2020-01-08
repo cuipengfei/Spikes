@@ -6,7 +6,8 @@ import scala.concurrent.duration._
 import kvstore.Replicator.{Replicate, Snapshot, SnapshotAck}
 import org.junit.Test
 
-trait Step3_ReplicatorSpec { this: KVStoreSuite =>
+trait Step3_ReplicatorSpec {
+  this: KVStoreSuite =>
 
   @Test def `Step3-case1: Replicator should send snapshots when asked to replicate`(): Unit = {
     val probe = TestProbe()
