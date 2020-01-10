@@ -48,16 +48,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   var pendingPersistence = Map.empty[Long, (ActorRef, Persist)]
 
-  // keep telling persistence to persist, until removed from map
-  context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
-    if (pendingPersistence.nonEmpty) {
-      pendingPersistence.foreach { entry =>
-        val (seq, (replicator, persist)) = entry
-        persistence ! persist
-      }
-    }
-  }
-
   var kv = Map.empty[String, String]
   // a map from secondary replicas to replicators
   var secondaries = Map.empty[ActorRef, ActorRef]
@@ -66,6 +56,15 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   var expectedSeq = 0L
 
+  // keep telling persistence to persist, until removed from map
+  context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
+    if (pendingPersistence.nonEmpty) {
+      pendingPersistence.foreach { entry =>
+        val (_, (_, persist)) = entry
+        persistence ! persist
+      }
+    }
+  }
 
   def receive = {
     case JoinedPrimary => context.become(leader)
@@ -98,7 +97,8 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
         }
       }
     case Persisted(k, seq) =>
-      pendingPersistence(seq)._1 ! SnapshotAck(k, seq)
+      val (replicator, _) = pendingPersistence(seq)
+      replicator ! SnapshotAck(k, seq)
       pendingPersistence -= seq
     case Get(k, id) =>
       sender() ! GetResult(k, kv.get(k), id)
