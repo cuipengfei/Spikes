@@ -42,6 +42,8 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
    * The contents of this actor is just a suggestion, you can implement it in any way you like.
    */
 
+  arbiter ! Join
+
   var kv = Map.empty[String, String]
   // a map from secondary replicas to replicators
   var secondaries = Map.empty[ActorRef, ActorRef]
@@ -56,6 +58,14 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   /* TODO Behavior for  the leader role. */
   val leader: Receive = {
+    case Insert(k, v, id) =>
+      kv += (k -> v)
+      sender() ! OperationAck(id)
+    case Remove(k, id) =>
+      kv -= k
+      sender() ! OperationAck(id)
+    case Get(k, id) =>
+      sender() ! GetResult(k, kv.get(k), id)
     case _ =>
   }
 
