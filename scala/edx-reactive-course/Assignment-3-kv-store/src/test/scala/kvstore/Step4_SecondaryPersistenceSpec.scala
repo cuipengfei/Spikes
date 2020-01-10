@@ -11,6 +11,8 @@ import org.junit.Test
 trait Step4_SecondaryPersistenceSpec {
   this: KVStoreSuite =>
 
+  private val msg = "secondary replica should already serve the received update while waiting for persistence: "
+
   @Test def `Step4-case1: Secondary should not acknowledge snapshots until persisted`(): Unit = {
     import Replicator._
 
@@ -30,7 +32,7 @@ trait Step4_SecondaryPersistenceSpec {
       case Persist("k1", Some("v1"), id) => id
     }
 
-    assertEquals("secondary replica should already serve the received update while waiting for persistence: ", Some("v1"), client.get("k1"))
+    assertEquals(msg, Some("v1"), client.get("k1"))
 
     replicator.expectNoMessage(500.milliseconds)
 
@@ -58,7 +60,7 @@ trait Step4_SecondaryPersistenceSpec {
       case Persist("k1", Some("v1"), id) => id
     }
 
-    assertEquals("secondary replica should already serve the received update while waiting for persistence: ", Some("v1"), client.get("k1"))
+    assertEquals(msg, Some("v1"), client.get("k1"))
 
     // Persistence should be retried
     persistence.expectMsg(300.milliseconds, Persist("k1", Some("v1"), persistId))

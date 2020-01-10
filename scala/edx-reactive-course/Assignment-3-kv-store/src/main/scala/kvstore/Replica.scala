@@ -44,6 +44,20 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   arbiter ! Join
 
+  private val persistence: ActorRef = context.system.actorOf(persistenceProps)
+
+  var pendingPersistence = Map.empty[Long, (ActorRef, Persist)]
+
+  // keep telling persistence to persist, until removed from map
+  context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
+    if (pendingPersistence.nonEmpty) {
+      pendingPersistence.foreach { entry =>
+        val (seq, (replicator, persist)) = entry
+        persistence ! persist
+      }
+    }
+  }
+
   var kv = Map.empty[String, String]
   // a map from secondary replicas to replicators
   var secondaries = Map.empty[ActorRef, ActorRef]
@@ -51,6 +65,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   var replicators = Set.empty[ActorRef]
 
   var expectedSeq = 0L
+
 
   def receive = {
     case JoinedPrimary => context.become(leader)
@@ -82,6 +97,9 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
           //......
         }
       }
+    case Persisted(k, seq) =>
+      pendingPersistence(seq)._1 ! SnapshotAck(k, seq)
+      pendingPersistence -= seq
     case Get(k, id) =>
       sender() ! GetResult(k, kv.get(k), id)
     case _ =>
@@ -91,7 +109,9 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     if (vOption.isDefined) kv += (k -> vOption.get)
     else kv -= k
 
-    sender() ! SnapshotAck(k, seq)
+    persistence ! Persist(k, vOption, seq)
+    pendingPersistence += (seq -> (sender(), Persist(k, vOption, seq)))
+
     expectedSeq += 1
   }
 }
