@@ -47,8 +47,8 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   arbiter ! Join
 
   private val persistence: ActorRef = context.system.actorOf(persistenceProps)
-  var pendingPersist = Map.empty[Long, (ActorRef, Persist)]
-  var pendingReplicate = Map.empty[Long, (ActorRef, Int)]
+  var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
+  var pendingReplicates = Map.empty[(Long, ActorRef), ActorRef]
 
   var kv = Map.empty[String, String]
   // a map from secondary replicas to replicators
@@ -61,8 +61,8 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   // keep telling persistence to persist, until removed from map
   // todo: move to persist method?
   context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
-    if (pendingPersist.nonEmpty) {
-      pendingPersist.foreach { entry =>
+    if (pendingPersists.nonEmpty) {
+      pendingPersists.foreach { entry =>
         val (_, (_, persist)) = entry
         persistence ! persist
       }
@@ -76,6 +76,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   val primary: Receive = {
     case Insert(k, v, id) =>
+      println(s"insert $k $v $id")
       kv += (k -> v)
       persistAndReplicate(id, sender(), Persist(k, Some(v), id))
 
@@ -84,34 +85,45 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
       persistAndReplicate(id, sender(), Persist(k, None, id))
 
     case Persisted(k, id) =>
-      val (client, _) = pendingPersist(id)
-      pendingPersist -= id
-      if (!pendingReplicate.contains(id)) client ! OperationAck(id)
+      val (client, _) = pendingPersists(id)
+      pendingPersists -= id
+      if (!pendingReplicates.keys.exists(k => k._1 == id)) client ! OperationAck(id)
 
     case Replicated(k, id) =>
-      val (client, todo) = pendingReplicate(id)
-      if ((todo - 1) == 0) {
-        pendingReplicate -= id
-        if (!pendingPersist.contains(id)) client ! OperationAck(id)
-      } else {
-        pendingReplicate += (id -> (client, todo - 1))
-      }
+      val replicator = sender()
+      handleReplicated(id, replicator)
 
     case Get(k, id) =>
       sender() ! GetResult(k, kv.get(k), id)
 
     case Replicas(replicas) =>
-      (replicas - self -- secondaries.keys)
-        .foreach(newSecondary => {
-          val replicator = context.actorOf(Replicator.props(newSecondary))
-          secondaries += (newSecondary -> replicator)
-          replicators += replicator
-          kv.foreach(entry => {
-            val (k, v) = entry
-            replicator ! Replicate(k, Some(v), Long.MinValue)
-            //todo: what id? what if failed here?
-          })
+      val newJoiners = (replicas - self) -- secondaries.keys
+      newJoiners.foreach(newJoiner => {
+        val newReplicator = context.actorOf(Replicator.props(newJoiner))
+        replicators += newReplicator
+        secondaries += (newJoiner -> newReplicator)
+
+        kv.foreach(entry => {
+          val (k, v) = entry
+          newReplicator ! Replicate(k, Some(v), Long.MinValue)
+          //todo: what id to use here?
         })
+      })
+
+      val quitters = secondaries.keys.toSet -- (replicas - self)
+      quitters.foreach(quitter => {
+        val replicator = secondaries(quitter)
+        replicators -= replicator
+        secondaries -= quitter
+
+        pendingReplicates.keys.foreach(k => {
+          val (id, r) = k
+          //for a removed secondary, pretend all its pending replicates are done
+          if (r == replicator) handleReplicated(id, r)
+        })
+
+        replicator ! PoisonPill
+      })
     case _ =>
   }
 
@@ -127,32 +139,46 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
         }
       }
     case Persisted(k, seq) =>
-      val (replicator, _) = pendingPersist(seq)
+      val (replicator, _) = pendingPersists(seq)
       replicator ! SnapshotAck(k, seq)
-      pendingPersist -= seq
+      pendingPersists -= seq
     case Get(k, id) =>
       sender() ! GetResult(k, kv.get(k), id)
     case _ =>
+  }
+
+  private def handleReplicated(id: Long, replicator: ActorRef) = {
+    val client = pendingReplicates.get((id, replicator))
+    if (client.isDefined) {
+      pendingReplicates -= ((id, replicator))
+      val noMorePendingReplicates = !pendingReplicates.keys.exists(k => k._1 == id)
+      if (noMorePendingReplicates && !pendingPersists.contains(id))
+        client.get ! OperationAck(id)
+    }
   }
 
   private def persistAndReplicate(id: Long, caller: ActorRef, persist: Persist) = {
     def p2r(p: Persist) = Replicate(p.key, p.valueOption, p.id)
 
     persistence ! persist
-    pendingPersist += (id -> (caller, persist))
+    pendingPersists += (id -> (caller, persist))
+
+    println(s"p and r $persist")
 
     if (replicators.nonEmpty) {
       replicators.foreach(replicator => {
         replicator ! p2r(persist)
+        pendingReplicates += ((id, replicator) -> caller)
       })
-      pendingReplicate += (id -> (caller, replicators.size))
     }
 
     context.system.scheduler.scheduleOnce(1.second) {
-      if (pendingPersist.contains(id) || pendingReplicate.contains(id)) {
+      val unfinishedReplicas: Iterable[(Long, ActorRef)] = pendingReplicates.keys.filter(k => k._1 == id)
+
+      if (pendingPersists.contains(id) || unfinishedReplicas.nonEmpty) {
         caller ! OperationFailed(id)
-        pendingPersist -= id
-        pendingReplicate -= id
+        pendingPersists -= id
+        pendingReplicates --= unfinishedReplicas
       }
     }
   }
