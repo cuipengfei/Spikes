@@ -58,6 +58,12 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   var expectedSeq = 0L
 
+  def nextSeq() = {
+    val ret = expectedSeq
+    expectedSeq += 1
+    ret
+  }
+
   // keep telling persistence to persist, until removed from map
   // todo: move to persist method?
   context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
@@ -76,7 +82,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   val primary: Receive = {
     case Insert(k, v, id) =>
-      println(s"insert $k $v $id")
       kv += (k -> v)
       persistAndReplicate(id, sender(), Persist(k, Some(v), id))
 
@@ -133,7 +138,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
         update(k, vOption, seq)
       } else {
         if (seq < expectedSeq) {
-          sender() ! SnapshotAck(k, seq)
+          if (!pendingPersists.contains(seq)) sender() ! SnapshotAck(k, seq)
         } else {
           //......
         }
@@ -163,8 +168,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     persistence ! persist
     pendingPersists += (id -> (caller, persist))
 
-    println(s"p and r $persist")
-
     if (replicators.nonEmpty) {
       replicators.foreach(replicator => {
         replicator ! p2r(persist)
@@ -189,7 +192,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
     persistAndReplicate(seq, sender(), Persist(k, vOption, seq))
 
-    expectedSeq += 1
+    nextSeq()
   }
 }
 

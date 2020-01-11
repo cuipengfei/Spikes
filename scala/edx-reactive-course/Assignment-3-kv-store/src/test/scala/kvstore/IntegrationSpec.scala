@@ -25,6 +25,10 @@ trait IntegrationSpec {
     integrate(true, true, 3)
   }
 
+  @Test def `Integration-case4: both reliable`(): Unit = {
+    integrate(false, false, 4)
+  }
+
   def integrate(flaky: Boolean, lossy: Boolean, nr: Int): Unit = {
     val arbiterProbe = TestProbe()
     val arbiter = system.actorOf(Props(classOf[given.Arbiter], lossy, arbiterProbe.ref))

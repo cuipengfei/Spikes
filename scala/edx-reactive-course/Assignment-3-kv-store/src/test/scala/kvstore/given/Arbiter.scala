@@ -22,7 +22,11 @@ class Arbiter(lossy: Boolean, audit: ActorRef) extends Actor {
         sender ! JoinedPrimary
         audit ! JoinedPrimary
       } else {
-        replicas += (if (lossy) context.actorOf(Props(classOf[LossyTransport], sender)) else sender)
+        val secondary =
+          if (lossy) context.actorOf(Props(classOf[FakeSecondary], sender))
+          else sender
+
+        replicas += secondary
         sender ! JoinedSecondary
         audit ! JoinedSecondary
       }
@@ -31,7 +35,8 @@ class Arbiter(lossy: Boolean, audit: ActorRef) extends Actor {
 
 }
 
-class LossyTransport(target: ActorRef) extends Actor {
+// sometimes, secondary can not receive msg
+class FakeSecondary(realSecondary: ActorRef) extends Actor {
   val rnd = new Random
   var dropped = 0
 
@@ -39,7 +44,7 @@ class LossyTransport(target: ActorRef) extends Actor {
     case msg =>
       if (dropped > 2 || rnd.nextFloat < 0.9) {
         dropped = 0
-        target forward msg
+        realSecondary forward msg
       } else {
         dropped += 1
       }
