@@ -55,8 +55,8 @@ class Replicator(val replica: ActorRef) extends Actor {
     case SnapshotAck(k, seq) =>
       if (acks.contains(seq)) { //todo: why do i need this? when could seq not be in the map?
         val (primary, replicate) = acks(seq)
-        acks -= seq
         primary ! Replicated(k, replicate.id)
+        acks -= seq
       }
     case _ =>
   }
