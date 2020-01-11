@@ -23,10 +23,6 @@ class Replicator(val replica: ActorRef) extends Actor {
   import Replicator._
   import context.dispatcher
 
-  /*
-   * The contents of this actor is just a suggestion, you can implement it in any way you like.
-   */
-
   // map from sequence number to pair of sender and request
   var acks = Map.empty[Long, (ActorRef, Replicate)]
 
@@ -37,13 +33,12 @@ class Replicator(val replica: ActorRef) extends Actor {
 
   // keep telling replica to snapshot, until removed from map
   context.system.scheduler.scheduleAtFixedRate(0 millisecond, 100 millisecond) { () =>
-    if (acks.nonEmpty) {
-      acks.foreach { entry =>
-        val (seq, (_, replicate)) = entry
-        replica ! Snapshot(replicate.key, replicate.valueOption, seq)
-      }
+    acks.foreach { entry =>
+      val (seq, (_, replicate)) = entry
+      replica ! Snapshot(replicate.key, replicate.valueOption, seq)
     }
   }
+
 
   def nextSeq() = {
     val ret = _seqCounter
