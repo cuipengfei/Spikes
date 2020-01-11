@@ -58,10 +58,11 @@ class Replicator(val replica: ActorRef) extends Actor {
       acks += (_seqCounter -> (sender(), replicate))
       nextSeq()
     case SnapshotAck(k, seq) =>
-      val (primary, replicate) = acks(seq)
-      acks -= seq
-      primary ! Replicated(k, replicate.id)
+      if (acks.contains(seq)) { //todo: why do i need this? when could seq not be in the map?
+        val (primary, replicate) = acks(seq)
+        acks -= seq
+        primary ! Replicated(k, replicate.id)
+      }
     case _ =>
   }
-
 }
