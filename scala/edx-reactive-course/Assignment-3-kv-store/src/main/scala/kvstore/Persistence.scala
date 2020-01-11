@@ -1,6 +1,7 @@
 package kvstore
 
-import akka.actor.{Props, Actor}
+import akka.actor.{Actor, Props}
+
 import scala.util.Random
 
 object Persistence {

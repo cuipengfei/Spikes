@@ -1,14 +1,11 @@
 package kvstore
 
 import akka.testkit.TestProbe
-
-import scala.concurrent.duration._
 import kvstore.Arbiter.{Join, JoinedSecondary}
 import org.junit.Assert._
 import org.junit.Test
 
-import scala.util.Random
-import scala.util.control.NonFatal
+import scala.concurrent.duration._
 
 trait Step2_SecondarySpec {
   this: KVStoreSuite =>

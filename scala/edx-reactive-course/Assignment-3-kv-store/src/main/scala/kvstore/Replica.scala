@@ -1,12 +1,9 @@
 package kvstore
 
-import akka.actor.{Actor, ActorRef, OneForOneStrategy, PoisonPill, Props, SupervisorStrategy, Terminated}
+import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import kvstore.Arbiter._
-import akka.pattern.{ask, pipe}
 
 import scala.concurrent.duration._
-import akka.util.Timeout
-import com.typesafe.config.ConfigException.Null
 
 object Replica {
 
@@ -35,9 +32,9 @@ object Replica {
 
 class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
+  import Persistence._
   import Replica._
   import Replicator._
-  import Persistence._
   import context.dispatcher
 
   /*

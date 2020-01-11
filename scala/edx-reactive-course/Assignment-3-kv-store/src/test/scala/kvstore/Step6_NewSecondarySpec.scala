@@ -1,8 +1,8 @@
 package kvstore
 
 import akka.testkit.TestProbe
-import Arbiter._
-import Replicator._
+import kvstore.Arbiter._
+import kvstore.Replicator._
 import org.junit.Test
 
 trait Step6_NewSecondarySpec {

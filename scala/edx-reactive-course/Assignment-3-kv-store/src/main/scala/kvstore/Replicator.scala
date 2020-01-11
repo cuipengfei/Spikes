@@ -1,6 +1,6 @@
 package kvstore
 
-import akka.actor.{Actor, ActorRef, Props, Timers}
+import akka.actor.{Actor, ActorRef, Props}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps

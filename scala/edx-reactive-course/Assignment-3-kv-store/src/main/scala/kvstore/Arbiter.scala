@@ -1,6 +1,6 @@
 package kvstore
 
-import akka.actor.{ActorRef, Actor}
+import akka.actor.{Actor, ActorRef}
 
 object Arbiter {
 

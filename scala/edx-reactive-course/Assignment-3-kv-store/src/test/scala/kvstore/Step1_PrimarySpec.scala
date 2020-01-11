@@ -3,9 +3,6 @@ package kvstore
 import akka.testkit.TestProbe
 import org.junit.Test
 
-import scala.util.Random
-import scala.util.control.NonFatal
-
 trait Step1_PrimarySpec {
   this: KVStoreSuite =>
 

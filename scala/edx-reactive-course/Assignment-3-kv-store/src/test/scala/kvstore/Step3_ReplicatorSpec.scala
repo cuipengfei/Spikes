@@ -1,10 +1,10 @@
 package kvstore
 
 import akka.testkit.TestProbe
-
-import scala.concurrent.duration._
 import kvstore.Replicator.{Replicate, Snapshot, SnapshotAck}
 import org.junit.Test
+
+import scala.concurrent.duration._
 
 trait Step3_ReplicatorSpec {
   this: KVStoreSuite =>

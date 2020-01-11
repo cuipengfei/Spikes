@@ -3,9 +3,9 @@
   */
 package kvstore.given
 
-import akka.actor.{ActorRef, Actor}
+import akka.actor.{Actor, ActorRef, Props}
+
 import scala.util.Random
-import akka.actor.Props
 
 class Arbiter(lossy: Boolean, audit: ActorRef) extends Actor {
 

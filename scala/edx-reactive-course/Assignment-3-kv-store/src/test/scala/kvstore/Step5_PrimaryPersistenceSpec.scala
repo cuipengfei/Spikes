@@ -1,11 +1,12 @@
 package kvstore
 
-import scala.concurrent.duration._
 import akka.testkit.TestProbe
-import Arbiter._
-import Persistence._
-import Replicator._
+import kvstore.Arbiter._
+import kvstore.Persistence._
+import kvstore.Replicator._
 import org.junit.Test
+
+import scala.concurrent.duration._
 
 trait Step5_PrimaryPersistenceSpec {
   this: KVStoreSuite =>

@@ -1,12 +1,10 @@
 package kvstore
 
-import akka.actor.ActorSystem
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.testkit.TestProbe
+import kvstore.Replicator.{Snapshot, SnapshotAck}
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
-import akka.testkit.TestProbe
-import akka.actor.{Actor, ActorRef}
-import akka.actor.Props
-import kvstore.Replicator.{Snapshot, SnapshotAck}
 
 object Tools {
 
