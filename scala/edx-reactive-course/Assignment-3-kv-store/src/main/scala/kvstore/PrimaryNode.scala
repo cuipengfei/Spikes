@@ -59,12 +59,10 @@ trait PrimaryNode {
     })
 
     context.system.scheduler.scheduleOnce(1.second) {
-      val unfinishedReplicas: Iterable[(Long, ActorRef)] = pendingReplicates.keys.filter(k => k._1 == id)
-
       if (!isPersistFinished(id) || !isAllReplicationsFinished(id)) {
         client ! OperationFailed(id)
         pendingPersists -= id
-        pendingReplicates --= unfinishedReplicas
+        pendingReplicates = pendingReplicates.dropWhile { case ((i, _), _) => i == id }
       }
     }
   }
@@ -91,11 +89,11 @@ trait PrimaryNode {
       val newReplicator = context.actorOf(Replicator.props(newJoiner))
       secondaries += (newJoiner -> newReplicator)
 
-      kv.foreach(entry => {
-        val (k, v) = entry
-        //todo: what id to use here?
-        newReplicator ! Replicate(k, Some(v), Long.MinValue)
-      })
+      //todo: what id to use here?
+      kv.foreach {
+        case (k, v) =>
+          newReplicator ! Replicate(k, Some(v), Long.MinValue)
+      }
     })
   }
 
@@ -103,12 +101,11 @@ trait PrimaryNode {
     quitters.foreach(quitter => {
       val replicator = secondaries(quitter)
 
-      pendingReplicates.keys.foreach(key => {
-        val (id, r) = key
-        //for a removed secondary, pretend all its pending replications are finished
-        //so that primary won't wait for it anymore
-        if (r == replicator) handleReplicated(id, r)
-      })
+      //for a removed secondary, pretend all its pending replications are finished
+      //so that primary won't wait for it anymore
+      pendingReplicates.keys.foreach {
+        case (id, r) if r == replicator => handleReplicated(id, r)
+      }
 
       secondaries -= quitter
       replicator ! PoisonPill
@@ -116,7 +113,7 @@ trait PrimaryNode {
   }
 
   private def isAllReplicationsFinished(id: Long) = {
-    !pendingReplicates.keys.exists(k => k._1 == id)
+    !pendingReplicates.keys.exists { case (i, r) => i == id }
   }
 
 }
