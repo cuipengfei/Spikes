@@ -37,23 +37,20 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   import Replicator._
   import context.dispatcher
 
-  /*
-   * The contents of this actor is just a suggestion, you can implement it in any way you like.
-   */
+  override def preStart(): Unit = {
+    arbiter ! Join
 
-  arbiter ! Join
-
-  private val persistence: ActorRef = context.system.actorOf(persistenceProps)
-  var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
-  var pendingReplicates = Map.empty[(Long, ActorRef), ActorRef]
-
-  var kv = Map.empty[String, String]
-  // a map from secondary replicas to replicators
-  var secondaries = Map.empty[ActorRef, ActorRef]
-  // the current set of replicators
-  var replicators = Set.empty[ActorRef]
-
-  var expectedSeq = 0L
+    // keep telling persistence to persist, until removed from map
+    // for both primary and secondary
+    context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
+      if (pendingPersists.nonEmpty) {
+        pendingPersists.foreach { entry =>
+          val (_, (_, persist)) = entry
+          persistence ! persist
+        }
+      }
+    }
+  }
 
   def nextSeq() = {
     val ret = expectedSeq
@@ -61,18 +58,22 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     ret
   }
 
-  // keep telling persistence to persist, until removed from map
-  // todo: move to persist method?
-  context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
-    if (pendingPersists.nonEmpty) {
-      pendingPersists.foreach { entry =>
-        val (_, (_, persist)) = entry
-        persistence ! persist
-      }
-    }
-  }
+  private var kv = Map.empty[String, String]
 
-  def receive = {
+  private var expectedSeq = 0L
+
+  private val persistence: ActorRef = context.system.actorOf(persistenceProps)
+  private var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
+  // [(id,replicator),caller]
+  private var pendingReplicates = Map.empty[(Long, ActorRef), ActorRef]
+
+  // a map from secondary replicas to replicators
+  private var secondaries = Map.empty[ActorRef, ActorRef]
+  // the current set of replicators
+  private var replicators = Set.empty[ActorRef]
+
+
+  def receive: Receive = {
     case JoinedPrimary => context.become(primary)
     case JoinedSecondary => context.become(secondary)
   }
@@ -80,15 +81,18 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   val primary: Receive = {
     case Insert(k, v, id) =>
       kv += (k -> v)
-      persistAndReplicate(id, sender(), Persist(k, Some(v), id))
+      goPersist(id, sender(), Persist(k, Some(v), id))
+      goReplicate(id, sender(), Replicate(k, Some(v), id))
 
     case Remove(k, id) =>
       kv -= k
-      persistAndReplicate(id, sender(), Persist(k, None, id))
+      goPersist(id, sender(), Persist(k, None, id))
+      goReplicate(id, sender(), Replicate(k, None, id))
 
     case Persisted(k, id) =>
       val (client, _) = pendingPersists(id)
       pendingPersists -= id
+      // when persist finished, check if all replications also finished, ack if so
       if (!pendingReplicates.keys.exists(k => k._1 == id)) client ! OperationAck(id)
 
     case Replicated(k, id) =>
@@ -120,7 +124,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
         pendingReplicates.keys.foreach(k => {
           val (id, r) = k
-          //for a removed secondary, pretend all its pending replicates are done
+          //for a removed secondary, pretend all its pending replications are finished
           if (r == replicator) handleReplicated(id, r)
         })
 
@@ -153,29 +157,24 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     val client = pendingReplicates.get((id, replicator))
     if (client.isDefined) {
       pendingReplicates -= ((id, replicator))
-      val noMorePendingReplicates = !pendingReplicates.keys.exists(k => k._1 == id)
-      if (noMorePendingReplicates && !pendingPersists.contains(id))
-        client.get ! OperationAck(id)
+      val allReplicationFinished = !pendingReplicates.keys.exists(k => k._1 == id)
+      val persistFinished = !pendingPersists.contains(id)
+      if (allReplicationFinished && persistFinished) client.get ! OperationAck(id)
     }
   }
 
-  private def persistAndReplicate(id: Long, caller: ActorRef, persist: Persist) = {
-    def p2r(p: Persist) = Replicate(p.key, p.valueOption, p.id)
-
-    persistence ! persist
-    pendingPersists += (id -> (caller, persist))
-
-    if (replicators.nonEmpty) {
-      replicators.foreach(replicator => {
-        replicator ! p2r(persist)
-        pendingReplicates += ((id, replicator) -> caller)
-      })
-    }
+  private def goReplicate(id: Long, caller: ActorRef, replicate: Replicate) = {
+    replicators.foreach(replicator => {
+      replicator ! replicate
+      pendingReplicates += ((id, replicator) -> caller)
+    })
 
     context.system.scheduler.scheduleOnce(1.second) {
       val unfinishedReplicas: Iterable[(Long, ActorRef)] = pendingReplicates.keys.filter(k => k._1 == id)
+      val persistNotFinished = pendingPersists.contains(id)
+      val replicationNotFinished = unfinishedReplicas.nonEmpty
 
-      if (pendingPersists.contains(id) || unfinishedReplicas.nonEmpty) {
+      if (persistNotFinished || replicationNotFinished) {
         caller ! OperationFailed(id)
         pendingPersists -= id
         pendingReplicates --= unfinishedReplicas
@@ -183,13 +182,18 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     }
   }
 
-  private def update(k: String, vOption: Option[String], seq: Long) = {
+  private def update(k: String, vOption: Option[String], seq: Long): Long = {
     if (vOption.isDefined) kv += (k -> vOption.get)
     else kv -= k
 
-    persistAndReplicate(seq, sender(), Persist(k, vOption, seq))
+    goPersist(seq, sender(), Persist(k, vOption, seq))
 
     nextSeq()
+  }
+
+  private def goPersist(id: Long, caller: ActorRef, persist: Persist) = {
+    persistence ! persist
+    pendingPersists += (id -> (caller, persist))
   }
 }
 
