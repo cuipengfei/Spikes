@@ -51,12 +51,15 @@ class Replicator(val replica: ActorRef) extends Actor {
       acks += (_seqCounter -> (sender(), replicate))
       nextSeq()
     case SnapshotAck(k, seq) =>
-      if (acks.contains(seq)) { //todo: why do i need this? when could seq not be in the map?
+      //why do i need this? when could seq not be in the map?
+      //original snapshot sent to secondary will eventually end up here
+      //retries can also end up here
+      //whichever one happens first will delete one item from acks map
+      //if we don't have this if guard here, there can be exception from map
+      if (acks.contains(seq)) {
         val (primary, replicate) = acks(seq)
         primary ! Replicated(k, replicate.id)
         acks -= seq
-      } else {
-        //todo: add log to find out why
       }
     case _ =>
   }

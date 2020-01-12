@@ -76,7 +76,7 @@ trait PrimaryNode {
   }
 
   private def handleReplicated(id: Long, replicator: ActorRef) = {
-    //should not directly use Map.apply here
+    //should not directly use Map.apply here, should have the if guard
     //need the if guard because replication to newJoiners will also trigger this method
     //and they are not in the pendingReplicates map
     val client: Option[ActorRef] = pendingReplicates.get((id, replicator))
