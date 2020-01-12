@@ -70,4 +70,3 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
     pendingPersists += (id -> (caller, persist))
   }
 }
-
