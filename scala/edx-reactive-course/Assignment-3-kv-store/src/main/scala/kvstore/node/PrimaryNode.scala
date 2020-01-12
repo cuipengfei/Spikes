@@ -1,15 +1,15 @@
-package kvstore
+package kvstore.node
 
 import akka.actor.{ActorRef, PoisonPill}
 import kvstore.Arbiter.Replicas
 import kvstore.Persistence.{Persist, Persisted}
 import kvstore.Replica._
 import kvstore.Replicator.{Replicate, Replicated}
+import kvstore.{Replica, Replicator}
 
 import scala.concurrent.duration._
 
 trait PrimaryNode {
-
   this: Replica =>
 
   import context.dispatcher
@@ -40,11 +40,15 @@ trait PrimaryNode {
       }
 
     case Replicated(_, id) =>
-      handleReplicated(id, sender())
+      val replicator = sender()
+      pendingReplicates.get((id, replicator)).foreach(client => {
+        pendingReplicates -= ((id, replicator))
+        ackToClientIfBothFinished(id, client)
+      })
 
     case Replicas(replicas) =>
       val newJoiners = (replicas - self) -- secondaries.keys
-      replicateTo(newJoiners)
+      catchUp(newJoiners)
       val quitters = secondaries.keys.toSet -- (replicas - self)
       drop(quitters)
 
@@ -58,15 +62,15 @@ trait PrimaryNode {
       pendingReplicates += ((id, replicator) -> client)
     })
 
-    failAtOneSecond(id, client)
+    failAfterOneSecond(id, client)
   }
 
-  private def failAtOneSecond(id: Long, client: ActorRef) = {
+  private def failAfterOneSecond(id: Long, client: ActorRef) = {
     context.system.scheduler.scheduleOnce(1.second) {
       if (!isPersistFinished(id) || !isAllReplicationsFinished(id)) {
-        client ! OperationFailed(id)
         pendingPersists -= id
         pendingReplicates = pendingReplicates.dropWhile { case ((i, _), _) => i == id }
+        client ! OperationFailed(id)
       }
     }
   }
@@ -77,17 +81,7 @@ trait PrimaryNode {
     }
   }
 
-  private def handleReplicated(id: Long, replicator: ActorRef) = {
-    //should not directly use pendingReplicates(id) here
-    //because replication to newJoiners will also tell primary Replicated, which will trigger this method
-    //but replications to newJoiners are not in the pendingReplicates map
-    pendingReplicates.get((id, replicator)).foreach(client => {
-      pendingReplicates -= ((id, replicator))
-      ackToClientIfBothFinished(id, client)
-    })
-  }
-
-  private def replicateTo(newJoiners: Set[ActorRef]) = {
+  private def catchUp(newJoiners: Set[ActorRef]) = {
     newJoiners.foreach(newJoiner => {
       val newReplicator = context.actorOf(Replicator.props(newJoiner))
       secondaries += (newJoiner -> newReplicator)
@@ -103,19 +97,19 @@ trait PrimaryNode {
     quitters.foreach(quitter => {
       val replicator = secondaries(quitter)
       dropPendingReplicationsOf(replicator)
+      replicator ! PoisonPill
 
       secondaries -= quitter
-      replicator ! PoisonPill
       //todo: stop the removed secondary as well?
     })
   }
 
   private def dropPendingReplicationsOf(replicator: ActorRef) = {
-    pendingReplicates.keys.foreach {
-      //for a removed secondary, pretend all its pending replications are finished
-      //so that primary won't wait for it anymore
-      case (id, r) if r == replicator => handleReplicated(id, r)
-    }
+    val toBeDropped = pendingReplicates.filter { case ((_, r), _) => r == replicator }
+    //remove from pending, so that primary won't wait for it anymore
+    pendingReplicates --= toBeDropped.keys
+    //check if should ack to client after remove
+    toBeDropped.foreach { case ((id, _), client) => ackToClientIfBothFinished(id, client) }
   }
 
   private def isAllReplicationsFinished(id: Long) = {

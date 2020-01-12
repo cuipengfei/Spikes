@@ -41,7 +41,7 @@ class Replicator(val replica: ActorRef) extends Actor {
     }
   }
 
-  def nextSeq() = {
+  private def nextSeq() = {
     val ret = _seqCounter
     _seqCounter += 1
     ret
@@ -52,17 +52,19 @@ class Replicator(val replica: ActorRef) extends Actor {
       replica ! Snapshot(k, vOption, _seqCounter)
       acks += (_seqCounter -> (sender(), replicate))
       nextSeq()
+
     case SnapshotAck(k, seq) =>
       //why can not do "acks(seq)"? when could seq not be in the map?
       //original snapshot sent to secondary will eventually end up here
       //subsequent retries can also end up here
-      //if one one ack get here first, it will delete one item from acks map
-      //and the next one happens later will cause exception if use "acks(seq)"
+      //if one ack gets here first, it will delete one item from acks map
+      //and the next ack happens later will cause exception if used "acks(seq)"
       acks.get(seq).foreach {
         case (primary, replicate) =>
           primary ! Replicated(k, replicate.id)
           acks -= seq
       }
+
     case _ =>
   }
 }

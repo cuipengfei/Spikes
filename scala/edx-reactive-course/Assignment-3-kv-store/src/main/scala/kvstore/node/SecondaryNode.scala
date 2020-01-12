@@ -1,6 +1,7 @@
-package kvstore
+package kvstore.node
 
 import kvstore.Persistence.{Persist, Persisted}
+import kvstore.Replica
 import kvstore.Replica.{Get, GetResult}
 import kvstore.Replicator.{Snapshot, SnapshotAck}
 
@@ -22,6 +23,7 @@ trait SecondaryNode {
     case snapshot@Snapshot(k, _, seq) =>
       if (seq == expectedSeq) {
         updateAndPersist(snapshot)
+        nextSeq()
       } else if (seq < expectedSeq && isPersistFinished(seq)) {
         sender() ! SnapshotAck(k, seq)
       } // ignore seq > expectedSeq
@@ -36,13 +38,12 @@ trait SecondaryNode {
   }
 
   private def updateAndPersist: PartialFunction[Snapshot, Unit] = {
-    case Snapshot(k, v, seq) =>
-      if (v.isDefined) kv += (k -> v.get)
+    case Snapshot(k, vOption, seq) => {
+      if (vOption.isDefined) kv += (k -> vOption.get)
       else kv -= k
 
-      goPersist(seq, sender(), Persist(k, v, seq))
-
-      nextSeq()
+      goPersist(seq, sender(), Persist(k, vOption, seq))
+    }
   }
 
 }

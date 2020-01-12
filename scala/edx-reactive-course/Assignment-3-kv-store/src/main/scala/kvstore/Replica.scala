@@ -2,6 +2,7 @@ package kvstore
 
 import akka.actor.{Actor, ActorRef, Props}
 import kvstore.Arbiter._
+import kvstore.node.{PrimaryNode, SecondaryNode}
 
 import scala.concurrent.duration._
 
@@ -38,7 +39,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
 
   var kv = Map.empty[String, String]
   private val persistence: ActorRef = context.system.actorOf(persistenceProps)
-  //[id/seq,(client/replicator,persist)]
+  // type: [id/seq,(client/replicator,persist)]
   var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
 
   override def preStart(): Unit = {
@@ -55,7 +56,9 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
     case JoinedSecondary => context.become(secondary)
   }
 
-  def isPersistFinished(id: Long) = !pendingPersists.contains(id)
+  def isPersistFinished(id: Long) = {
+    !pendingPersists.contains(id)
+  }
 
   def goPersist(id: Long, caller: ActorRef, persist: Persist) = {
     persistence ! persist
