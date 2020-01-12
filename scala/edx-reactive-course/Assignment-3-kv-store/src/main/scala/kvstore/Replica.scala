@@ -92,8 +92,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     case Persisted(k, id) =>
       val (client, _) = pendingPersists(id)
       pendingPersists -= id
-      // when persist finished, check if all replications also finished, ack if so
-      if (isAllReplicationsFinished(id)) client ! OperationAck(id)
+      ackToClientIfBothFinished(id, client)
 
     case Replicated(k, id) =>
       val replicator = sender()
@@ -101,31 +100,40 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
     case Replicas(replicas) =>
       val newJoiners = (replicas - self) -- secondaries.keys
-      newJoiners.foreach(newJoiner => {
-        val newReplicator = context.actorOf(Replicator.props(newJoiner))
-        secondaries += (newJoiner -> newReplicator)
-
-        kv.foreach(entry => {
-          val (k, v) = entry
-          newReplicator ! Replicate(k, Some(v), Long.MinValue)
-          //todo: what id to use here?
-        })
-      })
-
       val quitters = secondaries.keys.toSet -- (replicas - self)
-      quitters.foreach(quitter => {
-        val replicator = secondaries(quitter)
-        secondaries -= quitter
+      replicateToNewJoiners(newJoiners)
+      removeQuittersAndDropPendingReplications(quitters)
 
-        pendingReplicates.keys.foreach(k => {
-          val (id, r) = k
-          //for a removed secondary, pretend all its pending replications are finished
-          if (r == replicator) handleReplicated(id, r)
-        })
-
-        replicator ! PoisonPill
-      })
     case _ =>
+  }
+
+  private def removeQuittersAndDropPendingReplications(quitters: Set[ActorRef]) = {
+    quitters.foreach(quitter => {
+      val replicator = secondaries(quitter)
+
+      pendingReplicates.keys.foreach(key => {
+        val (id, r) = key
+        //for a removed secondary, pretend all its pending replications are finished
+        //so that primary won't wait for it anymore
+        if (r == replicator) handleReplicated(id, r)
+      })
+
+      secondaries -= quitter
+      replicator ! PoisonPill
+    })
+  }
+
+  private def replicateToNewJoiners(newJoiners: Set[ActorRef]) = {
+    newJoiners.foreach(newJoiner => {
+      val newReplicator = context.actorOf(Replicator.props(newJoiner))
+      secondaries += (newJoiner -> newReplicator)
+
+      kv.foreach(entry => {
+        val (k, v) = entry
+        //todo: what id to use here?
+        newReplicator ! Replicate(k, Some(v), Long.MinValue)
+      })
+    })
   }
 
   val secondary: Receive = {
@@ -149,12 +157,19 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   }
 
   private def handleReplicated(id: Long, replicator: ActorRef) = {
+    //should not directly use Map.apply here
+    //need the if guard because replication to newJoiners will also trigger this method
+    //and they are not in the pendingReplicates map
     val client: Option[ActorRef] = pendingReplicates.get((id, replicator))
     if (client.isDefined) {
       pendingReplicates -= ((id, replicator))
-      val allReplicationFinished = isAllReplicationsFinished(id)
-      val persistFinished = isPersistFinished(id)
-      if (allReplicationFinished && persistFinished) client.get ! OperationAck(id)
+      ackToClientIfBothFinished(id, client.get)
+    }
+  }
+
+  private def ackToClientIfBothFinished(id: Long, client: ActorRef) = {
+    if (isAllReplicationsFinished(id) && isPersistFinished(id)) {
+      client ! OperationAck(id)
     }
   }
 
