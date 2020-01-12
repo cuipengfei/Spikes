@@ -1,11 +1,12 @@
 package kvstore
 
-import scala.concurrent.duration._
 import akka.actor.{ActorRef, PoisonPill}
 import kvstore.Arbiter.Replicas
 import kvstore.Persistence.{Persist, Persisted}
-import kvstore.Replica.{Get, GetResult, Insert, OperationAck, OperationFailed, Remove}
+import kvstore.Replica._
 import kvstore.Replicator.{Replicate, Replicated}
+
+import scala.concurrent.duration._
 
 trait PrimaryNode {
 

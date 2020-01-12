@@ -1,6 +1,6 @@
 package kvstore
 
-import akka.actor.{Actor, ActorRef, PoisonPill, Props}
+import akka.actor.{Actor, ActorRef, Props}
 import kvstore.Arbiter._
 
 import scala.concurrent.duration._
@@ -30,12 +30,16 @@ object Replica {
   def props(arbiter: ActorRef, persistenceProps: Props): Props = Props(new Replica(arbiter, persistenceProps))
 }
 
-class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor with PrimaryNode with SecondaryNode {
+class Replica(val arbiter: ActorRef, persistenceProps: Props)
+  extends Actor with PrimaryNode with SecondaryNode {
 
   import Persistence._
-  import Replica._
-  import Replicator._
   import context.dispatcher
+
+  var kv = Map.empty[String, String]
+  private val persistence: ActorRef = context.system.actorOf(persistenceProps)
+  //[id,(client,persist)]
+  var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
 
   override def preStart(): Unit = {
     arbiter ! Join
@@ -51,11 +55,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor with
       }
     }
   }
-
-  var kv = Map.empty[String, String]
-
-  private val persistence: ActorRef = context.system.actorOf(persistenceProps)
-  var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
 
   def receive: Receive = {
     case JoinedPrimary => context.become(primary)
