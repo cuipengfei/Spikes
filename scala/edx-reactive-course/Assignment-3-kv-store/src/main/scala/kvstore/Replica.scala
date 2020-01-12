@@ -137,22 +137,21 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   }
 
   val secondary: Receive = {
+    case Get(k, id) =>
+      sender() ! GetResult(k, kv.get(k), id)
+
     case Snapshot(k, vOption, seq) =>
       if (seq == expectedSeq) {
         update(k, vOption, seq)
-      } else {
-        if (seq < expectedSeq) {
-          if (isPersistFinished(seq)) sender() ! SnapshotAck(k, seq)
-        } else {
-          //......
-        }
-      }
+      } else if (seq < expectedSeq) {
+        if (isPersistFinished(seq)) sender() ! SnapshotAck(k, seq)
+      } // ignore seq > expectedSeq
+
     case Persisted(k, seq) =>
       val (replicator, _) = pendingPersists(seq)
       replicator ! SnapshotAck(k, seq)
       pendingPersists -= seq
-    case Get(k, id) =>
-      sender() ! GetResult(k, kv.get(k), id)
+
     case _ =>
   }
 
