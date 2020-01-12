@@ -30,7 +30,7 @@ object Replica {
   def props(arbiter: ActorRef, persistenceProps: Props): Props = Props(new Replica(arbiter, persistenceProps))
 }
 
-class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
+class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor with SecondaryNode {
 
   import Persistence._
   import Replica._
@@ -52,18 +52,10 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     }
   }
 
-  def nextSeq() = {
-    val ret = expectedSeq
-    expectedSeq += 1
-    ret
-  }
-
-  private var kv = Map.empty[String, String]
-
-  private var expectedSeq = 0L
+  var kv = Map.empty[String, String]
 
   private val persistence: ActorRef = context.system.actorOf(persistenceProps)
-  private var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
+  var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
   // [(id,replicator),caller]
   private var pendingReplicates = Map.empty[(Long, ActorRef), ActorRef]
 
@@ -136,25 +128,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     })
   }
 
-  val secondary: Receive = {
-    case Get(k, id) =>
-      sender() ! GetResult(k, kv.get(k), id)
-
-    case Snapshot(k, vOption, seq) =>
-      if (seq == expectedSeq) {
-        update(k, vOption, seq)
-      } else if (seq < expectedSeq) {
-        if (isPersistFinished(seq)) sender() ! SnapshotAck(k, seq)
-      } // ignore seq > expectedSeq
-
-    case Persisted(k, seq) =>
-      val (replicator, _) = pendingPersists(seq)
-      replicator ! SnapshotAck(k, seq)
-      pendingPersists -= seq
-
-    case _ =>
-  }
-
   private def handleReplicated(id: Long, replicator: ActorRef) = {
     //should not directly use Map.apply here
     //need the if guard because replication to newJoiners will also trigger this method
@@ -172,7 +145,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     }
   }
 
-  private def isPersistFinished(id: Long) = {
+  def isPersistFinished(id: Long) = {
     !pendingPersists.contains(id)
   }
 
@@ -198,16 +171,8 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     }
   }
 
-  private def update(k: String, vOption: Option[String], seq: Long): Long = {
-    if (vOption.isDefined) kv += (k -> vOption.get)
-    else kv -= k
 
-    goPersist(seq, sender(), Persist(k, vOption, seq))
-
-    nextSeq()
-  }
-
-  private def goPersist(id: Long, caller: ActorRef, persist: Persist) = {
+  def goPersist(id: Long, caller: ActorRef, persist: Persist) = {
     persistence ! persist
     pendingPersists += (id -> (caller, persist))
   }
