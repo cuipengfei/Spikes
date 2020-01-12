@@ -69,9 +69,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
 
   // a map from secondary replicas to replicators
   private var secondaries = Map.empty[ActorRef, ActorRef]
-  // the current set of replicators
-  private var replicators = Set.empty[ActorRef]
-
 
   def receive: Receive = {
     case JoinedPrimary => context.become(primary)
@@ -106,7 +103,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
       val newJoiners = (replicas - self) -- secondaries.keys
       newJoiners.foreach(newJoiner => {
         val newReplicator = context.actorOf(Replicator.props(newJoiner))
-        replicators += newReplicator
         secondaries += (newJoiner -> newReplicator)
 
         kv.foreach(entry => {
@@ -119,7 +115,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
       val quitters = secondaries.keys.toSet -- (replicas - self)
       quitters.foreach(quitter => {
         val replicator = secondaries(quitter)
-        replicators -= replicator
         secondaries -= quitter
 
         pendingReplicates.keys.foreach(k => {
@@ -163,19 +158,21 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     }
   }
 
-  private def goReplicate(id: Long, caller: ActorRef, replicate: Replicate) = {
+  private def goReplicate(id: Long, client: ActorRef, replicate: Replicate) = {
+    val replicators = secondaries.values
     replicators.foreach(replicator => {
       replicator ! replicate
-      pendingReplicates += ((id, replicator) -> caller)
+      pendingReplicates += ((id, replicator) -> client)
     })
 
     context.system.scheduler.scheduleOnce(1.second) {
       val unfinishedReplicas: Iterable[(Long, ActorRef)] = pendingReplicates.keys.filter(k => k._1 == id)
-      val persistNotFinished = pendingPersists.contains(id)
+
       val replicationNotFinished = unfinishedReplicas.nonEmpty
+      val persistNotFinished = pendingPersists.contains(id)
 
       if (persistNotFinished || replicationNotFinished) {
-        caller ! OperationFailed(id)
+        client ! OperationFailed(id)
         pendingPersists -= id
         pendingReplicates --= unfinishedReplicas
       }
