@@ -86,18 +86,18 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
       goPersist(id, sender(), Persist(k, None, id))
       goReplicate(id, sender(), Replicate(k, None, id))
 
+    case Get(k, id) =>
+      sender() ! GetResult(k, kv.get(k), id)
+
     case Persisted(k, id) =>
       val (client, _) = pendingPersists(id)
       pendingPersists -= id
       // when persist finished, check if all replications also finished, ack if so
-      if (!pendingReplicates.keys.exists(k => k._1 == id)) client ! OperationAck(id)
+      if (isAllReplicationsFinished(id)) client ! OperationAck(id)
 
     case Replicated(k, id) =>
       val replicator = sender()
       handleReplicated(id, replicator)
-
-    case Get(k, id) =>
-      sender() ! GetResult(k, kv.get(k), id)
 
     case Replicas(replicas) =>
       val newJoiners = (replicas - self) -- secondaries.keys
@@ -134,7 +134,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
         update(k, vOption, seq)
       } else {
         if (seq < expectedSeq) {
-          if (!pendingPersists.contains(seq)) sender() ! SnapshotAck(k, seq)
+          if (isPersistFinished(seq)) sender() ! SnapshotAck(k, seq)
         } else {
           //......
         }
@@ -149,13 +149,21 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
   }
 
   private def handleReplicated(id: Long, replicator: ActorRef) = {
-    val client = pendingReplicates.get((id, replicator))
+    val client: Option[ActorRef] = pendingReplicates.get((id, replicator))
     if (client.isDefined) {
       pendingReplicates -= ((id, replicator))
-      val allReplicationFinished = !pendingReplicates.keys.exists(k => k._1 == id)
-      val persistFinished = !pendingPersists.contains(id)
+      val allReplicationFinished = isAllReplicationsFinished(id)
+      val persistFinished = isPersistFinished(id)
       if (allReplicationFinished && persistFinished) client.get ! OperationAck(id)
     }
+  }
+
+  private def isPersistFinished(id: Long) = {
+    !pendingPersists.contains(id)
+  }
+
+  private def isAllReplicationsFinished(id: Long) = {
+    !pendingReplicates.keys.exists(k => k._1 == id)
   }
 
   private def goReplicate(id: Long, client: ActorRef, replicate: Replicate) = {
@@ -168,10 +176,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props) extends Actor {
     context.system.scheduler.scheduleOnce(1.second) {
       val unfinishedReplicas: Iterable[(Long, ActorRef)] = pendingReplicates.keys.filter(k => k._1 == id)
 
-      val replicationNotFinished = unfinishedReplicas.nonEmpty
-      val persistNotFinished = pendingPersists.contains(id)
-
-      if (persistNotFinished || replicationNotFinished) {
+      if (!isPersistFinished(id) || !isAllReplicationsFinished(id)) {
         client ! OperationFailed(id)
         pendingPersists -= id
         pendingReplicates --= unfinishedReplicas
