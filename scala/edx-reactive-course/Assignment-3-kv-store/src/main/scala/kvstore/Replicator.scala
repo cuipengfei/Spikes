@@ -24,6 +24,7 @@ class Replicator(val replica: ActorRef) extends Actor {
   import context.dispatcher
 
   // map from sequence number to pair of sender and request
+  //[seq,(primary,replicate)]
   var acks = Map.empty[Long, (ActorRef, Replicate)]
 
   // a sequence of not-yet-sent snapshots (you can disregard this if not implementing batching)
@@ -31,11 +32,12 @@ class Replicator(val replica: ActorRef) extends Actor {
 
   var _seqCounter = 0L
 
-  // keep telling the partner replica to snapshot, until it has acked and removed from map
-  context.system.scheduler.scheduleAtFixedRate(0 millisecond, 100 millisecond) { () =>
-    acks.foreach { entry =>
-      val (seq, (_, replicate)) = entry
-      replica ! Snapshot(replicate.key, replicate.valueOption, seq)
+  override def preStart(): Unit = {
+    // keep telling the partner replica to snapshot, until it has acked and removed from map
+    context.system.scheduler.scheduleAtFixedRate(0 millisecond, 100 millisecond) { () =>
+      acks.foreach { case (seq, (_, replicate)) =>
+        replica ! Snapshot(replicate.key, replicate.valueOption, seq)
+      }
     }
   }
 
@@ -51,15 +53,15 @@ class Replicator(val replica: ActorRef) extends Actor {
       acks += (_seqCounter -> (sender(), replicate))
       nextSeq()
     case SnapshotAck(k, seq) =>
-      //why do i need this? when could seq not be in the map?
+      //why can not do "acks(seq)"? when could seq not be in the map?
       //original snapshot sent to secondary will eventually end up here
-      //retries can also end up here
-      //whichever one happens first will delete one item from acks map
-      //if we don't have this if guard here, there can be exception from map
-      if (acks.contains(seq)) {
-        val (primary, replicate) = acks(seq)
-        primary ! Replicated(k, replicate.id)
-        acks -= seq
+      //subsequent retries can also end up here
+      //if one one ack get here first, it will delete one item from acks map
+      //and the next one happens later will cause exception if use "acks(seq)"
+      acks.get(seq).foreach {
+        case (primary, replicate) =>
+          primary ! Replicated(k, replicate.id)
+          acks -= seq
       }
     case _ =>
   }

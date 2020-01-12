@@ -28,7 +28,7 @@ class Arbiter extends Actor {
     case Join =>
       if (leader.isEmpty) {
         leader = Some(sender)
-        replicas += sender
+        replicas += sender //todo: why add leader into this set?
         sender ! JoinedPrimary
       } else {
         replicas += sender

@@ -38,21 +38,15 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
 
   var kv = Map.empty[String, String]
   private val persistence: ActorRef = context.system.actorOf(persistenceProps)
-  //[id,(client,persist)]
+  //[id/seq,(client/replicator,persist)]
   var pendingPersists = Map.empty[Long, (ActorRef, Persist)]
 
   override def preStart(): Unit = {
     arbiter ! Join
 
-    // keep telling persistence to persist, until removed from map
-    // for both primary and secondary
+    // keep telling persistence to persist, until removed from map, for both primary and secondary
     context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
-      if (pendingPersists.nonEmpty) {
-        pendingPersists.foreach { entry =>
-          val (_, (_, persist)) = entry
-          persistence ! persist
-        }
-      }
+      pendingPersists.foreach { case (_, (_, persist)) => persistence ! persist }
     }
   }
 
@@ -61,9 +55,7 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
     case JoinedSecondary => context.become(secondary)
   }
 
-  def isPersistFinished(id: Long) = {
-    !pendingPersists.contains(id)
-  }
+  def isPersistFinished(id: Long) = !pendingPersists.contains(id)
 
   def goPersist(id: Long, caller: ActorRef, persist: Persist) = {
     persistence ! persist

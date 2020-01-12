@@ -9,7 +9,7 @@ trait SecondaryNode {
 
   private var expectedSeq = 0L
 
-  def nextSeq(): Long = {
+  private def nextSeq(): Long = {
     val ret = expectedSeq
     expectedSeq += 1
     ret
@@ -19,28 +19,30 @@ trait SecondaryNode {
     case Get(k, id) =>
       sender() ! GetResult(k, kv.get(k), id)
 
-    case Snapshot(k, vOption, seq) =>
+    case snapshot@Snapshot(k, _, seq) =>
       if (seq == expectedSeq) {
-        update(k, vOption, seq)
+        updateAndPersist(snapshot)
       } else if (seq < expectedSeq && isPersistFinished(seq)) {
         sender() ! SnapshotAck(k, seq)
       } // ignore seq > expectedSeq
 
     case Persisted(k, seq) =>
-      val (replicator, _) = pendingPersists(seq)
-      replicator ! SnapshotAck(k, seq)
-      pendingPersists -= seq
+      pendingPersists.get(seq).foreach { case (replicator, _) =>
+        replicator ! SnapshotAck(k, seq)
+        pendingPersists -= seq
+      }
 
     case _ =>
   }
 
-  private def update(k: String, vOption: Option[String], seq: Long): Long = {
-    if (vOption.isDefined) kv += (k -> vOption.get)
-    else kv -= k
+  private def updateAndPersist: PartialFunction[Snapshot, Unit] = {
+    case Snapshot(k, v, seq) =>
+      if (v.isDefined) kv += (k -> v.get)
+      else kv -= k
 
-    goPersist(seq, sender(), Persist(k, vOption, seq))
+      goPersist(seq, sender(), Persist(k, v, seq))
 
-    nextSeq()
+      nextSeq()
   }
 
 }
