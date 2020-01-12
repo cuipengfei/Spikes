@@ -22,8 +22,8 @@ trait SecondaryNode {
     case Snapshot(k, vOption, seq) =>
       if (seq == expectedSeq) {
         update(k, vOption, seq)
-      } else if (seq < expectedSeq) {
-        if (isPersistFinished(seq)) sender() ! SnapshotAck(k, seq)
+      } else if (seq < expectedSeq && isPersistFinished(seq)) {
+        sender() ! SnapshotAck(k, seq)
       } // ignore seq > expectedSeq
 
     case Persisted(k, seq) =>
