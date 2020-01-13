@@ -46,7 +46,7 @@ class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Tim
 
     case SnapshotAck(k, seq) =>
       //todo: why can not do "map(seq)"? when could seq not be in the map?
-      // when could the same secondary ack to its partner replicator more then once?
+      // when could a secondary ack to its partner replicator more then once?
       // once a secondary finishes its persistence it ack to replicator
       // which leads the replicator to remove one item from pending acks
       // which leads to no more retries, so the following if statement should never hit

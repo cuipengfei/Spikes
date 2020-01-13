@@ -24,6 +24,7 @@ trait SecondaryNode {
       if (seq == expectedSeq) {
         updateAndPersist(snapshot)
       } else if (seq < expectedSeq) {
+        println("seq < expected seq happened")
         sender() ! SnapshotAck(k, seq)
       } // ignore seq > expectedSeq
 
