@@ -23,14 +23,14 @@ trait SecondaryNode {
     case snapshot@Snapshot(k, _, seq) =>
       if (seq == expectedSeq) {
         updateAndPersist(snapshot)
-        nextSeq()
-      } else if (seq < expectedSeq && isPersistFinished(seq)) {
+      } else if (seq < expectedSeq) {
         sender() ! SnapshotAck(k, seq)
       } // ignore seq > expectedSeq
 
     case Persisted(k, seq) =>
       pendingPersists.get(seq).foreach { case (replicator, _) =>
         replicator ! SnapshotAck(k, seq)
+        nextSeq()
         pendingPersists -= seq
       }
 

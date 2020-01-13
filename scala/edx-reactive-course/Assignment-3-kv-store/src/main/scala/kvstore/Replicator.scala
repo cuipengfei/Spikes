@@ -56,7 +56,6 @@ class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Tim
       pendingAcks.get(seq).foreach {
         case (primary, replicate) =>
           primary ! Replicated(k, replicate.id)
-          log.info(s"$seq ack, $sender")
           pendingAcks -= seq
       }
 
