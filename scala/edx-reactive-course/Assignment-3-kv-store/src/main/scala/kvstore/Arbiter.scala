@@ -24,7 +24,7 @@ class Arbiter extends Actor {
   var leader: Option[ActorRef] = None
   var replicas = Set.empty[ActorRef]
 
-  def receive = {
+  def receive: Receive = {
     case Join =>
       if (leader.isEmpty) {
         leader = Some(sender)

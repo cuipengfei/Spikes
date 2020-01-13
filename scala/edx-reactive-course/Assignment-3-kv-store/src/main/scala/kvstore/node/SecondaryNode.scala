@@ -37,13 +37,12 @@ trait SecondaryNode {
     case _ =>
   }
 
-  private def updateAndPersist: PartialFunction[Snapshot, Unit] = {
-    case Snapshot(k, vOption, seq) => {
+  private val updateAndPersist: PartialFunction[Snapshot, Unit] = {
+    case Snapshot(k, vOption, seq) =>
       if (vOption.isDefined) kv += (k -> vOption.get)
       else kv -= k
 
       goPersist(seq, sender(), Persist(k, vOption, seq))
-    }
   }
 
 }

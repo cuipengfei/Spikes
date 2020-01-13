@@ -75,37 +75,38 @@ trait PrimaryNode {
     }
   }
 
-  private def ackToClientIfBothFinished(id: Long, client: ActorRef) = {
+  private def ackToClientIfBothFinished(id: Long, client: ActorRef): Unit = {
     if (isAllReplicationsFinished(id) && isPersistFinished(id)) {
       client ! OperationAck(id)
     }
   }
 
-  private def catchUp(newJoiners: Set[ActorRef]) = {
+  private def catchUp(newJoiners: Set[ActorRef]): Unit = {
     newJoiners.foreach(newJoiner => {
       val newReplicator = context.actorOf(Replicator.props(newJoiner))
       secondaries += (newJoiner -> newReplicator)
 
-      //todo: what id to use here?
       kv.foreach { case (k, v) =>
+        //todo: what id to use here?
         newReplicator ! Replicate(k, Some(v), Long.MinValue)
       }
     })
   }
 
-  private def drop(quitters: Set[ActorRef]) = {
+  private def drop(quitters: Set[ActorRef]): Unit = {
     quitters.foreach(quitter => {
       val replicator = secondaries(quitter)
       dropPendingReplicationsOf(replicator)
       replicator ! PoisonPill
 
       secondaries -= quitter
-      //todo: stop the removed secondary as well?
+      //todo: need to stop the removed secondary as well?
     })
   }
 
-  private def dropPendingReplicationsOf(replicator: ActorRef) = {
+  private def dropPendingReplicationsOf(replicator: ActorRef): Unit = {
     val toBeDropped = pendingReplicates.filter { case ((_, r), _) => r == replicator }
+
     //remove from pending, so that primary won't wait for it anymore
     pendingReplicates --= toBeDropped.keys
     //check if should ack to client after remove

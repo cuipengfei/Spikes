@@ -56,11 +56,11 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
     case JoinedSecondary => context.become(secondary)
   }
 
-  def isPersistFinished(id: Long) = {
+  def isPersistFinished(id: Long): Boolean = {
     !pendingPersists.contains(id)
   }
 
-  def goPersist(id: Long, caller: ActorRef, persist: Persist) = {
+  def goPersist(id: Long, caller: ActorRef, persist: Persist): Unit = {
     persistence ! persist
     pendingPersists += (id -> (caller, persist))
   }
