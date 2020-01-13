@@ -62,6 +62,6 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
 
   def goPersist(id: Long, caller: ActorRef, persist: Persist): Unit = {
     persistence ! persist
-    pendingPersists += (id -> (caller, persist))
+    pendingPersists += ((id, (caller, persist)))
   }
 }

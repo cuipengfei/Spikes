@@ -110,7 +110,9 @@ trait PrimaryNode {
     //remove from pending, so that primary won't wait for it anymore
     pendingReplicates --= toBeDropped.keys
     //check if should ack to client after remove
-    toBeDropped.foreach { case ((id, _), client) => ackToClientIfBothFinished(id, client) }
+    toBeDropped.foreach { case ((id, _), client) =>
+      ackToClientIfBothFinished(id, client)
+    }
   }
 
   private def isAllReplicationsFinished(id: Long) = {
