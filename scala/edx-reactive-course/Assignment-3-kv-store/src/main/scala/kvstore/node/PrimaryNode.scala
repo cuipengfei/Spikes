@@ -12,8 +12,6 @@ import scala.concurrent.duration._
 trait PrimaryNode {
   this: Replica =>
 
-  import context.dispatcher
-
   // a map from secondary replicas to replicators
   private var secondaries = Map.empty[ActorRef, ActorRef]
   // [(id,replicator),client]
@@ -52,6 +50,13 @@ trait PrimaryNode {
       val quitters = secondaries.keys.toSet -- (replicas - self)
       drop(quitters)
 
+    case ("OneSecond", id: Long, client: ActorRef) =>
+      if (!isPersistFinished(id) || !isAllReplicationsFinished(id)) {
+        pendingPersists -= id
+        pendingReplicates = pendingReplicates.dropWhile { case ((i, _), _) => i == id }
+        client ! OperationFailed(id)
+      }
+
     case _ =>
   }
 
@@ -62,17 +67,7 @@ trait PrimaryNode {
       pendingReplicates += ((id, replicator) -> client)
     })
 
-    failAfterOneSecond(id, client)
-  }
-
-  private def failAfterOneSecond(id: Long, client: ActorRef) = {
-    context.system.scheduler.scheduleOnce(1.second) {
-      if (!isPersistFinished(id) || !isAllReplicationsFinished(id)) {
-        pendingPersists -= id
-        pendingReplicates = pendingReplicates.dropWhile { case ((i, _), _) => i == id }
-        client ! OperationFailed(id)
-      }
-    }
+    timers.startSingleTimer("FailAfterOneSecond", ("OneSecond", id, client), 1.second)
   }
 
   private def ackToClientIfBothFinished(id: Long, client: ActorRef): Unit = {

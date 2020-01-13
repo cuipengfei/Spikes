@@ -1,6 +1,6 @@
 package kvstore
 
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props, Timers}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -18,27 +18,18 @@ object Replicator {
   def props(replica: ActorRef): Props = Props(new Replicator(replica))
 }
 
-class Replicator(val replica: ActorRef) extends Actor {
+class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Timers {
 
   import Replicator._
-  import context.dispatcher
 
   // map from sequence number to pair of sender and request
   //[seq,(primary,replicate)]
   var pendingAcks = Map.empty[Long, (ActorRef, Replicate)]
 
-  // a sequence of not-yet-sent snapshots (you can disregard this if not implementing batching)
-  var pending = Vector.empty[Snapshot]
-
   var _seqCounter = 0L
 
   override def preStart(): Unit = {
-    // keep telling the partner replica to snapshot, until it has acked and removed from map
-    context.system.scheduler.scheduleAtFixedRate(0 millisecond, 100 millisecond) { () =>
-      pendingAcks.foreach { case (seq, (_, replicate)) =>
-        replica ! Snapshot(replicate.key, replicate.valueOption, seq)
-      }
-    }
+    timers.startTimerAtFixedRate("RetrySnapshot", "RetrySnapshot", 100.milliseconds)
   }
 
   private def nextSeq() = {
@@ -48,23 +39,23 @@ class Replicator(val replica: ActorRef) extends Actor {
   }
 
   def receive: Receive = {
-    case replicate@Replicate(k, vOption, _) =>
+    case msg@Replicate(k, vOption, _) =>
       replica ! Snapshot(k, vOption, _seqCounter)
-      pendingAcks += ((_seqCounter, (sender(), replicate)))
+      pendingAcks += ((_seqCounter, (sender(), msg)))
       nextSeq()
 
     case SnapshotAck(k, seq) =>
       //why can not do "map(seq)"? when could seq not be in the map?
-      //original snapshot sent to secondary will eventually end up here
-      //subsequent retries can also end up here
-      //if one ack gets here first, it will delete one item from map
-      //and the next ack happens later will cause exception if used "map(seq)"
       pendingAcks.get(seq).foreach {
         case (primary, replicate) =>
           primary ! Replicated(k, replicate.id)
           pendingAcks -= seq
       }
 
+    case "RetrySnapshot" =>
+      pendingAcks.foreach { case (seq, (_, replicate)) =>
+        replica ! Snapshot(replicate.key, replicate.valueOption, seq)
+      }
     case _ =>
   }
 }

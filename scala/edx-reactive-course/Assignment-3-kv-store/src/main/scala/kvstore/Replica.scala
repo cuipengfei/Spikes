@@ -1,6 +1,6 @@
 package kvstore
 
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{Actor, ActorRef, Props, Timers}
 import kvstore.Arbiter._
 import kvstore.node.{PrimaryNode, SecondaryNode}
 
@@ -32,10 +32,9 @@ object Replica {
 }
 
 class Replica(val arbiter: ActorRef, persistenceProps: Props)
-  extends Actor with PrimaryNode with SecondaryNode {
+  extends Actor with PrimaryNode with SecondaryNode with Timers {
 
   import Persistence._
-  import context.dispatcher
 
   var kv = Map.empty[String, String]
   private val persistence: ActorRef = context.system.actorOf(persistenceProps)
@@ -44,16 +43,17 @@ class Replica(val arbiter: ActorRef, persistenceProps: Props)
 
   override def preStart(): Unit = {
     arbiter ! Join
+    timers.startTimerAtFixedRate("RetryPersist", "RetryPersist", 100.milliseconds)
+  }
 
-    // keep telling persistence to persist, until removed from map, for both primary and secondary
-    context.system.scheduler.scheduleAtFixedRate(0.millisecond, 100.millisecond) { () =>
+  private val retryPersist: Receive = {
+    case "RetryPersist" =>
       pendingPersists.foreach { case (_, (_, persist)) => persistence ! persist }
-    }
   }
 
   def receive: Receive = {
-    case JoinedPrimary => context.become(primary)
-    case JoinedSecondary => context.become(secondary)
+    case JoinedPrimary => context.become(retryPersist orElse primary)
+    case JoinedSecondary => context.become(retryPersist orElse secondary)
   }
 
   def isPersistFinished(id: Long): Boolean = {
