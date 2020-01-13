@@ -45,10 +45,18 @@ class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Tim
       nextSeq()
 
     case SnapshotAck(k, seq) =>
-      //why can not do "map(seq)"? when could seq not be in the map?
+      //todo: why can not do "map(seq)"? when could seq not be in the map?
+      // when could the same secondary ack to its partner replicator more then once?
+      // once a secondary finishes its persistence it ack to replicator
+      // which leads the replicator to remove one item from pending acks
+      // which leads to no more retries, so the following if statement should never hit
+      // but it does, why?
+      if (!pendingAcks.contains(seq)) log.error(s"$seq ack again, $sender")
+
       pendingAcks.get(seq).foreach {
         case (primary, replicate) =>
           primary ! Replicated(k, replicate.id)
+          log.info(s"$seq ack, $sender")
           pendingAcks -= seq
       }
 
