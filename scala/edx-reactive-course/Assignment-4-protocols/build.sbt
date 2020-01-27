@@ -16,8 +16,8 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka"        %% "akka-actor-typed"         % akkaVersion,
-  "com.typesafe.akka"        %% "akka-actor-testkit-typed" % akkaVersion % Test,
-  "org.scalacheck"           %% "scalacheck"               % "1.14.0"    % Test,
-  "com.novocode"             % "junit-interface"           % "0.11"      % Test
+  "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
+  "org.scalacheck" %% "scalacheck" % "1.14.0" % Test,
+  "com.novocode" % "junit-interface" % "0.11" % Test
 )

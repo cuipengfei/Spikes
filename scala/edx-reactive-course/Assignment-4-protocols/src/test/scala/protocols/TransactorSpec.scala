@@ -29,10 +29,10 @@ trait TransactorSpec {
     val extract = Gen.const(Extract[Int, Int](identity, i.ref))
     val map = Gen.oneOf(
       Gen.zip(arbitrary[Int], serial).map {
-        case(x, id) => Modify[Int, String](x + _, id, s"add $x", done.ref)
+        case (x, id) => Modify[Int, String](x + _, id, s"add $x", done.ref)
       },
       Gen.zip(arbitrary[Int], serial).map {
-        case(x, id) => Modify[Int, String](x * _, id, s"times $x", done.ref)
+        case (x, id) => Modify[Int, String](x * _, id, s"times $x", done.ref)
       }
     )
     val op = Gen.oneOf(extract, map)

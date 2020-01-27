@@ -29,7 +29,7 @@ trait SelectiveReceiveSpec {
 
   def expectStart[T](inbox: TestInbox[T], start: T, followUp: Behavior[T]): Behavior[T] =
     receiveMessagePartial {
-      case x @ `start` =>
+      case x@`start` =>
         inbox.ref ! x
         followUp
     }
@@ -37,17 +37,17 @@ trait SelectiveReceiveSpec {
   @Test def `A SelectiveReceive Decorator must eventually execute the behavior`(): Unit = {
     val values = List("A", "B", "C")
     val abc = Gen.oneOf(values)
-    val abcs = Gen.choose(0, 30).flatMap(Gen.listOfN(_, abc))
+    val abcs: Gen[List[String]] = Gen.choose(0, 30).flatMap(Gen.listOfN(_, abc))
 
-    Util.assertPropPassed(forAll(abcs) { list =>
-      val i = TestInbox[String]()
+    Util.assertPropPassed(forAll(abcs) { list: Seq[String] =>
+      val i: TestInbox[String] = TestInbox[String]()
       val b = behavior(i, 30, values)
       val testkit = BehaviorTestKit(b, "eventually execute")
       list.foreach(value => {
         testkit.ref ! value
         testkit.runOne()
       })
-      val delivered = i.receiveAll()
+      val delivered: Seq[String] = i.receiveAll()
       assertEquals(delivered.sorted, delivered)
       values.foldLeft((passed, true)) { case ((prevProp, prev), v) =>
         val contained = prev && list.contains(v)
