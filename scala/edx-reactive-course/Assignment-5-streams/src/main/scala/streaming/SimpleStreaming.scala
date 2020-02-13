@@ -1,8 +1,12 @@
 package streaming
 
+import java.lang.IllegalStateException
+
 import akka.NotUsed
 import akka.stream.Materializer
+import akka.stream.impl.fusing.Filter
 import akka.stream.scaladsl.{Flow, Sink, Source}
+
 import scala.concurrent.Future
 
 /**
@@ -15,12 +19,14 @@ import scala.concurrent.Future
 object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
 
   /** Change each of the streamed elements to their String values */
-  def mapToStrings(ints: Source[Int, NotUsed]): Source[String, NotUsed] =
-    ???
+  def mapToStrings(ints: Source[Int, NotUsed]): Source[String, NotUsed] = {
+    ints.map(i => i.toString)
+  }
 
   /** Filter elements which are even (use the modulo operator: `%`) */
-  def filterEvenValues: Flow[Int, Int, NotUsed] =
-    ???
+  def filterEvenValues: Flow[Int, Int, NotUsed] = {
+    Flow[Int].filter(i => i % 2 == 0)
+  }
 
   /**
    * Rather than re-using operations as `operation(source): Source`,
@@ -29,8 +35,9 @@ object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
    * Similar to function composition, Flows can be composed thanks to the `via` operator,
    * try to implement this method by composing the previous two.
    */
-  def filterUsingPreviousFilterFlowAndMapToStrings(ints: Source[Int, NotUsed]): Source[String, NotUsed] =
-    ???
+  def filterUsingPreviousFilterFlowAndMapToStrings(ints: Source[Int, NotUsed]): Source[String, NotUsed] = {
+    mapToStrings(ints.via(filterEvenValues))
+  }
 
   /**
    * You likely noticed that the `via` composition style reads more nicely since it is possible to read it
@@ -39,15 +46,17 @@ object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
    * Let's now re-use the passed in toStringFlow to re-implement the previous source semantics,
    * however by chaining multiple Flows with each-other.
    */
-  def filterUsingPreviousFlowAndMapToStringsUsingTwoVias(ints: Source[Int, NotUsed], toString: Flow[Int, String, _]): Source[String, NotUsed] =
-    ???
+  def filterUsingPreviousFlowAndMapToStringsUsingTwoVias(ints: Source[Int, NotUsed], toString: Flow[Int, String, _]): Source[String, NotUsed] = {
+    ints via filterEvenValues via toString
+  }
 
   /**
    * You can also "trim" a stream, by taking a number of elements (or by predicate).
    * In this method, take the first element only -- the stream should be then completed once the first element has arrived.
    */
-  def firstElementSource(ints: Source[Int, NotUsed]): Source[Int, NotUsed] =
-    ???
+  def firstElementSource(ints: Source[Int, NotUsed]): Source[Int, NotUsed] = {
+    ints.take(1)
+  }
 
   /**
    * This time we will actually *run* the stream.
@@ -56,7 +65,7 @@ object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
    * Notes: Compare the signatures of `run` and `runWith`
    */
   def firstElementFuture(ints: Source[Int, NotUsed])(implicit mat: Materializer): Future[Int] =
-    ???
+    ints.runWith(Sink.head)
 
   // --- failure handling ---
 
@@ -64,14 +73,14 @@ object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
    * Recover [[IllegalStateException]] values to a -1 value
    */
   def recoverSingleElement(ints: Source[Int, NotUsed]): Source[Int, NotUsed] =
-    ???
+    ints.recover { case x: IllegalStateException => -1 }
 
   /**
    * Recover [[IllegalStateException]] values to the provided fallback Source
    *
    */
   def recoverToAlternateSource(ints: Source[Int, NotUsed], fallback: Source[Int, NotUsed]): Source[Int, NotUsed] =
-    ???
+    ints.recoverWith { case x: IllegalStateException => fallback }
 
   // working with rate
 
@@ -89,7 +98,7 @@ object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
    * If you'd like to see the exact events happening you can call `.logAllEvents` on the Flow you are returning here
    */
   def sumUntilBackpressureGoesAway: Flow[Int, Int, _] =
-    ???
+    Flow[Int].conflate((acc, elem) => acc + elem)
 
   /**
    * A faster downstream wants to consume elements, yet the upstream is slow at providing them.
@@ -102,6 +111,6 @@ object SimpleStreaming extends ExtraStreamOps with SimpleStreamingInterface {
    * See also [[Iterator.continually]]
    */
   def keepRepeatingLastObservedValue: Flow[Int, Int, _] =
-    ???
+    Flow[Int].extrapolate(Iterator.continually(_))
 
 }
