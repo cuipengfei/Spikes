@@ -11,8 +11,8 @@ import play.api.libs.json.{Json, JsObject, JsPath}
 import scala.util.{Failure, Success, Try}
 
 /**
-  * Provides tasks for submitting the assignment
-  */
+ * Provides tasks for submitting the assignment
+ */
 object StudentTasks extends AutoPlugin {
 
   override def requires = super.requires && MOOCSettings
@@ -59,8 +59,8 @@ object StudentTasks extends AutoPlugin {
   ) ++ packageSubmissionZipSettings
 
   /** **********************************************************
-    * SUBMITTING A SOLUTION TO COURSERA
-    */
+   * SUBMITTING A SOLUTION TO COURSERA
+   */
 
   val packageSubmissionZipSettings = Seq(
     packageSubmissionZip := {
@@ -71,16 +71,16 @@ object StudentTasks extends AutoPlugin {
       submission
     },
     artifactClassifier in packageSourcesOnly := Some("sources"),
-    artifact in (Compile, packageBinWithoutResources) ~= (art => art.withName(art.name + "-without-resources"))
+    artifact in(Compile, packageBinWithoutResources) ~= (art => art.withName(art.name + "-without-resources"))
   ) ++
-  inConfig(Compile)(
-    Defaults.packageTaskSettings(packageSourcesOnly, Defaults.sourceMappings) ++
-    Defaults.packageTaskSettings(packageBinWithoutResources, Def.task {
-      val relativePaths =
-        (unmanagedResources in Compile).value.flatMap(Path.relativeTo((unmanagedResourceDirectories in Compile).value)(_))
-      (mappings in (Compile, packageBin)).value.filterNot { case (_, path) => relativePaths.contains(path) }
-    })
-  )
+    inConfig(Compile)(
+      Defaults.packageTaskSettings(packageSourcesOnly, Defaults.sourceMappings) ++
+        Defaults.packageTaskSettings(packageBinWithoutResources, Def.task {
+          val relativePaths =
+            (unmanagedResources in Compile).value.flatMap(Path.relativeTo((unmanagedResourceDirectories in Compile).value)(_))
+          (mappings in(Compile, packageBin)).value.filterNot { case (_, path) => relativePaths.contains(path) }
+        })
+    )
 
   val maxSubmitFileSize = {
     val mb = 1024 * 1024
@@ -88,8 +88,8 @@ object StudentTasks extends AutoPlugin {
   }
 
   /** Check that the jar exists, isn't empty, isn't crazy big, and can be read
-    * If so, encode jar as base64 so we can send it to Coursera
-    */
+   * If so, encode jar as base64 so we can send it to Coursera
+   */
   def prepareJar(jar: File, s: TaskStreams): String = {
     val errPrefix = "Error submitting assignment jar: "
     val fileLength = jar.length()
@@ -154,8 +154,8 @@ object StudentTasks extends AutoPlugin {
     val courseName =
       course.value match {
         case "capstone" => "scala-capstone"
-        case "bigdata"  => "scala-spark-big-data"
-        case other      => other
+        case "bigdata" => "scala-spark-big-data"
+        case other => other
       }
 
     val partId = assignmentDetails.partId
@@ -174,12 +174,12 @@ object StudentTasks extends AutoPlugin {
               |It can be obtained from the assignment page:
               |https://www.coursera.org/learn/$courseName/programming/$itemId
               |${
-                premiumItemId.fold("") { id =>
-                  s"""or (for premium learners):
-                     |https://www.coursera.org/learn/$courseName/programming/$id
+            premiumItemId.fold("") { id =>
+              s"""or (for premium learners):
+                 |https://www.coursera.org/learn/$courseName/programming/$id
                    """.stripMargin
-                }
-              }
+            }
+          }
           """.stripMargin
         s.log.error(inputErr)
         failSubmit()
@@ -206,9 +206,9 @@ object StudentTasks extends AutoPlugin {
       )
       s.log.info("Connecting to Coursera...")
       val response = Try(http.postData(data)
-                         .headers(hs)
-                         .option(HttpOptions.connTimeout(10000)) // scalaj default timeout is only 100ms, changing that to 10s
-                         .asString) // kick off HTTP POST
+        .headers(hs)
+        .option(HttpOptions.connTimeout(10000)) // scalaj default timeout is only 100ms, changing that to 10s
+        .asString) // kick off HTTP POST
       response
     }
 
@@ -223,23 +223,23 @@ object StudentTasks extends AutoPlugin {
       val code = response.code
       val respBody = response.body
 
-       /* Sample JSON response from Coursera
-      {
-        "message": "Invalid email or token.",
-        "details": {
-          "learnerMessage": "Invalid email or token."
-        }
-      }
-      */
+      /* Sample JSON response from Coursera
+     {
+       "message": "Invalid email or token.",
+       "details": {
+         "learnerMessage": "Invalid email or token."
+       }
+     }
+     */
 
       // Success, Coursera responds with 2xx HTTP status code
       if (response.is2xx) {
         val successfulSubmitMsg =
           s"""|Successfully connected to Coursera. (Status $code)
               |
-                |Assignment submitted successfully!
+              |Assignment submitted successfully!
               |
-                |You can see how you scored by going to:
+              |You can see how you scored by going to:
               |https://www.coursera.org/learn/$courseName/programming/$itemId/
               |${
             premiumItemId.fold("") { id =>
@@ -303,16 +303,16 @@ object StudentTasks extends AutoPlugin {
         s.log.error(failedConnectMsg)
     }
 
-   }
+  }
 
   def failSubmit(): Nothing = {
     sys.error("Submission failed")
   }
 
   /**
-    * *****************
-    * DEALING WITH JARS
-    */
+   * *****************
+   * DEALING WITH JARS
+   */
   def encodeBase64(bytes: Array[Byte]): String =
     new String(Base64.encodeBase64(bytes))
 }

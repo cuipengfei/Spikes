@@ -11,7 +11,7 @@ trait ExtraStreamOps {
   implicit final class ExtraOps[T, M](val f: Flow[T, T, M]) {
 
     // proposed as idea to akka streams: https://github.com/akka/akka/issues/24859
-    def logAllEvents (name: String)= {
+    def logAllEvents(name: String) = {
       val l = new GraphStage[FlowShape[T, T]] {
         val in = Inlet[T]("logAllEvents.in")
         val out = Outlet[T]("logAllEvents.out")
@@ -43,9 +43,11 @@ trait ExtraStreamOps {
           override def onUpstreamFinish(): Unit = {
             log.log(level, s"complete         ==> {$paddedName}")
           }
+
           override def onUpstreamFailure(ex: Throwable): Unit = {
             log.log(level, s"fail(onError)    xx> {$paddedName}")
           }
+
           override def onDownstreamFinish(cause: Throwable): Unit = {
             log.log(level, s"cancel           x~~ {$paddedName}")
           }
@@ -85,9 +87,11 @@ trait ExtraStreamOps {
           override def onUpstreamFinish(): Unit = {
             log.log(level, s"complete             {$paddedName} ==>")
           }
+
           override def onUpstreamFailure(ex: Throwable): Unit = {
             log.log(level, s"fail(onError)        {$paddedName} xx>")
           }
+
           override def onDownstreamFinish(cause: Throwable): Unit = {
             log.log(level, s"cancel from downstr  {$paddedName} x~~")
           }

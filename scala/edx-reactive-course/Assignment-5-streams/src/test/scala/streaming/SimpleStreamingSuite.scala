@@ -13,6 +13,7 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
 class SimpleStreamingSuite extends TestKit(ActorSystem("SimpleStreaming")) {
+
   import SimpleStreaming._
 
   // Convenient method that blocks until a Future value is completed
@@ -114,7 +115,7 @@ class SimpleStreamingSuite extends TestKit(ActorSystem("SimpleStreaming")) {
 
     p.sendError(ex)
     s.expectNext(10)
-     .expectNext(11)
+      .expectNext(11)
   }
 
 
@@ -145,9 +146,9 @@ class SimpleStreamingSuite extends TestKit(ActorSystem("SimpleStreaming")) {
   @Test def `keep repeating last observed value`(): Unit = {
     val (sourceProbe, sinkProbe) =
       TestSource.probe[Int]
-      .via(keepRepeatingLastObservedValue)
-      .toMat(TestSink.probe)(Keep.both)
-      .run()
+        .via(keepRepeatingLastObservedValue)
+        .toMat(TestSink.probe)(Keep.both)
+        .run()
 
     sourceProbe.ensureSubscription()
     sourceProbe.expectRequest()

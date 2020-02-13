@@ -7,16 +7,16 @@ import sbt.Keys._
  * Coursera uses two versions of each assignment. They both have the same assignment key and part id but have
  * different item ids.
  *
- * @param key Assignment key
- * @param partId Assignment partId
- * @param itemId Item id of the non premium version
+ * @param key           Assignment key
+ * @param partId        Assignment partId
+ * @param itemId        Item id of the non premium version
  * @param premiumItemId Item id of the premium version (`None` if the assignment is optional)
  */
 case class CourseraId(key: String, partId: String, itemId: String, premiumItemId: Option[String])
 
 /**
-  * Settings shared by all assignments, reused in various tasks.
-  */
+ * Settings shared by all assignments, reused in various tasks.
+ */
 object MOOCSettings extends AutoPlugin {
 
   object autoImport {
