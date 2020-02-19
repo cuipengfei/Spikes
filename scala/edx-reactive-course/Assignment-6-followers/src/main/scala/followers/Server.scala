@@ -5,7 +5,7 @@ import akka.event.Logging
 import akka.stream.scaladsl.{BroadcastHub, Flow, Framing, Keep, MergeHub, Sink, Source}
 import akka.stream.{ActorAttributes, Materializer}
 import akka.util.ByteString
-import followers.model.Event.{Broadcast, Follow, PrivateMsg, StatusUpdate, Unfollow}
+import followers.model.Event._
 import followers.model.{Event, Followers, Identity}
 
 import scala.collection.immutable.SortedSet
@@ -169,7 +169,7 @@ class Server()(implicit executionContext: ExecutionContext, materializer: Materi
     *  1. A `Sink` that consumes events data,
     *  2. and a `Source` of decoded events paired with the state of followers.
     */
-  val (inboundSink, broadcastOut) = {
+  val (inboundSink: Sink[ByteString, NotUsed], broadcastOut: Source[(Event, Followers), NotUsed]) = {
     /**
       * A flow that consumes the event source, re-frames it,
       * decodes the events, re-orders them, and builds a Map of
@@ -178,7 +178,7 @@ class Server()(implicit executionContext: ExecutionContext, materializer: Materi
       * of the followers Map.
       */
     val incomingDataFlow: Flow[ByteString, (Event, Followers), NotUsed] =
-      unimplementedFlow
+      eventParserFlow via reintroduceOrdering via followersFlow
 
     // Wires the MergeHub and the BroadcastHub together and runs the graph
     MergeHub.source[ByteString](256)
@@ -202,7 +202,7 @@ class Server()(implicit executionContext: ExecutionContext, materializer: Materi
     * `Flow.fromSinkAndSourceCoupled` to find how to achieve that.
     */
   val eventsFlow: Flow[ByteString, Nothing, NotUsed] =
-    unimplementedFlow
+    Flow.fromSinkAndSourceCoupled(inboundSink, Source.maybe[Nothing])
 
   /**
     * @return The source of events for the given user
@@ -217,7 +217,9 @@ class Server()(implicit executionContext: ExecutionContext, materializer: Materi
     *               Status Update:   All current followers of the From User ID should be notified
     */
   def outgoingFlow(userId: Int): Source[ByteString, NotUsed] =
-    ???
+    broadcastOut.filter(isNotified(userId)).map {
+      case (event, followers) => event.render
+    }
 
   /**
     * The "final form" of the client flow.
@@ -238,13 +240,13 @@ class Server()(implicit executionContext: ExecutionContext, materializer: Materi
     */
   def clientFlow(): Flow[ByteString, ByteString, NotUsed] = {
     val clientIdPromise = Promise[Identity]()
-    //    clientIdPromise.future.map(id => actorSystem.log.info("Connected follower: {}", id.userId))
-
-    // A sink that parses the client identity and completes `clientIdPromise` with it
     val incoming: Sink[ByteString, NotUsed] =
-      ???
+      identityParserSink.mapMaterializedValue { mat =>
+        clientIdPromise.completeWith(mat)
+        NotUsed
+      }
 
-    val outgoing = Source.futureSource(clientIdPromise.future.map { identity =>
+    val outgoing = Source.fromFutureSource(clientIdPromise.future.map { identity =>
       outgoingFlow(identity.userId)
     })
 
