@@ -47,7 +47,7 @@ object Server extends ServerModuleInterface {
     * Hint: reuse `reframedFlow`
     */
   val eventParserFlow: Flow[ByteString, Event, NotUsed] =
-    unimplementedFlow
+    reframedFlow.map(str => Event.parse(str))
 
   /**
     * Implement a Sink that will look for the first [[Identity]]
