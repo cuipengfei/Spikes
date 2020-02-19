@@ -5,6 +5,7 @@ import akka.event.Logging
 import akka.stream.scaladsl.{BroadcastHub, Flow, Framing, Keep, MergeHub, Sink, Source}
 import akka.stream.{ActorAttributes, Materializer}
 import akka.util.ByteString
+import followers.model.Event.{Follow, Unfollow}
 import followers.model.{Event, Followers, Identity}
 
 import scala.collection.immutable.SortedSet
@@ -106,7 +107,19 @@ object Server extends ServerModuleInterface {
     *  - you may find the `statefulMapConcat` operation useful.
     */
   val followersFlow: Flow[Event, (Event, Followers), NotUsed] =
-    unimplementedFlow
+    Flow[Event].statefulMapConcat(() => {
+      var followers: Followers = Map.empty.withDefaultValue(Set.empty)
+      event => {
+        event match {
+          case Follow(_, fromUserId, toUserId) =>
+            followers = followers.updated(fromUserId, followers(fromUserId) + toUserId)
+          case Unfollow(_, fromUserId, toUserId) =>
+            followers = followers.updated(fromUserId, followers(fromUserId) - toUserId)
+          case _ =>
+        }
+        (event, followers) :: Nil
+      }
+    })
 
   /**
     * @return Whether the given user should be notified by the incoming `Event`,
