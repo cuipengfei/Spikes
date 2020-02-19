@@ -30,8 +30,11 @@ object Server extends ServerModuleInterface {
     *
     * Hint: you may find the [[Framing]] flows useful.
     */
-  val reframedFlow: Flow[ByteString, String, NotUsed] =
-    unimplementedFlow
+  val reframedFlow: Flow[ByteString, String, NotUsed] = {
+    Framing
+      .delimiter(ByteString("\n"), Int.MaxValue, false)
+      .map(byteString => byteString.utf8String)
+  }
 
   /**
     * A flow that consumes chunks of bytes and produces [[Event]] messages.
@@ -89,7 +92,7 @@ object Server extends ServerModuleInterface {
     * @return Whether the given user should be notified by the incoming `Event`,
     *         given the current state of `Followers`. See [[Event]] for more
     *         information of when users should be notified about them.
-    * @param userId Id of the user
+    * @param userId            Id of the user
     * @param eventAndFollowers Event and current state of followers
     */
   def isNotified(userId: Int)(eventAndFollowers: (Event, Followers)): Boolean =
@@ -107,10 +110,11 @@ object Server extends ServerModuleInterface {
   * Creates a hub accepting several client connections and a single event connection.
   *
   * @param executionContext Execution context for `Future` values transformations
-  * @param materializer Stream materializer
+  * @param materializer     Stream materializer
   */
 class Server()(implicit executionContext: ExecutionContext, materializer: Materializer)
   extends ServerInterface with ExtraStreamOps {
+
   import Server._
 
   /**
@@ -162,37 +166,37 @@ class Server()(implicit executionContext: ExecutionContext, materializer: Materi
     * @return The source of events for the given user
     * @param userId Id of the user
     *
-    * Reminder on delivery semantics of messages:
+    *               Reminder on delivery semantics of messages:
     *
-    * Follow:          Only the To User Id should be notified
-    * Unfollow:        No clients should be notified
-    * Broadcast:       All connected user clients should be notified
-    * Private Message: Only the To User Id should be notified
-    * Status Update:   All current followers of the From User ID should be notified
+    *               Follow:          Only the To User Id should be notified
+    *               Unfollow:        No clients should be notified
+    *               Broadcast:       All connected user clients should be notified
+    *               Private Message: Only the To User Id should be notified
+    *               Status Update:   All current followers of the From User ID should be notified
     */
   def outgoingFlow(userId: Int): Source[ByteString, NotUsed] =
     ???
 
   /**
-   * The "final form" of the client flow.
-   *
-   * Clients will connect to this server and send their id as an Identity message (e.g. "21323\n").
-   *
-   * The server should establish a link from the event source towards the clients, in such way that they
-   * receive only the events that they are interested about.
-   *
-   * The incoming side of this flow needs to extract the client id to then properly construct the outgoing Source,
-   * as it will need this identifier to notify the server which data it is interested about.
-   *
-   * Hints:
-   *   - since the clientId will be emitted as a materialized value of `identityParserSink`,
-   *     you may need to use mapMaterializedValue to side effect it into a shared Promise/Future that the Source
-   *     side can utilise to construct such Source "from that client id future".
-   *   - Remember to use `via()` to connect a `Flow`, and `to()` to connect a `Sink`.
-   */
+    * The "final form" of the client flow.
+    *
+    * Clients will connect to this server and send their id as an Identity message (e.g. "21323\n").
+    *
+    * The server should establish a link from the event source towards the clients, in such way that they
+    * receive only the events that they are interested about.
+    *
+    * The incoming side of this flow needs to extract the client id to then properly construct the outgoing Source,
+    * as it will need this identifier to notify the server which data it is interested about.
+    *
+    * Hints:
+    *   - since the clientId will be emitted as a materialized value of `identityParserSink`,
+    * you may need to use mapMaterializedValue to side effect it into a shared Promise/Future that the Source
+    * side can utilise to construct such Source "from that client id future".
+    *   - Remember to use `via()` to connect a `Flow`, and `to()` to connect a `Sink`.
+    */
   def clientFlow(): Flow[ByteString, ByteString, NotUsed] = {
     val clientIdPromise = Promise[Identity]()
-//    clientIdPromise.future.map(id => actorSystem.log.info("Connected follower: {}", id.userId))
+    //    clientIdPromise.future.map(id => actorSystem.log.info("Connected follower: {}", id.userId))
 
     // A sink that parses the client identity and completes `clientIdPromise` with it
     val incoming: Sink[ByteString, NotUsed] =
