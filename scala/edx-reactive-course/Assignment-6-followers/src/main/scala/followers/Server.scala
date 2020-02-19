@@ -60,7 +60,7 @@ object Server extends ServerModuleInterface {
     * (and have a look at `Keep.right`).
     */
   val identityParserSink: Sink[ByteString, Future[Identity]] =
-    unimplementedSink
+    reframedFlow.map(Identity.parse).toMat(Sink.head)(Keep.right)
 
   /**
     * A flow that consumes unordered messages and produces messages ordered by `sequenceNr`.
@@ -74,8 +74,28 @@ object Server extends ServerModuleInterface {
     * You may want to use `statefulMapConcat` in order to keep the state needed for this
     * operation around in the operator.
     */
+  implicit val ord: Ordering[Event] = Ordering.by(_.sequenceNr)
+
   val reintroduceOrdering: Flow[Event, Event, NotUsed] =
-    unimplementedFlow
+    Flow[Event].statefulMapConcat(() => pickExpectedEvent)
+
+  def pickExpectedEvent: Event => Seq[Event] = {
+    var expect = 1
+    var buffer: Set[Event] = SortedSet[Event]()
+
+    event: Event => {
+      buffer += event
+      val toSend: Seq[Event] = buffer
+        .takeWhile(event => {
+          val isExpected = event.sequenceNr == expect
+          if (isExpected) expect += 1
+          isExpected
+        }).toList
+
+      buffer = buffer.drop(toSend.length)
+      toSend
+    }
+  }
 
   /**
     * A flow that associates a state of [[Followers]] to
