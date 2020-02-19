@@ -5,7 +5,7 @@ import akka.event.Logging
 import akka.stream.scaladsl.{BroadcastHub, Flow, Framing, Keep, MergeHub, Sink, Source}
 import akka.stream.{ActorAttributes, Materializer}
 import akka.util.ByteString
-import followers.model.Event.{Follow, Unfollow}
+import followers.model.Event.{Broadcast, Follow, PrivateMsg, StatusUpdate, Unfollow}
 import followers.model.{Event, Followers, Identity}
 
 import scala.collection.immutable.SortedSet
@@ -128,8 +128,17 @@ object Server extends ServerModuleInterface {
     * @param userId            Id of the user
     * @param eventAndFollowers Event and current state of followers
     */
-  def isNotified(userId: Int)(eventAndFollowers: (Event, Followers)): Boolean =
-    ???
+  def isNotified(userId: Int)(eventAndFollowers: (Event, Followers)): Boolean = {
+    val (event, followers) = eventAndFollowers
+
+    event match {
+      case _: Broadcast => true
+      case _: Unfollow => false
+      case Follow(_, _, to) => userId == to
+      case PrivateMsg(_, _, to) => userId == to
+      case StatusUpdate(_, from) => followers(userId).contains(from)
+    }
+  }
 
   // Utilities to temporarily have unimplemented parts of the program
   private def unimplementedFlow[A, B, C]: Flow[A, B, C] =
