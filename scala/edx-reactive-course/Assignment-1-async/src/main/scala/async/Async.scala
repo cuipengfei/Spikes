@@ -12,8 +12,8 @@ object Async extends AsyncInterface {
     * In case the given `Future` value failed, this method
     * should return a failed `Future` with the same error.
     */
-  def transformSuccess(eventuallyX: Future[Int]): Future[Boolean] = {
-    eventuallyX.map(x => x % 2 == 0)
+  def transformSuccess(future: Future[Int]): Future[Boolean] = {
+    future.map(x => x % 2 == 0)
   }
 
   /**
@@ -23,8 +23,8 @@ object Async extends AsyncInterface {
     * In case the given `Future` value was successful, this method
     * should return a successful `Future` with the same value.
     */
-  def recoverFailure(eventuallyX: Future[Int]): Future[Int] = {
-    eventuallyX.fallbackTo(Future.successful(-1))
+  def recoverFailure(future: Future[Int]): Future[Int] = {
+    future.fallbackTo(Future.successful(-1))
   }
 
 
