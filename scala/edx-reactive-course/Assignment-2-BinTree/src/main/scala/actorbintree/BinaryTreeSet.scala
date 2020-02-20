@@ -19,7 +19,8 @@ class BinaryTreeSet extends Actor with Stash {
   def receive: Receive = normal
 
   val normal: Receive = {
-    case op: Operation => root ! op //regular operations, just need to forward to root
+    //regular operations, just need to forward to root
+    case op: Operation => root ! op
     case GC =>
       val newRoot = createRoot()
       context.become(garbageCollecting(newRoot))

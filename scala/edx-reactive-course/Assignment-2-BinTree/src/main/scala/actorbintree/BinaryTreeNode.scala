@@ -13,26 +13,30 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
 
   def receive: Receive = normal
 
-  /** Handles `Operation` messages and `CopyTo` requests. */
   val normal: Receive = {
 
-    case ins: Insert =>
-      if (ins.elem == this.elem) {
-        this.removed = false //it could be removed and then added back
-        ins.requester ! OperationFinished(ins.id)
+    case insertOp: Insert =>
+      if (insertOp.elem == this.elem) {
+        //it could be removed and then added back before GC
+        this.removed = false
+        insertOp.requester ! OperationFinished(insertOp.id)
       }
-      else addTo(getPosition(ins.elem), ins)
+      else add(getPosition(insertOp.elem), insertOp)
 
-    case cts: Contains =>
-      if (cts.elem == this.elem) cts.requester ! ContainsResult(cts.id, !removed)
-      else contains(getPosition(cts.elem), cts)
+    case containsOp: Contains =>
+      if (containsOp.elem == this.elem)
+        containsOp.requester ! ContainsResult(containsOp.id, !removed)
+      else
+        contains(getPosition(containsOp.elem), containsOp)
 
     case rm: Remove =>
       if (rm.elem == this.elem) {
         this.removed = true
         rm.requester ! OperationFinished(rm.id)
       }
-      else remove(getPosition(rm.elem), rm)
+      else {
+        remove(getPosition(rm.elem), rm)
+      }
 
     case cp: CopyTo =>
       if (this.removed) {
@@ -56,17 +60,23 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
   }
 
   private def remove(pos: Position, rm: Remove): Unit = {
-    if (subtrees.isDefinedAt(pos)) subtrees(pos) ! rm
-    else rm.requester ! OperationFinished(rm.id)
+    if (subtrees.contains(pos))
+      subtrees(pos) ! rm
+    else
+      rm.requester ! OperationFinished(rm.id)
   }
 
-  private def contains(pos: Position, cts: Contains): Unit = {
-    if (subtrees.isDefinedAt(pos)) subtrees(pos) ! cts
-    else cts.requester ! ContainsResult(cts.id, false)
+  private def contains(pos: Position, containsOp: Contains): Unit = {
+    if (subtrees.contains(pos))
+      subtrees(pos) ! containsOp
+    else
+      containsOp.requester ! ContainsResult(containsOp.id, false)
   }
 
-  private def addTo(pos: Position, ins: Insert): Unit = {
-    if (subtrees.isDefinedAt(pos)) subtrees(pos) ! ins
+  private def add(pos: Position, ins: Insert): Unit = {
+    if (subtrees.contains(pos)) {
+      subtrees(pos) ! ins
+    }
     else {
       subtrees += (pos -> createNode(ins.elem))
       ins.requester ! OperationFinished(ins.id)
@@ -80,7 +90,7 @@ class BinaryTreeNode(val elem: Int, initiallyRemoved: Boolean) extends Actor {
     * `insertConfirmed` tracks whether the copy of this node to the new tree has been confirmed.
     */
   def copying(expected: Set[ActorRef], insertConfirmed: Boolean): Receive = {
-    case OperationFinished(id) =>
+    case OperationFinished(_) =>
       if (expected.isEmpty) {
         context.parent ! CopyFinished
         self ! PoisonPill
