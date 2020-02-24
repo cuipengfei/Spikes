@@ -46,8 +46,8 @@ trait PrimaryNode {
 
     case Replicas(replicas) =>
       val newJoiners = (replicas - self) -- secondaries.keys
-      catchUp(newJoiners)
       val quitters = secondaries.keys.toSet -- (replicas - self)
+      catchUp(newJoiners)
       drop(quitters)
 
     case ("OneSecond", id: Long, client: ActorRef) =>

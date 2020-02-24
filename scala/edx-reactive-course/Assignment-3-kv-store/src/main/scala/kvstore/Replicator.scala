@@ -39,20 +39,12 @@ class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Tim
   }
 
   def receive: Receive = {
-    case msg@Replicate(k, vOption, _) =>
-      replica ! Snapshot(k, vOption, _seqCounter)
+    case msg@Replicate(k, v, _) =>
+      this.replica ! Snapshot(k, v, _seqCounter)
       pendingAcks += ((_seqCounter, (sender(), msg)))
       nextSeq()
 
     case SnapshotAck(k, seq) =>
-      //todo: why can not do "map(seq)"? when could seq not be in the map?
-      // when could a secondary ack to its partner replicator more then once?
-      // once a secondary finishes its persistence it ack to replicator
-      // which leads the replicator to remove one item from pending acks
-      // which leads to no more retries, so the following if statement should never hit
-      // but it does, why?
-      if (!pendingAcks.contains(seq)) log.error(s"$seq ack again, $sender")
-
       pendingAcks.get(seq).foreach {
         case (primary, replicate) =>
           primary ! Replicated(k, replicate.id)
@@ -61,7 +53,7 @@ class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Tim
 
     case "RetrySnapshot" =>
       pendingAcks.foreach { case (seq, (_, replicate)) =>
-        replica ! Snapshot(replicate.key, replicate.valueOption, seq)
+        this.replica ! Snapshot(replicate.key, replicate.valueOption, seq)
       }
     case _ =>
   }
