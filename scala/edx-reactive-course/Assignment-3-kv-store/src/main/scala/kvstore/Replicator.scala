@@ -26,22 +26,22 @@ class Replicator(val replica: ActorRef) extends Actor with ActorLogging with Tim
   //[seq,(primary,replicate)]
   var pendingAcks = Map.empty[Long, (ActorRef, Replicate)]
 
-  var _seqCounter = 0L
+  var seq = 0L
 
   override def preStart(): Unit = {
     timers.startTimerAtFixedRate("RetrySnapshot", "RetrySnapshot", 100.milliseconds)
   }
 
   private def nextSeq() = {
-    val ret = _seqCounter
-    _seqCounter += 1
+    val ret = seq
+    seq += 1
     ret
   }
 
   def receive: Receive = {
     case msg@Replicate(k, v, _) =>
-      this.replica ! Snapshot(k, v, _seqCounter)
-      pendingAcks += ((_seqCounter, (sender(), msg)))
+      this.replica ! Snapshot(k, v, seq)
+      pendingAcks += ((seq, (sender(), msg)))
       nextSeq()
 
     case SnapshotAck(k, seq) =>
