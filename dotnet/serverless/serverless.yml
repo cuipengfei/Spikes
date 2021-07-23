@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: serverless
+service: azure-csharp-example
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
