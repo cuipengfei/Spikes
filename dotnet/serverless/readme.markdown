@@ -1,4 +1,4 @@
-#C# function on Azure serverless example
+# C# function on Azure serverless example
 
 Run ```docker-compose build```
 
