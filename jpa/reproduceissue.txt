@@ -1,0 +1,305 @@
+package com.example.demo.customerWithEmbedId;
+
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Embeddable;
+import java.io.Serializable;
+
+@NoArgsConstructor
+@EqualsAndHashCode
+@Embeddable
+public class CustomerId implements Serializable {
+
+    private Long unitId;
+
+    private Long versionId;
+
+    public void setUnitId(Long unitId) {
+        this.unitId = unitId;
+    }
+
+    public void setVersionId(Long versionId) {
+        this.versionId = versionId;
+    }
+}
+
+
+package com.example.demo.customerWithEmbedId;
+
+
+import org.hibernate.annotations.DiscriminatorFormula;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import java.io.Serializable;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorFormula("case when vip_number is not null then 'vip' else 'normal' end")
+@DiscriminatorValue("normal")
+public class CustomerWithEmbedId implements Serializable {
+
+    @EmbeddedId
+    private CustomerId customerId;
+
+    private String firstName;
+    private String lastName;
+
+    protected CustomerWithEmbedId() {
+    }
+
+    public CustomerWithEmbedId(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setVersionId(Long versionId) {
+        if (customerId == null) {
+            customerId = new CustomerId();
+        }
+        this.customerId.setVersionId(versionId);
+    }
+
+    public void setUnitId(Long unitId) {
+        if (customerId == null) {
+            customerId = new CustomerId();
+        }
+        this.customerId.setUnitId(unitId);
+    }
+}
+
+
+package com.example.demo.customerWithEmbedId;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface CustomerWithEmbedIdRepository extends CrudRepository<CustomerWithEmbedId, CustomerId> {
+
+}
+
+
+package com.example.demo.customerWithEmbedId;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("vip")
+public class VipCustomerWithEmbedId extends CustomerWithEmbedId {
+    private String vipNumber;
+
+    public VipCustomerWithEmbedId() {
+    }
+
+    public VipCustomerWithEmbedId(String firstName, String lastName, String vipNumber) {
+        super(firstName, lastName);
+        this.vipNumber = vipNumber;
+    }
+
+    public String getVipNumber() {
+        return vipNumber;
+    }
+
+    public void setVipNumber(String vipNumber) {
+        this.vipNumber = vipNumber;
+    }
+}
+
+
+package com.example.demo.customerWithIdClass;
+
+
+import org.hibernate.annotations.DiscriminatorFormula;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import java.io.Serializable;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorFormula("case when vip_number is not null then 'vip' else 'normal' end")
+@DiscriminatorValue("normal")
+@IdClass(CustomerId.class)
+public class CustomerWithIdClass implements Serializable {
+
+    private String firstName;
+    private String lastName;
+
+    @Id
+    private Long versionId;
+    @Id
+    private Long unitId;
+
+    protected CustomerWithIdClass() {
+    }
+
+    public CustomerWithIdClass(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setVersionId(Long versionId) {
+        this.versionId = versionId;
+    }
+
+    public void setUnitId(Long unitId) {
+        this.unitId = unitId;
+    }
+}
+
+package com.example.demo.customerWithIdClass;
+
+import org.springframework.data.repository.CrudRepository;
+
+public interface CustomerWithIdClassRepository extends CrudRepository<CustomerWithIdClass, CustomerId> {
+
+}
+
+
+package com.example.demo.customerWithIdClass;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("vip")
+public class VipCustomerWithIdClass extends CustomerWithIdClass {
+    private String vipNumber;
+
+    public VipCustomerWithIdClass() {
+    }
+
+    public VipCustomerWithIdClass(String firstName, String lastName, String vipNumber) {
+        super(firstName, lastName);
+        this.vipNumber = vipNumber;
+    }
+
+    public String getVipNumber() {
+        return vipNumber;
+    }
+
+    public void setVipNumber(String vipNumber) {
+        this.vipNumber = vipNumber;
+    }
+}
+
+
+package com.example.demo;
+import com.example.demo.customerWithEmbedId.CustomerWithEmbedId;
+import com.example.demo.customerWithEmbedId.CustomerWithEmbedIdRepository;
+import com.example.demo.customerWithEmbedId.VipCustomerWithEmbedId;
+import com.example.demo.customerWithIdClass.CustomerWithIdClass;
+import com.example.demo.customerWithIdClass.CustomerWithIdClassRepository;
+import com.example.demo.customerWithIdClass.VipCustomerWithIdClass;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+    @Bean
+    public CommandLineRunner demo(CustomerWithEmbedIdRepository repositoryEmbedIdVersion,
+                                  CustomerWithIdClassRepository repositoryIdClassVersion) {
+        return (args) -> {
+            embedIdIsOk(repositoryEmbedIdVersion);
+            butIdClassFails(repositoryIdClassVersion);
+        };
+    }
+    private void embedIdIsOk(CustomerWithEmbedIdRepository repo) {
+        CustomerWithEmbedId customer = new CustomerWithEmbedId("a", "b");
+        customer.setVersionId(123L);
+        customer.setUnitId(456L);
+        repo.save(customer); //save object of base class, ok
+        customer.setFirstName("a2");
+        repo.save(customer);//modify object of base class and save again, ok
+        VipCustomerWithEmbedId vipCustomer = new VipCustomerWithEmbedId("a", "b", "888");
+        vipCustomer.setVersionId(987L);
+        vipCustomer.setUnitId(654L);
+        repo.save(vipCustomer); //save object of sub class, ok
+        vipCustomer.setVipNumber("999");
+        repo.save(vipCustomer);//modify object of base class and save again, ok
+        // using embedded id annotation, all 4 times of saving to db ok, for both pg and mysql
+    }
+    private void butIdClassFails(CustomerWithIdClassRepository repository) {
+        CustomerWithIdClass customer = new CustomerWithIdClass("a", "b");
+        customer.setVersionId(123L);
+        customer.setUnitId(456L);
+        repository.save(customer);//save object of base class, ok
+        customer.setFirstName("a2");
+        repository.save(customer);//modify object of base class and save again, ok
+        VipCustomerWithIdClass vipCustomer = new VipCustomerWithIdClass("a", "b", "888");
+        vipCustomer.setVersionId(987L);
+        vipCustomer.setUnitId(654L);
+        repository.save(vipCustomer);//save object of sub class, ok
+        vipCustomer.setVipNumber("999");
+        repository.save(vipCustomer);//modify object of base class and save again, NOT OK
+        // ↑ THIS FAILS BECAUSE OF PRIMARY KEY CONFLICT. INSERT STATEMENT WAS USED INSTEAD OF UPDATE, WHY?
+        // this failure only happens when using the id class annotation, for both pg and mysql
+    }
+
+}
+
+
+
+#spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+#spring.datasource.username=postgres
+#spring.datasource.password=mysecretpassword
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#
+#spring.jpa.database-platform=org.hibernate.dialect.PostgreSQL95Dialect
+#spring.jpa.show-sql=true
+#spring.jpa.hibernate.ddl-auto=create
+
+# ----------
+
+spring.datasource.url=jdbc:mysql://localhost:3306/mysql
+spring.datasource.username=root
+spring.datasource.password=my-secret-pw
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=create
