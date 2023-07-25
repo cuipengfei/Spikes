@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="3.1" jmeter="3.1 r1770033">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CDG-API" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables local" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="token" elementType="Argument">
+            <stringProp name="Argument.name">token</stringProp>
+            <stringProp name="Argument.value">eyJ0eXAiOiJKV1MiLCJraWQiOiJFMkVfVFJVU1RfU0FNTF9DTUJfVUFUIiwiYWxnIjoiUlMyNTYiLCJzY2giOiJ1cm46YWltOnRva2VuOmludGVybmFsIiwic2N2IjoiMS4wIiwidGt2IjoiMS4wIn0.eyJzdWIiOiJIQkFQTERTLUhLVVRCMDUiLCJncnAiOlsiQ049aW5mb0Rpci1jbWItZHNwLWliMmItbnByb2QtdWssT1U9SEJFVSxPVT1DTUItUExBVEZPUk0tRFNQLE9VPUFwcGxpY2F0aW9ucyxPVT1Hcm91cHMsREM9SW5mb0RpcixEQz1Qcm9kLERDPUhTQkMiLCJDTj1pbmZvRGlyLWNtYi1kc3AtaWIyYi1ucHJvZC1oayxPVT1IQkhLLE9VPUNNQi1QTEFURk9STS1EU1AsT1U9QXBwbGljYXRpb25zLE9VPUdyb3VwcyxEQz1JbmZvRGlyLERDPVByb2QsREM9SFNCQyIsIkNOPUluZm9EaXItQ01CLUN1c3RvbWVyLURvY3VtZW50LUdhdGV3YXktREVWLE9VPUhCSEssT1U9Q01CLUN1c3RvbWVyLURvY3VtZW50LUdhdGV3YXksT1U9QXBwbGljYXRpb25zLE9VPUdyb3VwcyxEQz1JbmZvRGlyLERDPVByb2QsREM9SFNCQyJdLCJpc3MiOiJjbWJkc3AudWsuaHNiYy5jb20iLCJleHAiOjE2NzgzNjA0MzcsImlhdCI6MTY3ODM2MDQwNywianRpIjoiMjJhNDc5MWQtZmNlOC00MjJjLTg4MDYtYWYyY2E2ODU5ZjRhIiwic2l0IjoiYWQ6c3ZjOnByaW5jaXBhbCJ9.mXkVr5dq7XJPR_o4bt8fxHFYBLS8QHNDCb-f8-C7gJr215agdzzuUDWiA7-s1qboeByw-6D0mTFzkpnTvCRDRZM-UR_KqC6oqiR2XqHCPs_BXj_juO-DlxwN0kVxdSF_LbsVkTbFU-TYMxqi8Bwb5QAn4xgwlXnRn_0qC_1aT4Fj-5957RoSNoFayFGtbmgq9EvU_HYtiD6nRdjADL_2GoFRTP3EsgRUm6509XX-KtkuG_1FUDxAtNCELnRKIYLohAV-ge-kurHYdWkLskELOJwGoRk0EE14KvS2JNzYSth0iD4TURXsJ7XGxT3wZ2vgIcKjGA5mrRQtTmwzV5j7Ug</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="path1" elementType="Argument">
+            <stringProp name="Argument.name">path1</stringProp>
+            <stringProp name="Argument.value">/CDG/CDG_lo_1M_HPP.tiff</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">C:\code\report</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <kg.apc.jmeter.threads.SteppingThreadGroup guiclass="kg.apc.jmeter.threads.SteppingThreadGroupGui" testclass="kg.apc.jmeter.threads.SteppingThreadGroup" testname="jp@gc - Stepping Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(userCount)}</stringProp>
+        <stringProp name="Threads initial delay">0</stringProp>
+        <stringProp name="Start users count">${__P(RampUpUsers)}</stringProp>
+        <stringProp name="Start users count burst">0</stringProp>
+        <stringProp name="Start users period">${__P(RampUpDuration)}</stringProp>
+        <stringProp name="Stop users count">${__P(RampDownUserCount)}</stringProp>
+        <stringProp name="Stop users period">${__P(RampDown)}</stringProp>
+        <stringProp name="flighttime">${__P(TestDuration)}</stringProp>
+        <stringProp name="rampUp">0</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+      </kg.apc.jmeter.threads.SteppingThreadGroup>
+      <hashTree>
+        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="uploadForIRTT-1M" enabled="true"/>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="X-HSBC-E2E-Trust-Token" elementType="Header">
+                <stringProp name="Header.name">X-HSBC-E2E-Trust-Token</stringProp>
+                <stringProp name="Header.value">${token}</stringProp>
+              </elementProp>
+              <elementProp name="X-HSBC-CUSTID" elementType="Header">
+                <stringProp name="Header.name">X-HSBC-CUSTID</stringProp>
+                <stringProp name="Header.value">CHHBEUR55CHCUST01</stringProp>
+              </elementProp>
+              <elementProp name="X-HSBC-GUID" elementType="Header">
+                <stringProp name="Header.name">X-HSBC-GUID</stringProp>
+                <stringProp name="Header.value">d594b5a0-1e4d-11eb-9d17-000704020701</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="upload" enabled="true">
+            <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
+              <collectionProp name="HTTPFileArgs.files">
+                <elementProp name="${path1}" elementType="HTTPFileArg">
+                  <stringProp name="File.path">${path1}</stringProp>
+                  <stringProp name="File.paramname">file</stringProp>
+                  <stringProp name="File.mimetype">text/plain</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="jsonData" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{ 	&quot;references&quot;: [{ 		&quot;refNum&quot;: &quot;perf1133459&quot;, 		&quot;refType&quot;: 1 	}], 	&quot;routingRule&quot;: [{ 		&quot;ruleName&quot;: &quot;BusinessLine&quot;, 		&quot;value&quot;: &quot;GPS&quot; 	}, 	{ 		&quot;ruleName&quot;: &quot;ProductLine&quot;, 		&quot;value&quot;: &quot;IRTT&quot; 	}, 	{ 		&quot;ruleName&quot;: &quot;RegionCode&quot;, 		&quot;value&quot;: &quot;CN&quot; 	}, 	{ 		&quot;ruleName&quot;: &quot;BusinessChannel&quot;, 		&quot;value&quot;: &quot;Webportal&quot; 	}, 	{ 		&quot;ruleName&quot;: &quot;Journey&quot;, 		&quot;value&quot;: &quot;IW&quot; 	}], 	&quot;extendProperties&quot;: [{       &quot;propertyName&quot;: &quot;FS_Account_Number&quot;,       &quot;dataType&quot;: &quot;String&quot;,       &quot;stringValue&quot;: &quot;001-025113-053&quot;     },{ 		&quot;propertyName&quot;: &quot;InstructionReferenceNumber&quot;, 		&quot;dataType&quot;: &quot;1&quot;, 		&quot;stringValue&quot;: &quot;1133459&quot; }] }</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">jsonData</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">sit-irtt.cdg.dev.ali.cloud.cn.hsbc</stringProp>
+            <stringProp name="HTTPSampler.port">443</stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/api/cdg/irtt/upload</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <BackendListener guiclass="BackendListenerGui" testclass="BackendListener" testname="Backend Listener" enabled="true">
+            <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="graphiteMetricsSender" elementType="Argument">
+                  <stringProp name="Argument.name">graphiteMetricsSender</stringProp>
+                  <stringProp name="Argument.value">org.apache.jmeter.visualizers.backend.graphite.TextGraphiteMetricsSender</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="graphiteHost" elementType="Argument">
+                  <stringProp name="Argument.name">graphiteHost</stringProp>
+                  <stringProp name="Argument.value"></stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="graphitePort" elementType="Argument">
+                  <stringProp name="Argument.name">graphitePort</stringProp>
+                  <stringProp name="Argument.value">2003</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="rootMetricsPrefix" elementType="Argument">
+                  <stringProp name="Argument.name">rootMetricsPrefix</stringProp>
+                  <stringProp name="Argument.value">jmeter.</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="summaryOnly" elementType="Argument">
+                  <stringProp name="Argument.name">summaryOnly</stringProp>
+                  <stringProp name="Argument.value">false</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="samplersList" elementType="Argument">
+                  <stringProp name="Argument.name">samplersList</stringProp>
+                  <stringProp name="Argument.value"></stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="percentiles" elementType="Argument">
+                  <stringProp name="Argument.name">percentiles</stringProp>
+                  <stringProp name="Argument.value">90;95;99</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="classname">org.apache.jmeter.visualizers.backend.graphite.GraphiteBackendListenerClient</stringProp>
+          </BackendListener>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
