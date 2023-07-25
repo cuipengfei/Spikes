@@ -20,7 +20,7 @@ public class LockTest {
      **/
     @Test
     public void runBothInTheSameJavaProcess() {
-        runWorkersService.runBoth();
+        runWorkersService.runBothWorkersInSameProcess();
 
         // run this one alone, this will reproduce the issue:
         // worker 1 gets the lock
@@ -36,13 +36,13 @@ public class LockTest {
      * ↓ when these 2 workers running in 2 SEPARATE JAVA PROCESSES, then it works as expected: ttl is respected
      **/
     @Test
-    public void runWorker1() {
+    public void runWorker1InOneJavaProcess() {
         runWorkersService.runWorker1().join();
         // run this one first in one java process
     }
 
     @Test
-    public void runWorker2() {
+    public void runWorker2InAnotherJavaProcess() {
         runWorkersService.runWorker2().join();
         // run this later in ANOTHER JAVA PROCESS
         // then we can see it works as expected
@@ -59,8 +59,8 @@ public class LockTest {
     }
 
     @Test
-    public void runBothWithProactiveExpire() {
-        runWorkersService.runBothWithProactiveExpire();
+    public void runBothInSameJavaProcess_WithProactiveExpire() {
+        runWorkersService.runBothInSameProcessWithProactiveExpire();
     }
 
     /**
@@ -68,7 +68,7 @@ public class LockTest {
      * try to prove that the ProactiveExpire action should not forcefully take the lock from worker 1
      **/
     @Test
-    public void runWorker2WithProactiveExpire() {
+    public void runWorker2InAnotherJavaProcess_WithProactiveExpire() {
         runWorkersService.runWorker2WithProactiveExpire().join();
         // run worker 1 first, then run this later in ANOTHER JAVA PROCESS, but not so late that ttl has expired
         // the ProactiveExpire action should not grab lock from worker1 if ttl is not reached yet

@@ -19,7 +19,7 @@ public class RunWorkersService {
     @Autowired
     JdbcLockRegistry registry;
 
-    public void runBoth() {
+    public void runBothWorkersInSameProcess() {
         logger.info("main - going to run worker 1");
         CompletableFuture<?> future1 = runWorker1();
 
@@ -32,7 +32,7 @@ public class RunWorkersService {
         CompletableFuture.allOf(future1, future2).join();
     }
 
-    public void runBothWithProactiveExpire() {
+    public void runBothInSameProcessWithProactiveExpire() {
         logger.info("main - going to run worker 1");
         CompletableFuture<?> future1 = runWorker1();
 
