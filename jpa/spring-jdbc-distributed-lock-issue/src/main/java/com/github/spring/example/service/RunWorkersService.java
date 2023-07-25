@@ -50,7 +50,7 @@ public class RunWorkersService {
             logger.info(workerName + " - lock get ok");
             for (int i = 0; i < 25; i++) {
                 try {
-                    logger.info(workerName + " - doing work " + i);
+                    logger.info(workerName + " - had been running for " + i + " seconds");
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
