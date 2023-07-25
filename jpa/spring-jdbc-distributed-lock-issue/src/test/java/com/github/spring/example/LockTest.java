@@ -15,8 +15,11 @@ public class LockTest {
     @Autowired
     RunWorkersService runWorkersService;
 
+    /**
+     * ↓  reproduce the issue of ttl has no effect when 2 workers running in 2 THREADS OF THE SAME JAVA PROCESS
+     **/
     @Test
-    public void runBothInTheSameJavaProcess() throws InterruptedException {
+    public void runBothInTheSameJavaProcess() {
         runWorkersService.runBoth();
 
         // run this one alone, this will reproduce the issue:
@@ -28,12 +31,10 @@ public class LockTest {
         // log output of this test will show the above ↑
     }
 
-    /**
-     * ↑ reproduce the issue of ttl has no effect when 2 workers running in 2 threads of the same java process
-     * <p>
-     * ↓ when these 2 workers running in 2 separate java processes, then it works as expected: ttl is respected
-     **/
 
+    /**
+     * ↓ when these 2 workers running in 2 SEPARATE JAVA PROCESSES, then it works as expected: ttl is respected
+     **/
     @Test
     public void runWorker1() {
         runWorkersService.runWorker1().join();
@@ -48,4 +49,29 @@ public class LockTest {
         // worker 2 can get the lock after ttl is expired
     }
 
+    /**
+     * ↓ when worker 1 and 2 are in the SAME JAVA PROCESS
+     * try to let worker 2 get lock even if worker 1 never release
+     **/
+    @Test
+    public void testStuckThread() {
+        runWorkersService.simulateStuckThread().join();
+    }
+
+    @Test
+    public void runBothWithProactiveExpire() {
+        runWorkersService.runBothWithProactiveExpire();
+    }
+
+    /**
+     * ↓ when worker 1 and 2 are in the 2 DIFFERENT JAVA PROCESS
+     * try to prove that the ProactiveExpire action should not forcefully take the lock from worker 1
+     **/
+    @Test
+    public void runWorker2WithProactiveExpire() {
+        runWorkersService.runWorker2WithProactiveExpire().join();
+        // run worker 1 first, then run this later in ANOTHER JAVA PROCESS, but not so late that ttl has expired
+        // the ProactiveExpire action should not grab lock from worker1 if ttl is not reached yet
+        // worker 2 should only get the lock after ttl is expired
+    }
 }
