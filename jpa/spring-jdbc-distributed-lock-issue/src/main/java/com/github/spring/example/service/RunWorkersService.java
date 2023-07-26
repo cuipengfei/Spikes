@@ -73,14 +73,6 @@ public class RunWorkersService {
         CompletableFuture.allOf(future1, future2).join();
     }
 
-    public CompletableFuture<Void> runWorker1() {
-        return runAsync(() -> runWorker("worker 1", 25), executor);
-    }
-
-    public CompletableFuture<Void> runWorker2() {
-        return runAsync(() -> runWorker("worker 2", 25), executor);
-    }
-
     public CompletableFuture<Void> runWorker2WithProactiveExpire() {
         return runAsync(() -> {
             logger.info("going to expireUnusedOlderThan 2000");
@@ -88,6 +80,10 @@ public class RunWorkersService {
             registry.expireUnusedOlderThan(2000);
             runWorker("worker 2", 25);
         }, executor);
+    }
+
+    public CompletableFuture<Void> runAsyncWorker(String workerName, int workSeconds) {
+        return runAsync(() -> runWorker(workerName, workSeconds), executor);
     }
 
     private void runWorker(String workerName, int workSeconds) {
@@ -146,7 +142,8 @@ public class RunWorkersService {
         try {
             return lock.tryLock(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            logger.error("try lock failure", e);
         }
+        return false;
     }
 }

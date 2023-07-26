@@ -36,13 +36,13 @@ public class LockTest {
      **/
     @Test
     public void runWorker1InOneJavaProcess() {
-        runWorkersService.runWorker1().join();
+        runWorkersService.runAsyncWorker("worker 1", 25).join();
         // run this one first in one java process
     }
 
     @Test
     public void runWorker2InAnotherJavaProcess() {
-        runWorkersService.runWorker2().join();
+        runWorkersService.runAsyncWorker("worker 2", 25).join();
         // run this later in ANOTHER JAVA PROCESS
         // then we can see it works as expected
         // worker 2 can get the lock after ttl is expired
