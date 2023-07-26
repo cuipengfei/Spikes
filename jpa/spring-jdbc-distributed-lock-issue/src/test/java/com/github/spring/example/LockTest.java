@@ -31,7 +31,6 @@ public class LockTest {
         // log output of this test will show the above ↑
     }
 
-
     /**
      * ↓ when these 2 workers running in 2 SEPARATE JAVA PROCESSES, then it works as expected: ttl is respected
      **/
@@ -51,20 +50,25 @@ public class LockTest {
 
     /**
      * ↓ when worker 1 and 2 are in the SAME JAVA PROCESS
-     * try to let worker 2 get lock even if worker 1 never release
+     * try to let worker 2 get lock AFTER ttl even if worker 1 never release
      **/
-    @Test
-    public void testStuckThread() {
-        runWorkersService.simulateStuckThread().join();
-    }
-
     @Test
     public void runBothInSameJavaProcess_WithProactiveExpire() {
         runWorkersService.runBothInSameProcessWithProactiveExpire();
     }
 
     /**
-     * ↓ when worker 1 and 2 are in the 2 DIFFERENT JAVA PROCESS
+     * ↓ when worker 1 and 2 are in the SAME JAVA PROCESS
+     * worker 2 calls expireUnusedOlderThan before ttl of worker1
+     * worker 2 should not be able to forcefully take lock from worker 1
+     **/
+    @Test
+    public void runBothInSameJavaProcess_WithProactiveExpire_BeforeTTL() {
+        runWorkersService.runBothInSameProcessWithProactiveExpireBeforeTTL();
+    }
+
+    /**
+     * ↓ when worker 1 and 2 are in 2 DIFFERENT JAVA PROCESS
      * try to prove that the ProactiveExpire action should not forcefully take the lock from worker 1
      **/
     @Test

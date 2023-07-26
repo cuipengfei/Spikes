@@ -6,7 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.*;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
@@ -21,30 +26,49 @@ public class RunWorkersService {
 
     public void runBothWorkersInSameProcess() {
         logger.info("main - going to run worker 1");
-        CompletableFuture<?> future1 = runWorker1();
+        CompletableFuture<?> future1 = runAsync(() -> runWorker("worker 1", 60));
 
-        logger.info("main - schedule worker 2 to run 26 seconds later, which is later than ttl");
-        Executor delay26Executor = CompletableFuture.delayedExecutor(26, TimeUnit.SECONDS, executor);
+        logger.info("main - schedule worker 2 to run 25 seconds later, which is later than ttl");
+        Executor delayedExecutor = CompletableFuture.delayedExecutor(25, TimeUnit.SECONDS, executor);
         CompletableFuture<Void> future2 = runAsync(
                 () -> runWorker("worker 2", 25),
-                delay26Executor);
+                delayedExecutor);
 
         CompletableFuture.allOf(future1, future2).join();
     }
 
     public void runBothInSameProcessWithProactiveExpire() {
         logger.info("main - going to run worker 1");
-        CompletableFuture<?> future1 = runWorker1();
+        CompletableFuture<?> future1 = runAsync(() -> runWorker("worker 1", 60));
 
-        logger.info("main - schedule worker 2 to run 26 seconds later, which is later than ttl");
-        Executor delay26Executor = CompletableFuture.delayedExecutor(26, TimeUnit.SECONDS, executor);
+        logger.info("main - schedule worker 2 to run 25 seconds later, which is later than ttl");
+        Executor delayedExecutor = CompletableFuture.delayedExecutor(25, TimeUnit.SECONDS, executor);
         CompletableFuture<Void> future2 = runAsync(
                 () -> {
-                    logger.info("going to expireUnusedOlderThan 2000");
+                    logger.info("going to call expireUnusedOlderThan(2000) at the start of worker 2");
                     registry.expireUnusedOlderThan(2000);
                     runWorker("worker 2", 25);
                 },
-                delay26Executor);
+                delayedExecutor);
+
+        CompletableFuture.allOf(future1, future2).join();
+    }
+
+    public void runBothInSameProcessWithProactiveExpireBeforeTTL() {
+        logger.info("main - going to run worker 1");
+        CompletableFuture<?> future1 = runAsync(() -> runWorker("worker 1", 60));
+
+        logger.info("main - schedule worker 2 to run 10 seconds later, which is before ttl");
+        Executor delayedExecutor = CompletableFuture.delayedExecutor(10, TimeUnit.SECONDS, executor);
+        CompletableFuture<Void> future2 = runAsync(
+                () -> {
+                    logger.info("going to call expireUnusedOlderThan(2000) at the start of worker 2");
+                    registry.expireUnusedOlderThan(2000);
+                    logger.info("called expireUnusedOlderThan(2000) at the start of worker 2");
+                    logger.info("but it should have no effect since ttl is not reached yet");
+                    runWorker("worker 2", 25);
+                },
+                delayedExecutor);
 
         CompletableFuture.allOf(future1, future2).join();
     }
@@ -66,29 +90,6 @@ public class RunWorkersService {
         }, executor);
     }
 
-    public CompletableFuture<Void> simulateStuckThread() {
-        logger.info("going to simulate a stuck worker");
-
-        CompletableFuture<Void> future = runAsync(() -> runWorker("simulated-stuck-worker", 120), executor);
-        future.completeOnTimeout(null, 25, TimeUnit.SECONDS)
-                .thenRun(() -> {
-                    logger.info("worker time out reached");
-                    logger.info("worker may not be able to release lock by itself, so we will release for it here");
-                    registry.expireUnusedOlderThan(1000);
-                    logger.info("expire called");
-                })
-                .handle((value, ex) -> {
-                    if (ex != null) {
-                        logger.error("error: ", ex);
-                    } else {
-                        logger.info("no error");
-                    }
-                    return null;
-                });
-
-        return future;
-    }
-
     private void runWorker(String workerName, int workSeconds) {
         logger.info(workerName + " - start");
 
@@ -97,18 +98,47 @@ public class RunWorkersService {
         boolean locked = tryGetLock();
         if (locked) {
             logger.info(workerName + " - lock get ok");
-            for (int i = 0; i < workSeconds; i++) {
-                try {
-                    logger.info(workerName + " - had been running for " + i + " seconds");
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            wasteTime(workerName, workSeconds);
             logger.info(workerName + " - end, does not release the lock");
         } else {
             logger.info(workerName + " - lock get fail");
         }
+    }
+
+    // 空转，模拟busy work
+    private void wasteTime(String workerName, int workSeconds) {
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + workSeconds * 1000L;
+        long lastLogTime = startTime;
+
+        while (System.currentTimeMillis() < endTime) {
+            // loop to waste time
+            for (int i = 0; i < 4000; i++) {
+                for (int j = 0; j < 4000; j++) {
+                    doMath();
+                }
+            }
+
+            // log time elapsed about once per second
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastLogTime >= 1000) {
+                double elapsedTime = (currentTime - startTime) / 1000.0;
+                logger.info(workerName + " - is running: " + elapsedTime + " seconds");
+                lastLogTime = currentTime;
+            }
+        }
+    }
+
+    private String doMath() {
+        Random random = new Random();
+        int a = random.nextInt(1000000);
+        int b = random.nextInt(1000000);
+        int c = random.nextInt(1000000);
+        int d = random.nextInt(1000000);
+        int e = random.nextInt(1000000);
+        int f = random.nextInt(1000000);
+        int result = (a * b + c * d - e) * f;
+        return Integer.toString(result);
     }
 
     private boolean tryGetLock() {
