@@ -1,10 +1,7 @@
 package com.github.spring.example.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-import java.sql.Timestamp;
+import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name = "int_lock")
@@ -13,7 +10,7 @@ import java.sql.Timestamp;
 public class IntLock {
 
     private String client_id;
-    private Timestamp created_date;
+    private Date created_date;
     @Id
     private String region;
     @Id
@@ -27,11 +24,12 @@ public class IntLock {
         this.client_id = client_id;
     }
 
-    public Timestamp getCreated_date() {
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    public Date getCreated_date() {
         return created_date;
     }
 
-    public void setCreated_date(Timestamp created_date) {
+    public void setCreated_date(Date created_date) {
         this.created_date = created_date;
     }
 

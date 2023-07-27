@@ -138,7 +138,7 @@ public class RunWorkersService {
     }
 
     private boolean tryGetLock() {
-        Lock lock = registry.obtain("string123");
+        Lock lock = registry.obtain("string1234");
         try {
             return lock.tryLock(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
