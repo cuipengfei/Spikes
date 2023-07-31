@@ -58,7 +58,13 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-redis</artifactId>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.23.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

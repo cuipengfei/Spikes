@@ -13,7 +13,7 @@ public class RedisLockConfigs {
     private static final Duration RELEASE_TIME_DURATION = Duration.ofSeconds(20);
 
     @Bean
-    public RedisLockRegistry lockRegistry(RedisConnectionFactory redisConnectionFactory) {
+    public RedisLockRegistry redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {
         return new RedisLockRegistry(
                 redisConnectionFactory,
                 LOCK_REGISTRY_REDIS_KEY,
