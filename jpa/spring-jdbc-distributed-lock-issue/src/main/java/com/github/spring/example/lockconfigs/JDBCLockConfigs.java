@@ -1,4 +1,4 @@
-package com.github.spring.example.lock;
+package com.github.spring.example.lockconfigs;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.integration.jdbc.lock.LockRepository;
 import javax.sql.DataSource;
 
 @Configuration
-public class DistributedLockConfigs {
+public class JDBCLockConfigs {
 
     public static final int TIME_TO_LIVE = 20 * 1000;
 

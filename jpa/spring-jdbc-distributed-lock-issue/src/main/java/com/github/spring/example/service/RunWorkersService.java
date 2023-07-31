@@ -3,15 +3,14 @@ package com.github.spring.example.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
+import org.springframework.integration.redis.util.RedisLockRegistry;
+import org.springframework.integration.support.locks.ExpirableLockRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 
 import static java.util.concurrent.CompletableFuture.runAsync;
@@ -22,7 +21,13 @@ public class RunWorkersService {
     ExecutorService executor = Executors.newFixedThreadPool(10);
 
     @Autowired
-    JdbcLockRegistry registry;
+    JdbcLockRegistry jdbcLockRegistry;
+
+    @Autowired
+    RedisLockRegistry redisLockRegistry;
+
+    @Value("${lock.registry.name}")
+    String registryName;
 
     public void runBothWorkersInSameProcess() {
         logger.info("main - going to run worker 1");
@@ -46,7 +51,7 @@ public class RunWorkersService {
         CompletableFuture<Void> future2 = runAsync(
                 () -> {
                     logger.info("going to call expireUnusedOlderThan(2000) at the start of worker 2");
-                    registry.expireUnusedOlderThan(2000);
+                    getLockRegistry().expireUnusedOlderThan(2000);
                     runWorker("worker 2", 25);
                 },
                 delayedExecutor);
@@ -63,7 +68,7 @@ public class RunWorkersService {
         CompletableFuture<Void> future2 = runAsync(
                 () -> {
                     logger.info("going to call expireUnusedOlderThan(2000) at the start of worker 2");
-                    registry.expireUnusedOlderThan(2000);
+                    getLockRegistry().expireUnusedOlderThan(2000);
                     logger.info("called expireUnusedOlderThan(2000) at the start of worker 2");
                     logger.info("but it should have no effect since ttl is not reached yet");
                     runWorker("worker 2", 25);
@@ -77,7 +82,7 @@ public class RunWorkersService {
         return runAsync(() -> {
             logger.info("going to expireUnusedOlderThan 2000");
             logger.info("but if the ttl is not reached yet, then this should have no effect");
-            registry.expireUnusedOlderThan(2000);
+            getLockRegistry().expireUnusedOlderThan(2000);
             runWorker("worker 2", 25);
         }, executor);
     }
@@ -88,7 +93,6 @@ public class RunWorkersService {
 
     private void runWorker(String workerName, int workSeconds) {
         logger.info(workerName + " - start");
-
         logger.info(workerName + " - going to try to get lock");
 
         boolean locked = tryGetLock();
@@ -102,6 +106,7 @@ public class RunWorkersService {
     }
 
     // 空转，模拟busy work
+
     private void wasteTime(String workerName, int workSeconds) {
         long startTime = System.currentTimeMillis();
         long endTime = startTime + workSeconds * 1000L;
@@ -138,12 +143,20 @@ public class RunWorkersService {
     }
 
     private boolean tryGetLock() {
-        Lock lock = registry.obtain("string1234");
+        Lock lock = getLockRegistry().obtain("string1234");
         try {
             return lock.tryLock(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             logger.error("try lock failure", e);
         }
         return false;
+    }
+
+    private ExpirableLockRegistry getLockRegistry() {
+        if (registryName == "jdbc") {
+            return jdbcLockRegistry;
+        } else {
+            return redisLockRegistry;
+        }
     }
 }
