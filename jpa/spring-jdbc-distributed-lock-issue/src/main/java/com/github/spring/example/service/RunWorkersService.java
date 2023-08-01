@@ -178,9 +178,7 @@ public class RunWorkersService {
 
     private void expiredUnusedOlderThan(int age) {
         if (Objects.equals(registryName, "redisson")) {
-            // todo: is this needed?
-            // looks like lease time / ttl of redisson just works
-            // may be don't need to do anything here
+            // todo: try to find out this later
         } else {
             getLockRegistry().expireUnusedOlderThan(age);
         }
