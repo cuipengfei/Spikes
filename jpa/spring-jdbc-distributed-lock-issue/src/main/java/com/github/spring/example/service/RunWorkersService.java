@@ -1,5 +1,6 @@
 package com.github.spring.example.service;
 
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +39,10 @@ public class RunWorkersService {
         logger.info("main - going to run worker 1");
         CompletableFuture<?> future1 = runAsync(() -> runWorker("worker 1", 60));
 
-        logger.info("main - schedule worker 2 to run 25 seconds later, which is later than ttl");
-        Executor delayedExecutor = CompletableFuture.delayedExecutor(25, TimeUnit.SECONDS, executor);
+        logger.info("main - schedule worker 2 to run 15 seconds after worker 1");
+        logger.info("main - when worker 1 has ran for 20 secs / worker 2 has ran for 5 secs " +
+                "that is when TTL/lease time has arrived");
+        Executor delayedExecutor = CompletableFuture.delayedExecutor(15, TimeUnit.SECONDS, executor);
         CompletableFuture<Void> future2 = runAsync(
                 () -> runWorker("worker 2", 25),
                 delayedExecutor);
@@ -148,12 +151,20 @@ public class RunWorkersService {
     }
 
     private boolean tryGetLock() {
-        Lock lock = getLock();
         try {
-            return lock.tryLock(20, TimeUnit.SECONDS);
+            String key = "string1234";
+
+            if (Objects.equals(registryName, "redisson")) {
+                RLock redissonLock = redissonClient.getLock(key);
+                return redissonLock.tryLock(20, 20, TimeUnit.SECONDS);
+            } else {
+                Lock lock = getLockRegistry().obtain(key);
+                return lock.tryLock(20, TimeUnit.SECONDS);
+            }
         } catch (InterruptedException e) {
             logger.error("try lock failure", e);
         }
+
         return false;
     }
 
@@ -167,19 +178,12 @@ public class RunWorkersService {
 
     private void expiredUnusedOlderThan(int age) {
         if (Objects.equals(registryName, "redisson")) {
-
+            // todo: is this needed?
+            // looks like lease time / ttl of redisson just works
+            // may be don't need to do anything here
         } else {
             getLockRegistry().expireUnusedOlderThan(age);
         }
     }
 
-    private Lock getLock() {
-        String key = "string1234";
-
-        if (Objects.equals(registryName, "redisson")) {
-            return redissonClient.getLock(key);
-        } else {
-            return getLockRegistry().obtain(key);
-        }
-    }
 }

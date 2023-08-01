@@ -1,21 +1,37 @@
 package com.github.spring.example;
 
 import com.github.spring.example.service.RunWorkersService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 // start docker before run test
 
-// docker run -e POSTGRES_USER=localtest -e POSTGRES_PASSWORD=localtest -e POSTGRES_DB=orders -p 5432:5432 -d postgres:9.6.12
+// docker run -e POSTGRES_USER=localtest -e POSTGRES_PASSWORD=localtest -e POSTGRES_DB=orders -p 5432:5432 -d postgres:15.3
 
 // docker run -p 6379:6379 -d redis:7.0.12 --requirepass "mypass"
 
 @SpringBootTest
 public class LockTest {
+    Logger logger = LoggerFactory.getLogger(LockTest.class);
 
     @Autowired
     RunWorkersService runWorkersService;
+
+    @Value("${lock.registry.name}")
+    String registryName;
+
+    @BeforeEach
+    @AfterEach
+    public void logMode() {
+        logger.info("there are 3 modes: jdbc, redis, redisson. later 2 are spring's implementation vs redisson");
+        logger.info("this test is in {} mode.", registryName);
+    }
 
     /**
      * ↓  reproduce the issue of ttl has no effect when 2 workers running in 2 THREADS OF THE SAME JAVA PROCESS
@@ -29,8 +45,7 @@ public class LockTest {
         // then after ttl is expired
         // worker 2 still can not get the lock
         // later worker 2 gives up waiting for lock after timeout
-
-        // log output of this test will show the above ↑
+        // the above seems only apply for spring integration, redisson works in a diff way
     }
 
     /**
