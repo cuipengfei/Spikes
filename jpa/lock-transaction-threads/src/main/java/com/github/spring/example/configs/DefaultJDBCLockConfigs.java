@@ -1,20 +1,31 @@
-package com.github.spring.example.lockconfigs;
+package com.github.spring.example.configs;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.integration.jdbc.lock.DefaultLockRepository;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
 import org.springframework.integration.jdbc.lock.LockRepository;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-public class JDBCLockConfigs {
+public class DefaultJDBCLockConfigs {
 
-    public static final int TIME_TO_LIVE = 20 * 1000;
+    private static final int TIME_TO_LIVE = 20 * 1000;
 
     @Bean
+    @Primary
+    public PlatformTransactionManager primaryTransactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
+    }
+
+    @Bean("defaultLockRepository")
     public LockRepository defaultLockRepository(
             DataSource dataSource,
             @Value(value = "${spring.jpa.properties.hibernate.default_schema}") String schema) {
@@ -24,8 +35,8 @@ public class JDBCLockConfigs {
         return defaultLockRepository;
     }
 
-    @Bean
-    public JdbcLockRegistry jdbcLockRegistry(LockRepository lockRepository) {
+    @Bean("defaultJdbcLockRegistry")
+    public JdbcLockRegistry defaultJdbcLockRegistry(@Qualifier("defaultLockRepository") LockRepository lockRepository) {
         return new JdbcLockRegistry(lockRepository);
     }
 }

@@ -1,29 +1,47 @@
 package com.github.spring.example.service;
 
+import com.github.spring.example.CatRepository;
+import com.github.spring.example.model.Cat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 @Service
 public class TestLockService {
+    @Autowired
+    private CatRepository catRepo;
+
     private Logger logger = LoggerFactory.getLogger(TestLockService.class);
 
     @Autowired
     private JdbcLockRegistry jdbcLockRegistry;
 
     @Transactional
-    public void testLock(String key) {
-        logger.info("{} start with transaction {}", key,
-                TransactionAspectSupport.currentTransactionStatus().hashCode());
+    public void testLock() {
+        catRepo.findById(UUID.randomUUID());
+        Arrays.asList("a", "b", "c").parallelStream().forEach(key -> {
+            logger.info("going to call lock method with key: {}", key);
+            lock(key);
+        });
+    }
 
+    @Transactional()
+    public void testLock2() {
+        Optional<Cat> byId = catRepo.findById(UUID.randomUUID());
+        lock(UUID.randomUUID().toString());
+    }
+
+    private void lock(String key) {
         boolean isLocked = false;
         Lock lock = jdbcLockRegistry.obtain(key);
         try {
@@ -46,9 +64,6 @@ public class TestLockService {
                 logger.info("{} skip unlock since it was never locked", key);
             }
         }
-
-        logger.info("{} end with transaction {}", key,
-                TransactionAspectSupport.currentTransactionStatus().hashCode());
     }
 
     private void pretendToDoWork(String key) throws InterruptedException {
