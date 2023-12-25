@@ -1,6 +1,9 @@
 package com.github.spring.example.configs;
 
+import com.github.spring.example.service.BaseService;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +34,8 @@ public class CustomJDBCLockConfigs {
             DataSource dataSource,
             @Value(value = "${spring.jpa.properties.hibernate.default_schema}") String schema) {
         DefaultLockRepository defaultLockRepository = new DefaultLockRepository(dataSource) {
+            private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
             @Transactional(propagation = Propagation.REQUIRES_NEW, transactionManager = "distributedLockTransactionManager")
             @Override
             public void close() {
@@ -50,6 +55,8 @@ public class CustomJDBCLockConfigs {
             )
             @Override
             public boolean acquire(String lock) {
+                logger.info("acquire method of custom lock repo, current transaction is {}",
+                        BaseService.getCurrentTransactionName());
                 return super.acquire(lock);
             }
 

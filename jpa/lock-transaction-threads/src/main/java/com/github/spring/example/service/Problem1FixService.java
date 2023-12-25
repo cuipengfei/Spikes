@@ -13,7 +13,7 @@ public class Problem1FixService extends BaseService {
 
     @Autowired
     @Qualifier("customLockRegistry")
-    protected JdbcLockRegistry jdbcLockRegistry;
+    private JdbcLockRegistry jdbcLockRegistry;
 
     @Override
     protected JdbcLockRegistry getJdbcLockRegistry() {
@@ -22,10 +22,10 @@ public class Problem1FixService extends BaseService {
 
     @Transactional
     public void problem1Fix() {
-        logger.info("going to call lock method in threads");
+        logCurrentTransaction("start of problem1Fix");
         Arrays.asList("a", "b", "c").parallelStream().forEach(key -> {
             logger.info("going to call lock method with key: {}", key);
-            lock(key);
+            doWorkInsideLock(key);
         });
     }
 }
