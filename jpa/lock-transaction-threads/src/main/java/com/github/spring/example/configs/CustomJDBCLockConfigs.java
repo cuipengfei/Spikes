@@ -80,8 +80,8 @@ public class CustomJDBCLockConfigs {
         return defaultLockRepository;
     }
 
-    @Bean("customLockRepository")
-    public JdbcLockRegistry customLockRepository(@Qualifier("customLockRepository") LockRepository lockRepository) {
+    @Bean("customLockRegistry")
+    public JdbcLockRegistry customLockRegistry(@Qualifier("customLockRepository") LockRepository lockRepository) {
         return new JdbcLockRegistry(lockRepository);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.spring.example.controllers;
 
+import com.github.spring.example.service.FixProblem1Service;
 import com.github.spring.example.service.Problem1Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,18 @@ public class TestLockController {
     @Autowired
     private Problem1Service p1Service;
 
+    @Autowired
+    private FixProblem1Service fixP1Service;
+
     @GetMapping("problem1")
     public ResponseEntity<String> problem1() {
         p1Service.problem1();
         return ResponseEntity.ok("problem1");
+    }
+
+    @GetMapping("fix-problem1")
+    public ResponseEntity<String> fixProblem1() {
+        fixP1Service.fixProblem1();
+        return ResponseEntity.ok("fixProblem1");
     }
 }
