@@ -10,6 +10,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -45,6 +46,25 @@ public abstract class BaseService {
                 logger.info("{} skip unlock since try lock failed", key);
             }
         }
+    }
+
+    protected Optional<Lock> tryGetLock(String key) {
+        logCurrentTransaction(key + " start of tryGetLock");
+
+        boolean isLocked = false;
+        Lock lock = getJdbcLockRegistry().obtain(key);
+        try {
+            isLocked = lock.tryLock(10, TimeUnit.SECONDS);
+            if (isLocked) {
+                logCurrentTransaction(key + " get lock ok");
+                return Optional.of(lock);
+            } else {
+                logger.info("{} lock failed with no exception", key);
+            }
+        } catch (Throwable t) {
+            logger.error("{} lock failed with exception", key, t);
+        }
+        return Optional.empty();
     }
 
     protected void logCurrentTransaction(String location) {

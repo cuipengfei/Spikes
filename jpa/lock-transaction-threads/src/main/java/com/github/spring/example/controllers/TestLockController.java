@@ -1,9 +1,6 @@
 package com.github.spring.example.controllers;
 
-import com.github.spring.example.service.Problem1FixService;
-import com.github.spring.example.service.Problem1Service;
-import com.github.spring.example.service.Problem2BadFixService;
-import com.github.spring.example.service.Problem2Service;
+import com.github.spring.example.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,9 @@ public class TestLockController {
     @Autowired
     private Problem2BadFixService p2BadFixService;
 
+    @Autowired
+    private Problem2GoodFixService p2GoodFixService;
+
     @GetMapping("problem1")
     public ResponseEntity<String> problem1() {
         p1Service.problem1();
@@ -51,5 +51,11 @@ public class TestLockController {
     public ResponseEntity<String> problem2BadFix() throws ExecutionException, InterruptedException {
         p2BadFixService.problem2BadFix();
         return ResponseEntity.ok("problem2BadFix");
+    }
+
+    @GetMapping("problem2-good-fix")
+    public ResponseEntity<String> problem2GoodFix() throws ExecutionException, InterruptedException {
+        p2GoodFixService.problem2GoodFix();
+        return ResponseEntity.ok("problem2GoodFix");
     }
 }
