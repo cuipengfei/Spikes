@@ -24,6 +24,7 @@ public class Problem1Service extends BaseService {
     public void problem1() {
         logCurrentTransaction("start of problem1");
         Arrays.asList("a", "b", "c").parallelStream().forEach(key -> {
+            // https://github.com/spring-projects/spring-integration/issues/3733
             logger.info("going to call lock method with key: {}", key);
             doWorkInsideLock(key);
         });
