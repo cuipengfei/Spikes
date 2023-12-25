@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 
 @Service
-public class FixProblem1Service extends BaseService {
+public class Problem1FixService extends BaseService {
 
     @Autowired
     @Qualifier("customLockRegistry")
@@ -21,7 +21,7 @@ public class FixProblem1Service extends BaseService {
     }
 
     @Transactional
-    public void fixProblem1() {
+    public void problem1Fix() {
         logger.info("going to call lock method in threads");
         Arrays.asList("a", "b", "c").parallelStream().forEach(key -> {
             logger.info("going to call lock method with key: {}", key);
