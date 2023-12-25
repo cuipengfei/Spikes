@@ -2,6 +2,7 @@ package com.github.spring.example.controllers;
 
 import com.github.spring.example.service.Problem1FixService;
 import com.github.spring.example.service.Problem1Service;
+import com.github.spring.example.service.Problem2BadFixService;
 import com.github.spring.example.service.Problem2Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.concurrent.ExecutionException;
 
 @Controller
 public class TestLockController {
@@ -22,6 +25,9 @@ public class TestLockController {
 
     @Autowired
     private Problem2Service p2Service;
+
+    @Autowired
+    private Problem2BadFixService p2BadFixService;
 
     @GetMapping("problem1")
     public ResponseEntity<String> problem1() {
@@ -39,5 +45,11 @@ public class TestLockController {
     public ResponseEntity<String> problem2() {
         p2Service.problem2();
         return ResponseEntity.ok("problem2");
+    }
+
+    @GetMapping("problem2-bad-fix")
+    public ResponseEntity<String> problem2BadFix() throws ExecutionException, InterruptedException {
+        p2BadFixService.problem2BadFix();
+        return ResponseEntity.ok("problem2BadFix");
     }
 }
