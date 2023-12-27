@@ -3,6 +3,7 @@ package com.github.spring.example.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +14,10 @@ public class Problem1FixService extends BaseService {
 
     @Autowired
     @Qualifier("customLockRegistry")
-    private JdbcLockRegistry jdbcLockRegistry;
+    private LockRegistry jdbcLockRegistry;
 
     @Override
-    protected JdbcLockRegistry getJdbcLockRegistry() {
+    protected LockRegistry getLockRegistry() {
         return jdbcLockRegistry;
     }
 

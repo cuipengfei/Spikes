@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.integration.jdbc.lock.DefaultLockRepository;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
 import org.springframework.integration.jdbc.lock.LockRepository;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Isolation;
@@ -52,7 +53,7 @@ public class DefaultJDBCLockConfigs {
     }
 
     @Bean("defaultJdbcLockRegistry")
-    public JdbcLockRegistry defaultJdbcLockRegistry(@Qualifier("defaultLockRepository") LockRepository lockRepository) {
+    public LockRegistry defaultJdbcLockRegistry(@Qualifier("defaultLockRepository") LockRepository lockRepository) {
         return new JdbcLockRegistry(lockRepository);
     }
 }

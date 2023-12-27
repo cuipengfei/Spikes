@@ -4,7 +4,7 @@ import com.github.spring.example.CatRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -21,13 +21,13 @@ public abstract class BaseService {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected abstract JdbcLockRegistry getJdbcLockRegistry();
+    protected abstract LockRegistry getLockRegistry();
 
     protected void doWorkInsideLock(String key) {
         logCurrentTransaction(key + " start of doWorkInsideLock");
 
         boolean isLocked = false;
-        Lock lock = getJdbcLockRegistry().obtain(key);
+        Lock lock = getLockRegistry().obtain(key);
         try {
             isLocked = lock.tryLock(10, TimeUnit.SECONDS);
             if (isLocked) {
@@ -52,7 +52,7 @@ public abstract class BaseService {
         logCurrentTransaction(key + " start of tryGetLock");
 
         boolean isLocked = false;
-        Lock lock = getJdbcLockRegistry().obtain(key);
+        Lock lock = getLockRegistry().obtain(key);
         try {
             isLocked = lock.tryLock(10, TimeUnit.SECONDS);
             if (isLocked) {
