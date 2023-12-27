@@ -4,6 +4,7 @@ import com.github.spring.example.service.BaseService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.jdbc.lock.DefaultLockRepository;
 import org.springframework.integration.jdbc.lock.JdbcLockRegistry;
 import org.springframework.integration.jdbc.lock.LockRepository;
+import org.springframework.integration.redis.util.RedisLockRegistry;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -19,9 +21,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Configuration
 public class CustomJDBCLockConfigs {
+
+    @Value("${lock.registry.name}")
+    String registryName;
+
+    @Autowired
+    private RedisLockRegistry redisLockRegistry;
 
     public static final int TIME_TO_LIVE = 20 * 1000;
 
@@ -90,6 +99,10 @@ public class CustomJDBCLockConfigs {
 
     @Bean("customLockRegistry")
     public LockRegistry customLockRegistry(@Qualifier("customLockRepository") LockRepository lockRepository) {
-        return new JdbcLockRegistry(lockRepository);
+        if (Objects.equals(registryName, "jdbc")) {
+            return new JdbcLockRegistry(lockRepository);
+        } else {
+            return redisLockRegistry;
+        }
     }
 }
