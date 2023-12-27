@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class Problem1Service extends BaseService {
 
     @Autowired
-    @Qualifier("defaultJdbcLockRegistry")
+    @Qualifier("defaultLockRegistry")
     private LockRegistry jdbcLockRegistry;
 
     @Override

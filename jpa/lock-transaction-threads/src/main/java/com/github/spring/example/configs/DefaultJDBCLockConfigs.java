@@ -52,8 +52,8 @@ public class DefaultJDBCLockConfigs {
         return defaultLockRepository;
     }
 
-    @Bean("defaultJdbcLockRegistry")
-    public LockRegistry defaultJdbcLockRegistry(@Qualifier("defaultLockRepository") LockRepository lockRepository) {
+    @Bean("defaultLockRegistry")
+    public LockRegistry defaultLockRegistry(@Qualifier("defaultLockRepository") LockRepository lockRepository) {
         return new JdbcLockRegistry(lockRepository);
     }
 }
