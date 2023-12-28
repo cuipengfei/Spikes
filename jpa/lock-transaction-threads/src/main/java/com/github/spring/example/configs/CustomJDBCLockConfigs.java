@@ -43,7 +43,7 @@ public class CustomJDBCLockConfigs {
     public LockRepository customLockRepository(
             DataSource dataSource,
             @Value(value = "${spring.jpa.properties.hibernate.default_schema}") String schema) {
-        DefaultLockRepository defaultLockRepository = new DefaultLockRepository(dataSource) {
+        DefaultLockRepository customLockRepository = new DefaultLockRepository(dataSource) {
             private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
             @Transactional(propagation = Propagation.REQUIRES_NEW, transactionManager = "distributedLockTransactionManager")
@@ -92,9 +92,9 @@ public class CustomJDBCLockConfigs {
                 return super.renew(lock);
             }
         };
-        defaultLockRepository.setPrefix(schema + ".INT_");
-        defaultLockRepository.setTimeToLive(TIME_TO_LIVE);
-        return defaultLockRepository;
+        customLockRepository.setPrefix(schema + ".INT_");
+        customLockRepository.setTimeToLive(TIME_TO_LIVE);
+        return customLockRepository;
     }
 
     @Bean("customLockRegistry")
