@@ -11,7 +11,7 @@ public class DefaultReplacer extends Replacer {
 
     @Override
     protected String tryReplace(int number, String appendableResult) {
-        if (appendableResult.length() == 0) {
+        if (appendableResult.isEmpty()) {
             return Integer.toString(number);
         }
         return appendableResult;

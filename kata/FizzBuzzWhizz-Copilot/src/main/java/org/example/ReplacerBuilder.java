@@ -20,12 +20,20 @@ public class ReplacerBuilder {
         return this;
     }
 
-    public ReplacerBuilder replaceWith(String word) {
+    public ReplacerBuilder replaceThenStop(String word) {
+        return replaceWith(word, true);
+    }
+
+    public ReplacerBuilder replaceThenContinue(String word) {
+        return replaceWith(word, false);
+    }
+
+    private ReplacerBuilder replaceWith(String word, boolean stop) {
         if (isBuildingDivisible) {
-            appendToChain(new DivisibleReplacer(number, word));
+            appendToChain(new DivisibleReplacer(number, word, stop));
             isBuildingDivisible = false;
         } else if (isBuildingInclusion) {
-            appendToChain(new InclusionReplacer(number, word));
+            appendToChain(new InclusionReplacer(number, word, stop));
             isBuildingInclusion = false;
         }
         return this;

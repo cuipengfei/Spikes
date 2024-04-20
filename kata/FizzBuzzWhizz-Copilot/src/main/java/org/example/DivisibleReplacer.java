@@ -6,6 +6,10 @@ public class DivisibleReplacer extends Replacer {
         super(dividend, word);
     }
 
+    public DivisibleReplacer(int dividend, String word, boolean stop) {
+        super(dividend, word, stop);
+    }
+
     @Override
     protected String tryReplace(int number, String appendableResult) {
         if (number % patternNumber == 0) {
