@@ -27,3 +27,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/java17vs8-demo.iml
+/.idea/dbnavigator.xml
+/.idea/jpa-buddy.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
