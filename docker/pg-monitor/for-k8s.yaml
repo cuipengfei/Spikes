@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pg-monitor
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pg-monitor-secrets
+  namespace: pg-monitor
+type: Opaque
+data:
+  db-connection-string: cG9zdGdyZXM6Ly9sYW5nY2hhaW46bGFuZ2NoYWluQGhvc3QuZG9ja2VyLmludGVybmFsOjYwMjQvbGFuZ2NoYWluP3NzbG1vZGU9ZGlzYWJsZQ==  # base64 encoded value of "postgresql://langchain:langchain@host.docker.internal:6024/langchain?sslmode=disable"
+  grafana-admin-password: YWRtaW4xMjM=  # base64 encoded value of "admin123"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pg-monitor-pod
+  namespace: pg-monitor
+  labels:
+    app: pg-monitor
+spec:
+  containers:
+    - name: prometheus
+      image: prom/prometheus:v3.1.0
+      ports:
+        - containerPort: 9090
+      volumeMounts:
+        - name: prometheus-config
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--storage.tsdb.retention.time=7d'
+    - name: postgres-exporter
+      image: prometheuscommunity/postgres-exporter:v0.16.0
+      ports:
+        - containerPort: 9187
+      env:
+        - name: DATA_SOURCE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: pg-monitor-seKcrets
+              key: db-connection-string
+    - name: grafana
+      image: grafana/grafana:11.5.0
+      ports:
+        - containerPort: 3000
+      env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pg-monitor-secrets
+              key: grafana-admin-password
+      volumeMounts:
+        - name: grafana-data
+          mountPath: /var/lib/grafana
+        - name: grafana-provisioning
+          mountPath: /etc/grafana/provisioning
+  volumes:
+    - name: prometheus-config
+      configMap:
+        name: prometheus-config
+    - name: grafana-data
+      emptyDir: {}
+    - name: grafana-provisioning
+      emptyDir: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: pg-monitor
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 60s
+
+    scrape_configs:
+      - job_name: 'postgres'
+        static_configs:
+          - targets: [ 'localhost:9187' ]
