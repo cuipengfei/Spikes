@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Prometheus 监控服务
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # 挂载配置文件
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - pg_monito_network
+    restart: unless-stopped
+
+  # PostgreSQL 指标采集器
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.16.0
+    container_name: postgres-exporter
+    environment:
+      # 关键配置：连接远程 PostgreSQL（需替换实际参数）
+      DATA_SOURCE_NAME: "postgresql://langchain:langchain@host.docker.internal:6024/langchain?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - pg_monito_network
+    restart: unless-stopped
+
+  # Grafana 可视化
+  grafana:
+    image: grafana/grafana:11.5.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana  # 持久化存储
+      - ./provisioning:/etc/grafana/provisioning  # 预配置仪表盘
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "admin123"  # 管理员密码
+    networks:
+      - pg_monito_network
+    restart: unless-stopped
+
+volumes:
+  grafana_data:
+
+networks:
+  pg_monito_network:
+    driver: bridge
